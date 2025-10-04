@@ -1,0 +1,60 @@
+<section class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar__brand">
+      <img src="assets/svgs/logo-white.svg" alt="CargoSafe Logo" class="sidebar__logo" />
+    </div>
+
+    <nav class="sidebar__nav">
+      <ul>
+        <li>
+          <a routerLink="/dashboard">
+            <img src="assets/icons/dashboard.svg" alt="" />
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/vehicles">
+            <img src="assets/icons/truck.svg" alt="" />
+            <span>Vehicles</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/sensors">
+            <img src="assets/icons/iot.svg" alt="" />
+            <span>Sensors</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/trips">
+            <img src="assets/icons/trip.svg" alt="" />
+            <span>Trips</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/alerts">
+            <img src="assets/icons/alert.svg" alt="" />
+            <span>Alerts</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/subscriptions"
+            ><img src="assets/icons/subscription.svg" alt="" /><span>Subscriptions</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar__footer">
+      <a routerLink="/logout">
+        <img src="assets/icons/logout.svg" alt="" />
+        <span>Log out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</section>
