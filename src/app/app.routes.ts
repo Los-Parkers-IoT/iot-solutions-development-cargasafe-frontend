@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RootLayout } from './shared/presentation/layout/root-layout/root-layout';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
 import { DashboardComponent } from './features/dashboard/components/dashboard.component';
+import { TripDetailComponent } from './features/dashboard/components/trip-detail/trip-detail.component';
 
 export const routes: Routes = [
   {
@@ -18,15 +19,15 @@ export const routes: Routes = [
         component: DashboardComponent,
       },
       {
+        path: 'trips/:id',
+        component: TripDetailComponent,
+      },
+      {
         path: 'vehicles',
         component: PageNotFound, // Placeholder until you create this component
       },
       {
         path: 'sensors',
-        component: PageNotFound, // Placeholder until you create this component
-      },
-      {
-        path: 'trips',
         component: PageNotFound, // Placeholder until you create this component
       },
       {

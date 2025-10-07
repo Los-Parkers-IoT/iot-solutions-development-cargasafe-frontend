@@ -145,7 +145,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges() {
-    console.log('📊 Chart data received:', this.data.length, 'months');
     this.filteredData = this.sortDataByDate([...this.data]);
     if (this.canvas) {
       this.drawChart();
@@ -207,15 +206,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     this.chartWidth = this.canvas.width - 120; // More margin for labels
     this.chartHeight = this.canvas.height - 120; // More margin for labels
     
-    console.log('📐 Canvas dimensions:', { 
-      width: this.canvas.width, 
-      height: this.canvas.height, 
-      chartWidth: this.chartWidth, 
-      chartHeight: this.chartHeight,
-      dataLength: this.data.length,
-      containerWidth: containerWidth
-    });
-    
     this.filteredData = this.sortDataByDate([...this.data]);
     this.drawChart();
   }
@@ -227,7 +217,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (this.filteredData.length === 0) {
-      console.log('⚠️ No data to draw');
       return;
     }
 
@@ -247,14 +236,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     } else {
       this.maxValue = Math.max(...this.filteredData.map(d => Math.max(d.temperatureIncidents, d.movementIncidents)));
     }
-    
-    console.log('📏 Chart calculations:', { 
-      filteredDataLength: this.filteredData.length, 
-      barWidth: this.barWidth, 
-      maxValue: this.maxValue,
-      chartWidth: this.chartWidth,
-      alertTypeFilter: this.alertTypeFilter
-    });
 
     // Draw axes
     this.drawAxes();
@@ -284,7 +265,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
   }
 
   private drawBars() {
-    console.log('🎨 Drawing', this.filteredData.length, 'months');
     const spaceBetweenGroups = 30;
     const spaceBetweenBars = 8;
     const startX = 60;
@@ -342,21 +322,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     const monthIndex = this.getMonthIndexFromX(x);
     const barInfo = this.getBarInfoFromPosition(x, y);
     
-    // Debug logging for September specifically
-    if (monthIndex >= 0 && monthIndex < this.filteredData.length) {
-      const monthData = this.filteredData[monthIndex];
-      if (monthData.month === 'Septiembre') {
-        console.log('Septiembre debug:', {
-          monthIndex,
-          barInfo,
-          x, y,
-          temperatureIncidents: monthData.temperatureIncidents,
-          movementIncidents: monthData.movementIncidents,
-          maxValue: this.maxValue
-        });
-      }
-    }
-    
     if (monthIndex >= 0 && monthIndex < this.filteredData.length && barInfo.isOverBar) {
       // Use relative positioning to the chart container
       const containerRect = this.canvas.parentElement?.getBoundingClientRect();
@@ -407,7 +372,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
         if (x >= tempBarX - tolerance && x <= tempBarX + this.barWidth + tolerance && 
             y >= tempBarTop - tolerance && y <= chartBottom + tolerance && 
             tempBarHeight > 0) {
-          console.log(`🎯 Temperature bar detected for ${monthData.month}: x=${x}, tempBarX=${tempBarX}, tempBarHeight=${tempBarHeight}`);
           return { isOverBar: true, barType: 'temperature' };
         }
       }
@@ -423,7 +387,6 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
         if (x >= movBarX - tolerance && x <= movBarX + this.barWidth + tolerance && 
             y >= movBarTop - tolerance && y <= chartBottom + tolerance && 
             movBarHeight > 0) {
-          console.log(`🎯 Movement bar detected for ${monthData.month}: x=${x}, movBarX=${movBarX}, movBarHeight=${movBarHeight}`);
           return { isOverBar: true, barType: 'movement' };
         }
       }

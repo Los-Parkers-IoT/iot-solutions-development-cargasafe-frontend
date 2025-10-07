@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { forkJoin } from 'rxjs';
 import { Trip, Alert, IncidentsByMonthData, AlertType } from '../models/trip.model';
@@ -65,7 +66,9 @@ interface TripWithIncidents extends Trip {
               </app-incidents-chart>
               <h3>Últimos Viajes</h3>
               <div class="trip-cards">
-                <div *ngFor="let trip of trips.slice(0, 3)" class="trip-card">
+                <div *ngFor="let trip of trips.slice(0, 3)" 
+                     class="trip-card"
+                     (click)="navigateToTripDetail(trip.id)">
                   <div class="trip-header">
                     <strong>{{ trip.vehiclePlate }}</strong>
                     <span class="status" [ngClass]="getStatusClass(trip.status)">
@@ -78,6 +81,7 @@ interface TripWithIncidents extends Trip {
                     <p><strong>Carga:</strong> {{ trip.cargoType }}</p>
                     <p><strong>Distancia:</strong> {{ trip.distance }} km</p>
                   </div>
+                  <button class="view-details-btn">Ver Detalles</button>
                 </div>
               </div>
               
@@ -142,7 +146,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(
     private dashboardService: DashboardService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -324,6 +329,11 @@ export class DashboardComponent implements OnInit {
   }
 
 
+
+  navigateToTripDetail(tripId: string): void {
+    this.router.navigate(['/trips', tripId]);
+    console.log('🚗 Navigating to trip detail:', tripId);
+  }
 
   private loadDashboardData(): void {
     this.loading = true;

@@ -8,32 +8,38 @@
     <nav class="sidebar__nav">
       <ul>
         <li>
-          <a routerLink="/dashboard">
+          <a routerLink="/dashboard" routerLinkActive="active">
+            <mat-icon>dashboard</mat-icon>
             <span>Dashboard</span>
           </a>
         </li>
         <li>
-          <a routerLink="/vehicles">
+          <a routerLink="/vehicles" routerLinkActive="active">
+            <mat-icon>local_shipping</mat-icon>
             <span>Vehicles</span>
           </a>
         </li>
         <li>
-          <a routerLink="/sensors">
+          <a routerLink="/sensors" routerLinkActive="active">
+            <mat-icon>sensors</mat-icon>
             <span>Sensors</span>
           </a>
         </li>
         <li>
-          <a routerLink="/trips">
+          <a routerLink="/trips" routerLinkActive="active">
+            <mat-icon>route</mat-icon>
             <span>Trips</span>
           </a>
         </li>
         <li>
-          <a routerLink="/alerts">
+          <a routerLink="/alerts" routerLinkActive="active">
+            <mat-icon>notifications</mat-icon>
             <span>Alerts</span>
           </a>
         </li>
         <li>
-          <a routerLink="/subscriptions">
+          <a routerLink="/subscriptions" routerLinkActive="active">
+            <mat-icon>card_membership</mat-icon>
             <span>Subscriptions</span>
           </a>
         </li>
@@ -42,6 +48,7 @@
 
     <div class="sidebar__footer">
       <a routerLink="/logout">
+        <mat-icon>logout</mat-icon>
         <span>Log out</span>
       </a>
     </div>
