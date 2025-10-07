@@ -1,8 +1,47 @@
 {
-  "users": [{ "id": 1, "email": "admin@mail.com", "password": "admin" }],
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@mail.com",
+      "password": "admin"
+    }
+  ],
   "profiles": [],
   "merchants": [],
-  "alerts": [],
+  "alerts": [
+    {
+      "id": 1,
+      "type": "High Temperature",
+      "deliveryOrderId": "T342",
+      "status": "Closed",
+      "createdAt": "10:45 AM",
+      "closedAt": "12:38:04 p. m."
+    },
+    {
+      "id": 2,
+      "type": "Excessive vibration",
+      "deliveryOrderId": "T343",
+      "status": "Closed",
+      "createdAt": "11:20 AM",
+      "closedAt": "11:45 AM"
+    },
+    {
+      "id": 3,
+      "type": "Energy Loss",
+      "deliveryOrderId": "T344",
+      "status": "Closed",
+      "createdAt": "01:05 PM",
+      "closedAt": "01:14 PM"
+    },
+    {
+      "id": 4,
+      "type": "Trip Loss",
+      "deliveryOrderId": "T345",
+      "status": "Closed",
+      "createdAt": "01:35 PM",
+      "closedAt": "01:50 PM"
+    }
+  ],
   "subscription_plans": [],
   "trips": [
     {

@@ -3,7 +3,9 @@
 
   <div class="summary">
     <div class="card danger">
-      <div class="icon">❗</div>
+      <div class="icon">
+        <mat-icon color="warn">warning</mat-icon>
+      </div>
       <div class="text">
         <h2>{{ (activeCount$ | async) || 0 }}</h2>
         <p>Alerts today</p>
@@ -11,7 +13,9 @@
     </div>
 
     <div class="card success">
-      <div class="icon">✅</div>
+      <div class="icon">
+        <mat-icon color="primary">check_circle</mat-icon>
+      </div>
       <div class="text">
         <h2>{{ (resolvedCount$ | async) || 0 }}</h2>
         <p>Resolved</p>

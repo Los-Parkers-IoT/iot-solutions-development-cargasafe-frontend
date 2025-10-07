@@ -16,3 +16,15 @@
   border-radius: 8px;
   overflow: hidden;
 }
+
+.resolved-text {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #388e3c;
+  font-weight: 500;
+}
+
+button[mat-icon-button] mat-icon {
+  font-size: 22px;
+}

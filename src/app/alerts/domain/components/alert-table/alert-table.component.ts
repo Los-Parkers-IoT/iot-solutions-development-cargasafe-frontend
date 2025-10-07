@@ -6,6 +6,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { Alert } from '../../models/alert.model';
 import { AlertsService } from '../../services/alert.service';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-alert-table',
@@ -15,7 +16,8 @@ import { AlertsService } from '../../services/alert.service';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './alert-table.component.html',
   styleUrls: ['./alert-table.component.css'],
