@@ -1,0 +1,18 @@
+.full-width-table {
+  width: 100%;
+}
+
+.active {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.closed {
+  color: #388e3c;
+  font-weight: 600;
+}
+
+.mat-elevation-z2 {
+  border-radius: 8px;
+  overflow: hidden;
+}
