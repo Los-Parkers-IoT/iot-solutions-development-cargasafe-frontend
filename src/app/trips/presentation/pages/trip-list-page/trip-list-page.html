@@ -1,0 +1,139 @@
+<section class="trips-page mat-elevation-z2">
+  <!-- HEADER -->
+  <header class="trips-header">
+    <h1>Trips</h1>
+  </header>
+
+  <!-- SUMMARY CARDS -->
+  <section class="trips-summary">
+    <div class="summary-group">
+      <h3>Total trips</h3>
+      <div class="summary-values">
+        <div class="summary-value">
+          <span class="summary-value-field">Today</span> <span>2</span>
+        </div>
+        <div class="summary-value">
+          <span class="summary-value-field">Yesterday</span> <span>1</span>
+        </div>
+        <div class="summary-value">
+          <span class="summary-value-field">Last 7 Days</span> <span>5</span>
+        </div>
+        <div class="summary-value">
+          <span class="summary-value-field">Last year</span> <span>9</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-group">
+      <h3>Total incidents</h3>
+      <div class="summary-values">
+        <div class="summary-value">
+          <span class="summary-value-field">Today</span> <span>2</span>
+        </div>
+        <div class="summary-value">
+          <span class="summary-value-field">Yesterday</span> <span>1</span>
+        </div>
+        <div class="summary-value">
+          <span class="summary-value-field">Last 7 Days</span> <span>5</span>
+        </div>
+        <div class="summary-value">
+          <span class="summary-value-field">Last year</span> <span>9</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTERS -->
+  <section class="trips-filters">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Search by trip ID, route, driver..." type="text" />
+    </mat-form-field>
+
+    <div class="filter-group">
+      <span>Filter by</span>
+
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Status</mat-label>
+        <mat-select>
+          <mat-option value="0">Completado</mat-option>
+          <mat-option value="1">Cancelado</mat-option>
+          <mat-option value="2">En curso</mat-option>
+          <mat-option value="3">Programado</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-select">
+        <mat-label>Created At</mat-label>
+        <mat-select>
+          <mat-option value="recent">Recent</mat-option>
+          <mat-option value="oldest">Oldest</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="actions">
+      <button mat-flat-button color="primary">+ Add new plan</button>
+      <button mat-stroked-button color="accent">Export</button>
+    </div>
+  </section>
+
+  <!-- TABLE -->
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+      <!-- ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let trip">{{ trip.id }}</td>
+      </ng-container>
+
+      <!-- DRIVER -->
+      <ng-container matColumnDef="driver">
+        <th mat-header-cell *matHeaderCellDef>Driver</th>
+        <td mat-cell *matCellDef="let trip">{{ trip.driverId }}</td>
+      </ng-container>
+
+      <!-- CODRIVER -->
+      <ng-container matColumnDef="codriver">
+        <th mat-header-cell *matHeaderCellDef>Codriver</th>
+        <td mat-cell *matCellDef="let trip">{{ trip.coDriverId || 'Not assigned' }}</td>
+      </ng-container>
+
+      <!-- DELIVERIES -->
+      <!-- <ng-container matColumnDef="deliveries">
+        <th mat-header-cell *matHeaderCellDef>N° Deliveries</th>
+        <td mat-cell *matCellDef="let trip">{{ trip.deliveries }}</td>
+      </ng-container> -->
+
+      <!-- CREATED -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Created at</th>
+        <td mat-cell *matCellDef="let trip">{{ trip.createdAt }}</td>
+      </ng-container>
+
+      <!-- DEPARTURE -->
+      <ng-container matColumnDef="departure">
+        <th mat-header-cell *matHeaderCellDef>Departure at</th>
+        <td mat-cell *matCellDef="let trip">{{ trip.departureAt || 'Not completed' }}</td>
+      </ng-container>
+
+      <!-- ACTIONS -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let trip" class="actions">
+          <button mat-stroked-button color="primary">See more</button>
+          <button *ngIf="trip.statusId !== 'Completado'" mat-stroked-button color="warn">
+            Modificar
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- HEADER & ROWS -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <!-- PAGINATOR -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+</section>

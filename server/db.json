@@ -1,0 +1,53 @@
+{
+  "users": [{ "id": 1, "email": "admin@mail.com", "password": "admin" }],
+  "profiles": [],
+  "merchants": [],
+  "alerts": [],
+  "subscription_plans": [],
+  "trips": [
+    {
+      "id": 1,
+      "statusId": 1,
+      "driverId": 101,
+      "coDriverId": 102,
+      "vehicleId": 501,
+      "merchantId": 9001,
+      "createdAt": "2025-10-01T08:30:00Z",
+      "updatedAt": "2025-10-01T08:45:00Z",
+      "departureAt": "2025-10-02T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "statusId": 2,
+      "driverId": 103,
+      "coDriverId": null,
+      "vehicleId": 502,
+      "merchantId": 9001,
+      "createdAt": "2025-09-29T10:15:00Z",
+      "updatedAt": "2025-09-29T12:00:00Z",
+      "departureAt": null
+    },
+    {
+      "id": 3,
+      "statusId": 3,
+      "driverId": 104,
+      "coDriverId": 105,
+      "vehicleId": 503,
+      "merchantId": 9002,
+      "createdAt": "2025-09-28T07:10:00Z",
+      "updatedAt": "2025-09-28T08:00:00Z",
+      "departureAt": "2025-09-29T09:00:00Z"
+    },
+    {
+      "id": 4,
+      "statusId": 4,
+      "driverId": 106,
+      "coDriverId": null,
+      "vehicleId": 504,
+      "merchantId": 9003,
+      "createdAt": "2025-09-30T14:25:00Z",
+      "updatedAt": "2025-09-30T14:40:00Z",
+      "departureAt": "2025-10-01T06:30:00Z"
+    }
+  ]
+}
