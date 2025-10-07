@@ -1,53 +1,75 @@
 {
-  "users": [{ "id": 1, "email": "admin@mail.com", "password": "admin" }],
+  "users": [
+    { "id": 1, "email": "admin@mail.com", "password": "admin" }
+  ],
   "profiles": [],
   "merchants": [],
   "alerts": [],
   "subscription_plans": [],
-  "trips": [
+  "trips": [],
+
+  "plans": [
+    { "id": "basic", "name": "BASIC", "price": 29, "currency": "PEN", "vehiclesLimit": 2 },
+    { "id": "standard", "name": "STANDARD", "price": 59, "currency": "PEN", "vehiclesLimit": 5 },
+    { "id": "premium", "name": "PREMIUM", "price": 99, "currency": "PEN", "vehiclesLimit": "UNLIMITED" }
+  ],
+
+  "subscriptions": [
     {
       "id": 1,
-      "statusId": 1,
-      "driverId": 101,
-      "coDriverId": 102,
-      "vehicleId": 501,
-      "merchantId": 9001,
-      "createdAt": "2025-10-01T08:30:00Z",
-      "updatedAt": "2025-10-01T08:45:00Z",
-      "departureAt": "2025-10-02T09:00:00Z"
+      "accountId": "1",
+      "planId": "standard",
+      "status": "ACTIVE",
+      "amount": 59,
+      "currency": "PEN",
+      "renewalDate": "2025-11-15",
+      "paymentMethodId": 1
+    }
+  ],
+
+  "paymentMethods": [
+    {
+      "id": 1,
+      "accountId": "1",
+      "brand": "Visa",
+      "last4": "1234",
+      "expMonth": 11,
+      "expYear": 2028,
+      "country": "United States",
+      "postalCode": "90210"
+    }
+  ],
+
+  "invoices": [
+    {
+      "id": 1001,
+      "subscriptionId": 1,
+      "date": "2025-11-15",
+      "amount": 59,
+      "currency": "PEN",
+      "status": "Pending",
+      "reference": null,
+      "receiptUrl": "https://example.com/receipts/1001.pdf"
     },
     {
-      "id": 2,
-      "statusId": 2,
-      "driverId": 103,
-      "coDriverId": null,
-      "vehicleId": 502,
-      "merchantId": 9001,
-      "createdAt": "2025-09-29T10:15:00Z",
-      "updatedAt": "2025-09-29T12:00:00Z",
-      "departureAt": null
+      "id": 1000,
+      "subscriptionId": 1,
+      "date": "2025-10-15",
+      "amount": 59,
+      "currency": "PEN",
+      "status": "Accepted",
+      "reference": "#PAY_8765",
+      "receiptUrl": "https://example.com/receipts/1000.pdf"
     },
     {
-      "id": 3,
-      "statusId": 3,
-      "driverId": 104,
-      "coDriverId": 105,
-      "vehicleId": 503,
-      "merchantId": 9002,
-      "createdAt": "2025-09-28T07:10:00Z",
-      "updatedAt": "2025-09-28T08:00:00Z",
-      "departureAt": "2025-09-29T09:00:00Z"
-    },
-    {
-      "id": 4,
-      "statusId": 4,
-      "driverId": 106,
-      "coDriverId": null,
-      "vehicleId": 504,
-      "merchantId": 9003,
-      "createdAt": "2025-09-30T14:25:00Z",
-      "updatedAt": "2025-09-30T14:40:00Z",
-      "departureAt": "2025-10-01T06:30:00Z"
+      "id": 999,
+      "subscriptionId": 1,
+      "date": "2025-09-15",
+      "amount": 59,
+      "currency": "PEN",
+      "status": "Accepted",
+      "reference": "#PAY_6754",
+      "receiptUrl": "https://example.com/receipts/999.pdf"
     }
   ]
 }

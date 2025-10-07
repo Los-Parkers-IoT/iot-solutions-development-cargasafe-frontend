@@ -1,3 +1,5 @@
 {
-  "/api/v1/*": "/$1"
+  "/api/v1/*": "/$1",
+  "/api/subscriptions/current/:accountId": "/subscriptions?accountId=:accountId&_limit=1",
+  "/api/invoices/by-sub/:subscriptionId": "/invoices?subscriptionId=:subscriptionId&_sort=date&_order=desc"
 }
