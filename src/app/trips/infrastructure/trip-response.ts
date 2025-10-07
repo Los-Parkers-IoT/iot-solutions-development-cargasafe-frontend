@@ -7,6 +7,7 @@ export interface TripResource {
   updatedAt: string;
   departureAt: string | null;
   merchantId: number;
+  statusId: number;
 }
 
 export interface TripsResponse {

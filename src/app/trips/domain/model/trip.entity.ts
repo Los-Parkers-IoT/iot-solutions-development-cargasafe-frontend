@@ -2,6 +2,7 @@ import { BaseEntity } from '../../../shared/domain/model/base-entity';
 
 export class Trip implements BaseEntity {
   private _id: number;
+  private _statusId: number;
   private _driverId: number;
   private _coDriverId: number | null;
   private _vehicleId: number;
@@ -12,6 +13,7 @@ export class Trip implements BaseEntity {
 
   constructor(trip: {
     id: number;
+    statusId: number;
     driverId: number;
     coDriverId: number | null;
     vehicleId: number;
@@ -21,6 +23,7 @@ export class Trip implements BaseEntity {
     merchantId: number;
   }) {
     this._id = trip.id;
+    this._statusId = trip.statusId;
     this._driverId = trip.driverId;
     this._coDriverId = trip.coDriverId ?? null;
     this._vehicleId = trip.vehicleId;
@@ -71,5 +74,12 @@ export class Trip implements BaseEntity {
 
   get merchantId(): number {
     return this._merchantId;
+  }
+
+  get statusId(): number {
+    return this._statusId;
+  }
+  set statusId(value: number) {
+    this._statusId = value;
   }
 }

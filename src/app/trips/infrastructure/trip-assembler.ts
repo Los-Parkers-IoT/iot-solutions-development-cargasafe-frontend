@@ -10,6 +10,7 @@ export class TripAssembler {
     return new Trip({
       id: resource.id,
       driverId: resource.driverId,
+      statusId: resource.statusId,
       coDriverId: resource.coDriverId,
       vehicleId: resource.vehicleId,
       createdAt: new Date(resource.createdAt),
