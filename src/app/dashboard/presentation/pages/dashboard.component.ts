@@ -215,18 +215,18 @@ export class DashboardComponent implements OnInit {
   // Método para obtener viajes que tuvieron incidencias en un mes específico
   private getTripsForMonth(monthData: IncidentsByMonthData): TripWithIncidents[] {
     // Simulamos viajes que tuvieron incidencias en este mes
-    const tripsWithIncidents = this.trips.map(trip => {
+    const tripsWithIncidents: TripWithIncidents[] = this.trips.map(trip => {
       // Simulamos el número de incidencias basado en los datos del mes
       const tempIncidents = Math.floor((monthData.temperatureIncidents / this.trips.length) + Math.random() * 2);
       const movIncidents = Math.floor((monthData.movementIncidents / this.trips.length) + Math.random() * 2);
       const totalIncidents = tempIncidents + movIncidents;
       
-      return {
-        ...trip,
+      // Crear un objeto extendido manteniendo la referencia al trip original
+      return Object.assign(trip, {
         incidentCount: totalIncidents,
         temperatureIncidents: tempIncidents,
         movementIncidents: movIncidents
-      };
+      }) as TripWithIncidents;
     })
     .filter(trip => trip.incidentCount > 0) // Solo viajes con incidencias
     .sort((a, b) => b.incidentCount - a.incidentCount) // Ordenar por más incidencias primero
@@ -254,8 +254,8 @@ export class DashboardComponent implements OnInit {
 
 
 
-  navigateToTripDetail(tripId: string): void {
-    this.router.navigate(['/dashboard/trips', tripId]);
+  navigateToTripDetail(tripId: number): void {
+    this.router.navigate(['/dashboard/trips', tripId.toString()]);
     console.log('🚗 Navigating to trip detail:', tripId);
   }
 
