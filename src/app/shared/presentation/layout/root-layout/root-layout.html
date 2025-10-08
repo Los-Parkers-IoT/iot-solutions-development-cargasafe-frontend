@@ -8,38 +8,39 @@
     <nav class="sidebar__nav">
       <ul>
         <li>
-          <a routerLink="/dashboard">
-            <img src="assets/icons/dashboard.svg" alt="" />
+          <a routerLink="/dashboard" routerLinkActive="active">
+            <mat-icon>dashboard</mat-icon>
             <span>Dashboard</span>
           </a>
         </li>
         <li>
-          <a routerLink="fleet/vehicles">
-            <img src="assets/icons/truck.svg" alt="" />
+          <a routerLink="/fleet/vehicles" routerLinkActive="active">
+            <mat-icon>local_shipping</mat-icon>
             <span>Vehicles</span>
           </a>
         </li>
         <li>
-          <a routerLink="fleet/devices">
-            <img src="assets/icons/iot.svg" alt="" />
+          <a routerLink="/fleet/devices" routerLinkActive="active">
+            <mat-icon>sensors</mat-icon>
             <span>Sensors</span>
           </a>
         </li>
         <li>
-          <a routerLink="/trips">
-            <img src="assets/icons/trip.svg" alt="" />
+          <a routerLink="/trips" routerLinkActive="active">
+            <mat-icon>route</mat-icon>
             <span>Trips</span>
           </a>
         </li>
         <li>
-          <a routerLink="/alerts">
-            <img src="assets/icons/alert.svg" alt="" />
+          <a routerLink="/alerts" routerLinkActive="active">
+            <mat-icon>notifications</mat-icon>
             <span>Alerts</span>
           </a>
         </li>
         <li>
-          <a routerLink="/subscriptions"
-            ><img src="assets/icons/subscription.svg" alt="" /><span>Subscriptions</span>
+          <a routerLink="/subscriptions" routerLinkActive="active">
+            <mat-icon>card_membership</mat-icon>
+            <span>Subscriptions</span>
           </a>
         </li>
       </ul>
@@ -47,7 +48,7 @@
 
     <div class="sidebar__footer">
       <a routerLink="/logout">
-        <img src="assets/icons/logout.svg" alt="" />
+        <mat-icon>logout</mat-icon>
         <span>Log out</span>
       </a>
     </div>

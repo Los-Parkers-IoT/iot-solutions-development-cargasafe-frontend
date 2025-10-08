@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root-layout',
-  imports: [RouterOutlet, RouterModule],
+  imports: [RouterModule, MatIconModule],
   templateUrl: './root-layout.html',
   styleUrls: ['./root-layout.css'],
 })

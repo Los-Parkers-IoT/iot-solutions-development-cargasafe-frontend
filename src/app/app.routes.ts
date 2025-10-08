@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { RootLayout } from './shared/presentation/layout/root-layout/root-layout';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
+import { DashboardComponent } from './features/dashboard/components/dashboard.component';
+import { TripDetailComponent } from './features/dashboard/components/trip-detail/trip-detail.component';
 import { LoginPageComponent } from './iam/presentation/pages/login-page/login-page';
 import { PasswordRecoveryPageComponent } from './iam/presentation/pages/password-recovery-page/password-recovery-page';
 import { RegisterPageComponent } from './iam/presentation/pages/register-page/register-page';
@@ -22,6 +24,15 @@ export const routes: Routes = [
     component: RootLayout,
     children: [
       {
+        path: '',
+        redirectTo: '/dashboard',
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+      },
+      {
         path: 'trips',
         loadChildren: tripRoutes,
       },
@@ -29,7 +40,6 @@ export const routes: Routes = [
         path: 'alerts',
         loadChildren: alertRoutes,
       },
-      { path: '', pathMatch: 'full', redirectTo: 'trips' },
       {
         path: 'fleet',
         children: [
