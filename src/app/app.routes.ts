@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { RootLayout } from './shared/presentation/layout/root-layout/root-layout';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
-import { DashboardComponent } from './features/dashboard/components/dashboard.component';
-import { TripDetailComponent } from './features/dashboard/components/trip-detail/trip-detail.component';
+import { DashboardComponent } from './dashboard/presentation/pages/dashboard.component';
+import { TripDetailComponent } from './dashboard/presentation/components/trip-detail/trip-detail.component';
 
 export const routes: Routes = [
   {
@@ -19,7 +19,7 @@ export const routes: Routes = [
         component: DashboardComponent,
       },
       {
-        path: 'trips/:id',
+        path: 'dashboard/trips/:id',
         component: TripDetailComponent,
       },
       {

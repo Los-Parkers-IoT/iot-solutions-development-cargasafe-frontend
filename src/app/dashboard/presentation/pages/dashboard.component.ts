@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { forkJoin } from 'rxjs';
-import { Trip, Alert, IncidentsByMonthData, AlertType } from '../models/trip.model';
-import { DashboardService } from '../services/dashboard.service';
-import { IncidentsChartComponent } from './incidents-chart/incidents-chart.component';
+import { Trip, IncidentsByMonthData } from '../../domain/entities/trip.model';
+import { Alert, AlertType } from '../../domain/entities/alert.model';
+import { DashboardService } from '../../application/services/dashboard.service';
+import { IncidentsChartComponent } from '../components/incidents-chart/incidents-chart.component';
 
 // Interfaz extendida para el tooltip con información de incidencias
 interface TripWithIncidents extends Trip {
@@ -18,83 +19,7 @@ interface TripWithIncidents extends Trip {
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule, NgxChartsModule, IncidentsChartComponent],
-  template: `
-    <div class="dashboard">
-      <div class="dashboard__header">
-        <h1 class="dashboard__title">Dashboard - Monitoreo de Cargas</h1>
-        <p class="dashboard__subtitle">
-          Visualización y análisis de viajes, incidencias y alertas del sistema CargaSafe
-        </p>
-      </div>
-
-      <div class="dashboard__content">
-        <!-- Loading Indicator -->
-        <div *ngIf="loading" style="text-align: center; padding: 20px; background: #f0f0f0; margin: 10px; border-radius: 8px;">
-          <h3>🔄 Cargando datos...</h3>
-          <p>Por favor espere mientras se cargan los datos del dashboard</p>
-        </div>
-
-        <!-- Resumen de Estadísticas -->
-        <div class="dashboard__stats" *ngIf="!loading">
-          <div class="stat-card">
-            <h3>Total de Viajes</h3>
-            <span class="stat-number">{{ trips.length }}</span>
-          </div>
-          <div class="stat-card">
-            <h3>Viajes Activos</h3>
-            <span class="stat-number">{{ activeTrips }}</span>
-          </div>
-          <div class="stat-card">
-            <h3>Alertas Totales</h3>
-            <span class="stat-number">{{ totalAlerts }}</span>
-          </div>
-          <div class="stat-card">
-            <h3>Alertas Pendientes</h3>
-            <span class="stat-number">{{ pendingAlerts }}</span>
-          </div>
-        </div>
-              
-        <!-- Vista previa de datos -->
-        <div class="dashboard__section">
-          <div class="data-preview">
-            <div *ngIf="loading" class="loading">Cargando datos...</div>
-            <div *ngIf="!loading" class="preview-content">
-                <h3>Gráfico de Incidencias por Mes</h3>
-                <app-incidents-chart
-                [data]="incidentsData"
-                [loading]="loading">
-              </app-incidents-chart>
-              <h3>Últimos Viajes</h3>
-              <div class="trip-cards">
-                <div *ngFor="let trip of trips.slice(0, 3)" 
-                     class="trip-card"
-                     (click)="navigateToTripDetail(trip.id)">
-                  <div class="trip-header">
-                    <strong>{{ trip.vehiclePlate }}</strong>
-                    <span class="status" [ngClass]="getStatusClass(trip.status)">
-                      {{ getStatusText(trip.status) }}
-                    </span>
-                  </div>
-                  <div class="trip-details">
-                    <p><strong>Conductor:</strong> {{ trip.driverName }}</p>
-                    <p><strong>Ruta:</strong> {{ trip.origin }} → {{ trip.destination }}</p>
-                    <p><strong>Carga:</strong> {{ trip.cargoType }}</p>
-                    <p><strong>Distancia:</strong> {{ trip.distance }} km</p>
-                  </div>
-                  <button class="view-details-btn">Ver Detalles</button>
-                </div>
-              </div>
-              
-              
-              
-              <!-- Componente personalizado de gráfico de incidencias -->
-              
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
@@ -331,7 +256,7 @@ export class DashboardComponent implements OnInit {
 
 
   navigateToTripDetail(tripId: string): void {
-    this.router.navigate(['/trips', tripId]);
+    this.router.navigate(['/dashboard/trips', tripId]);
     console.log('🚗 Navigating to trip detail:', tripId);
   }
 
@@ -388,13 +313,13 @@ export class DashboardComponent implements OnInit {
   getStatusText(status: string): string {
     switch (status) {
       case 'IN_PROGRESS':
-        return 'En Progreso';
+        return 'In Progress';
       case 'COMPLETED':
-        return 'Completado';
+        return 'Completed';
       case 'CANCELLED':
-        return 'Cancelado';
+        return 'Cancelled';
       case 'DELAYED':
-        return 'Retrasado';
+        return 'Delayed';
       default:
         return status;
     }
@@ -424,9 +349,9 @@ export class DashboardComponent implements OnInit {
   getAlertTypeText(type: AlertType): string {
     switch (type) {
       case AlertType.TEMPERATURE:
-        return 'Temperatura';
+        return 'Temperature';
       case AlertType.MOVEMENT:
-        return 'Movimiento';
+        return 'Movement';
       default:
         return type;
     }
