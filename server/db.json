@@ -86,6 +86,69 @@
     }
   ],
   "trips": [],
+
+  "plans": [
+    { "id": "basic", "name": "BASIC", "price": 29, "currency": "PEN", "vehiclesLimit": 2 },
+    { "id": "standard", "name": "STANDARD", "price": 59, "currency": "PEN", "vehiclesLimit": 5 },
+    { "id": "premium", "name": "PREMIUM", "price": 99, "currency": "PEN", "vehiclesLimit": "UNLIMITED" }
+  ],
+  "subscriptions": [
+    {
+      "id": 1,
+      "accountId": "1",
+      "planId": "standard",
+      "status": "ACTIVE",
+      "amount": 59,
+      "currency": "PEN",
+      "renewalDate": "2025-11-15",
+      "paymentMethodId": 1
+    }
+  ],
+  "paymentMethods": [
+    {
+      "id": 1,
+      "accountId": "1",
+      "brand": "Visa",
+      "last4": "1234",
+      "expMonth": 11,
+      "expYear": 2028,
+      "country": "United States",
+      "postalCode": "90210"
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1001,
+      "subscriptionId": 1,
+      "date": "2025-11-15",
+      "amount": 59,
+      "currency": "PEN",
+      "status": "Pending",
+      "reference": null,
+      "receiptUrl": "https://example.com/receipts/1001.pdf"
+    },
+    {
+      "id": 1000,
+      "subscriptionId": 1,
+      "date": "2025-10-15",
+      "amount": 59,
+      "currency": "PEN",
+      "status": "Accepted",
+      "reference": "#PAY_8765",
+      "receiptUrl": "https://example.com/receipts/1000.pdf"
+    },
+    {
+      "id": 999,
+      "subscriptionId": 1,
+      "date": "2025-09-15",
+      "amount": 59,
+      "currency": "PEN",
+      "status": "Accepted",
+      "reference": "#PAY_6754",
+      "receiptUrl": "https://example.com/receipts/999.pdf"
+    }
+  ],
+
   "analytics-trips": [
     {
       "id": "1",
