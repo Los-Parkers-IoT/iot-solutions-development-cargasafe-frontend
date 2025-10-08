@@ -17,6 +17,10 @@ export class TripAssembler {
       updatedAt: new Date(resource.updatedAt),
       departureAt: resource.departureAt ? new Date(resource.departureAt) : null,
       merchantId: resource.merchantId,
+      originPointId: 1,
+      polyline_encrypted: '',
+      totalDistanceKm: 0,
+      totalDurationMin: 0,
     });
   }
 }

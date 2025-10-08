@@ -1,0 +1,62 @@
+:host { display:block; padding:16px; }
+
+/* header */
+.vd-header{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px; margin:8px 0 16px;
+}
+.vd-title{ margin:0; font-size:32px; font-weight:800; }
+.vd-actions{ display:flex; gap:12px; }
+
+/* layout 2 columnas */
+.vd-grid{
+  display:grid; grid-template-columns: 1fr 320px; gap:16px;
+}
+.vd-main{ display:flex; flex-direction:column; gap:16px; }
+.vd-aside{ display:flex; flex-direction:column; gap:16px; }
+
+/* cards */
+.vd-card{
+  border:2px solid #e6e6e6; border-radius:12px; padding:14px 16px; background:#fff;
+}
+.vd-card-title{
+  font-weight:700; margin-bottom:8px;
+}
+
+/* technical card body */
+.vd-tech{ display:grid; grid-template-columns: 1fr 1fr; gap:10px 24px; }
+.kv{ display:grid; grid-template-columns: 120px 1fr; gap:8px; align-items:center; }
+.k{ color:#5a5a5a; font-weight:600; }
+.v{ color:#111; }
+.hint{ margin-left:8px; font-size:12px; color:#7a7a7a; }
+
+/* chips */
+mat-chip-set{ display:flex; flex-wrap:wrap; gap:8px; }
+.mat-mdc-chip{
+  --mdc-chip-container-height: 32px;
+  --mdc-chip-label-text-size: 13px;
+  padding-inline:8px;
+}
+
+/* history */
+.vd-history{ display:flex; flex-direction:column; gap:8px; }
+.hist-row{ display:flex; align-items:center; gap:12px; }
+.hist-date{ width:180px; color:#666; font-variant-numeric: tabular-nums; }
+.hist-text{ flex:1; }
+.hist-badge{
+  font-size:12px; padding:2px 8px; border-radius:8px; border:1px solid #d0d0d0; color:#444;
+}
+
+/* empty states */
+.empty{ color:#777; font-style:italic; }
+
+/* footer buttons */
+.vd-footer{
+  display:flex; justify-content:flex-end; gap:8px; margin-top:12px;
+}
+
+/* responsive */
+@media (max-width: 960px){
+  .vd-grid{ grid-template-columns: 1fr; }
+  .vd-tech{ grid-template-columns: 1fr; }
+}
