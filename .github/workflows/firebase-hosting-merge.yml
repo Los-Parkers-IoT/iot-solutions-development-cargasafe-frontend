@@ -4,7 +4,8 @@
 name: Deploy to Firebase Hosting on merge
 on:
   push:
-    branches: [release/v0.0.1]
+    branches:
+      - main # Set a branch to deploy from
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
