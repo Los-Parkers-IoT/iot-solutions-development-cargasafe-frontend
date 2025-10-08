@@ -5,4 +5,5 @@ export interface Alert{
   status: 'Active' | 'Closed';
   createdAt: string;
   closedAt?: string;
+  description: string;
 }

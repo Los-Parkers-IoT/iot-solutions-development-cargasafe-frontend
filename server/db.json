@@ -15,7 +15,8 @@
       "deliveryOrderId": "T342",
       "status": "Closed",
       "createdAt": "01:44:36 p. m.",
-      "closedAt": "01:44:55 p. m."
+      "closedAt": "01:44:55 p. m.",
+      "description": "Temperature is greater than 8°C"
     },
     {
       "id": 2,
@@ -23,7 +24,8 @@
       "deliveryOrderId": "T343",
       "status": "Active",
       "createdAt": "",
-      "closedAt": ""
+      "closedAt": "",
+      "description": "Vibration is excessive"
     },
     {
       "id": 3,
@@ -31,7 +33,8 @@
       "deliveryOrderId": "T344",
       "status": "Active",
       "createdAt": "",
-      "closedAt": ""
+      "closedAt": "",
+      "description": "The energy is low"
     },
     {
       "id": 4,
@@ -39,7 +42,8 @@
       "deliveryOrderId": "T345",
       "status": "Active",
       "createdAt": "",
-      "closedAt": ""
+      "closedAt": "",
+      "description": "Trip loss"
     },
     {
       "id": 5,
@@ -47,7 +51,8 @@
       "deliveryOrderId": "T346",
       "status": "Active",
       "createdAt": "",
-      "closedAt": ""
+      "closedAt": "",
+      "description": "The gate is loss"
     }
   ],
   "subscription_plans": [],
