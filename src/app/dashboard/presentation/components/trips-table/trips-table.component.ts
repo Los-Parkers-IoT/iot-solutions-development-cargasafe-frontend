@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Trip, TripStatus } from '../../../domain/entities/trip.model';
+import { Trip, TripStatus } from '../../../domain/entities';
 
 @Component({
   selector: 'app-trips-table',

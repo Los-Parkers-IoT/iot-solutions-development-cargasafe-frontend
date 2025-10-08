@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Trip, IncidentsByMonthData } from '../../domain/entities/trip.model';
-import { Alert } from '../../domain/entities/alert.model';
+import { Trip, IncidentsByMonthData, Alert } from '../../domain/entities';
 
 @Injectable({
   providedIn: 'root'

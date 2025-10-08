@@ -1,8 +1,7 @@
 import { Component, Input, ElementRef, ViewChild, AfterViewInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IncidentsByMonthData } from '../../../domain/entities/trip.model';
-import { Alert, AlertType } from '../../../domain/entities/alert.model';
+import { IncidentsByMonthData, Alert, AlertType } from '../../../domain/entities';
 
 @Component({
   selector: 'app-incidents-chart',

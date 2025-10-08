@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Trip } from '../../../domain/entities/trip.model';
+import { Trip } from '../../../domain/entities';
 import { DashboardService } from '../../../application/services/dashboard.service';
 
 interface SensorData {

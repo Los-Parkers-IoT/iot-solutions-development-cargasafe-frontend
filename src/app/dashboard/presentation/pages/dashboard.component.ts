@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { forkJoin } from 'rxjs';
-import { Trip, IncidentsByMonthData } from '../../domain/entities/trip.model';
-import { Alert, AlertType } from '../../domain/entities/alert.model';
+import { Trip, IncidentsByMonthData, Alert, AlertType } from '../../domain/entities';
 import { DashboardService } from '../../application/services/dashboard.service';
 import { IncidentsChartComponent } from '../components/incidents-chart/incidents-chart.component';
 
