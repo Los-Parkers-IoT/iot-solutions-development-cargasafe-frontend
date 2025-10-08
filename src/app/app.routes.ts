@@ -8,6 +8,7 @@ import { VehicleManagementComponent } from './fleet/presentation/pages/vehicle-m
 import { DeviceManagementComponent } from './fleet/presentation/pages/device-management/device-management';
 import { VehicleDetailPageComponent } from './fleet/presentation/pages/vehicle-detail-page/vehicle-detail-page';
 import { DeviceDetailPageComponent } from './fleet/presentation/pages/device-detail-page/device-detail-page';
+import { SubscriptionsPage } from './subscription/presentation/pages/subscriptions/subscriptions.page';
 
 const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
 const alertRoutes = () => import('./alerts/presentation/alert.routes').then((m) => m.routes);
@@ -41,6 +42,8 @@ export const routes: Routes = [
           { path: '', pathMatch: 'full', redirectTo: 'vehicles' },
         ],
       },
+
+      { path: 'subscriptions', component: SubscriptionsPage },
 
       { path: '**', component: PageNotFound },
     ],
