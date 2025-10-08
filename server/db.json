@@ -10,19 +10,7 @@
   "merchants": [],
   "alerts": [],
   "subscription_plans": [],
-  "trips": [],
   "vehicles": [
-    {
-      "id": 1,
-      "plate": "TR-09",
-      "type": "Truck",
-      "capabilities": [
-        "Reefer"
-      ],
-      "status": "Available",
-      "odometerKm": 248120,
-      "deviceImei": "IMEI-8675309"
-    },
     {
       "id": 2,
       "plate": "FT-22",
@@ -52,5 +40,6 @@
       "online": false,
       "vehiclePlate": "TR-09"
     }
-  ]
+  ],
+  "trips": []
 }

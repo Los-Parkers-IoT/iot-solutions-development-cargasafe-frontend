@@ -1,18 +1,28 @@
 import { Routes } from '@angular/router';
 import { RootLayout } from './shared/presentation/layout/root-layout/root-layout';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
-import {VehicleManagementComponent} from './fleet/presentation/pages/vehicle-management/vehicle-management';
-import {DeviceManagementComponent} from './fleet/presentation/pages/device-management/device-management';
-import {VehicleDetailPageComponent} from './fleet/presentation/pages/vehicle-detail-page/vehicle-detail-page';
-import {DeviceDetailPageComponent} from './fleet/presentation/pages/device-detail-page/device-detail-page';
+import { AlertsPageComponent } from './alerts/domain/components/alerts-page/alerts-page.component';
+
+const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
+import { VehicleManagementComponent } from './fleet/presentation/pages/vehicle-management/vehicle-management';
+import { DeviceManagementComponent } from './fleet/presentation/pages/device-management/device-management';
+import { VehicleDetailPageComponent } from './fleet/presentation/pages/vehicle-detail-page/vehicle-detail-page';
+import { DeviceDetailPageComponent } from './fleet/presentation/pages/device-detail-page/device-detail-page';
 
 export const routes: Routes = [
   {
     path: '',
     component: RootLayout,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'fleet/vehicles' },
-
+      {
+        path: 'trips',
+        loadChildren: tripRoutes,
+      },
+      {
+        path: 'alerts',
+        component: AlertsPageComponent,
+      },
+      { path: '', pathMatch: 'full', redirectTo: 'trips' },
       {
         path: 'fleet',
         children: [

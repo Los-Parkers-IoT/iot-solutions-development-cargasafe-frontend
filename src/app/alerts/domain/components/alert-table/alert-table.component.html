@@ -1,0 +1,77 @@
+<div class="mat-elevation-z2">
+  <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let alert">{{ alert.id }}</td>
+    </ng-container>
+
+    <!-- Type Column -->
+    <ng-container matColumnDef="type">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+      <td mat-cell *matCellDef="let alert">{{ alert.type }}</td>
+    </ng-container>
+
+    <!-- Delivery Order ID -->
+    <ng-container matColumnDef="deliveryOrderId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Delivery Order ID</th>
+      <td mat-cell *matCellDef="let alert">{{ alert.deliveryOrderId }}</td>
+    </ng-container>
+
+    <!-- Status -->
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let alert">
+        <span [ngClass]="alert.status === 'Active' ? 'active' : 'closed'">
+          {{ alert.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <!-- Created -->
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+      <td mat-cell *matCellDef="let alert">{{ alert.createdAt }}</td>
+    </ng-container>
+
+    <!-- Closed -->
+    <ng-container matColumnDef="closedAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Closed</th>
+      <td mat-cell *matCellDef="let alert">{{ alert.closedAt || '---' }}</td>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let alert">
+        <button
+          mat-raised-button
+          color="primary"
+          *ngIf="alert.status === 'Active'; else resolved"
+          (click)="markAsResolved(alert.id)"
+        >
+          Mark as resolved
+        </button>
+        <ng-template #resolved>Resolved ✔</ng-template>
+      </td>
+    </ng-container>
+
+    <!-- Details -->
+    <ng-container matColumnDef="details">
+      <th mat-header-cell *matHeaderCellDef>Details</th>
+      <td mat-cell *matCellDef="let alert">
+        <button mat-icon-button>
+          🔍
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons>
+  </mat-paginator>
+</div>

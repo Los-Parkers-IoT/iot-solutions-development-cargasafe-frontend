@@ -3,22 +3,18 @@
 <mat-card *ngIf="(vehicle$ | async) === null" class="error">
   Vehicle not found.
   <div class="mt-2">
-    <button mat-stroked-button (click)="back()">
-      <mat-icon>arrow_back</mat-icon> Back
-    </button>
+    <button mat-stroked-button (click)="back()"><mat-icon>arrow_back</mat-icon> Back</button>
   </div>
 </mat-card>
 
 <!-- OK -->
-<ng-container *ngIf="(vehicle$ | async) as v">
+<ng-container *ngIf="vehicle$ | async as v">
   <!-- Page header -->
   <div class="vd-header">
     <h1 class="vd-title">Vehicles {{ v.plate }}</h1>
 
     <div class="vd-actions">
-      <button mat-raised-button color="primary" (click)="setAvailable(v)">
-        Set Available
-      </button>
+      <button mat-raised-button color="primary" (click)="setAvailable(v)">Set Available</button>
       <button mat-raised-button color="warn" (click)="setOutOfService(v)">
         Set out of Service
       </button>
@@ -56,7 +52,11 @@
             <div class="v">
               <ng-container *ngIf="(v.capabilities?.length ?? 0) > 0; else noCaps">
                 <mat-chip-set>
-                  <mat-chip *ngFor="let c of v.capabilities; trackBy: trackByValue" appearance="outlined" selected>
+                  <mat-chip
+                    *ngFor="let c of v.capabilities; trackBy: trackByValue"
+                    appearance="outlined"
+                    selected
+                  >
                     {{ c }}
                   </mat-chip>
                 </mat-chip-set>
@@ -67,7 +67,7 @@
 
           <div class="kv">
             <div class="k">Odometer:</div>
-            <div class="v">{{ v.odometerKm ?? 0 | number }} km</div>
+            <div class="v">{{ v.odometerKm || 0 | number }} km</div>
           </div>
         </div>
       </mat-card>
@@ -90,8 +90,6 @@
 
   <!-- Footer actions -->
   <div class="vd-footer">
-    <button mat-stroked-button (click)="back()">
-      <mat-icon>arrow_back</mat-icon> Back
-    </button>
+    <button mat-stroked-button (click)="back()"><mat-icon>arrow_back</mat-icon> Back</button>
   </div>
 </ng-container>
