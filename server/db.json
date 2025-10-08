@@ -1,5 +1,11 @@
 {
-  "users": [{ "id": 1, "email": "admin@mail.com", "password": "admin" }],
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@mail.com",
+      "password": "admin"
+    }
+  ],
   "profiles": [],
   "merchants": [],
   "alerts": [],
@@ -44,7 +50,7 @@
       "type": "GPS",
       "firmware": "v1.1.0",
       "online": false,
-      "vehiclePlate": "TR-9"
+      "vehiclePlate": "TR-09"
     }
   ]
 }
