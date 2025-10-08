@@ -1,3 +1,24 @@
+<div class="filters">
+  <mat-form-field appearance="outline">
+    <mat-label>Search alerts</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder=""
+      (keyup)="applySearch($event)"
+    />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select (selectionChange)="filterByStatus($event.value)">
+      <mat-option value="">All</mat-option>
+      <mat-option value="Active">Active</mat-option>
+      <mat-option value="Closed">Closed</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 <div class="mat-elevation-z2">
   <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
 
@@ -47,7 +68,7 @@
       <td mat-cell *matCellDef="let alert">
         <button
           mat-raised-button
-          color="primary"
+          class="mark-resolved-btn"
           *ngIf="alert.status === 'Active'; else resolved"
           (click)="markAsResolved(alert.id)"
         >
@@ -66,7 +87,7 @@
     <ng-container matColumnDef="details">
       <th mat-header-cell *matHeaderCellDef>Details</th>
       <td mat-cell *matCellDef="let alert">
-        <button mat-icon-button color="primary">
+        <button mat-icon-button color="primary" (click)="openDetails(alert)">
           <mat-icon>search</mat-icon>
         </button>
       </td>
@@ -79,4 +100,30 @@
 
   <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons>
   </mat-paginator>
+</div>
+
+<div class="overlay" *ngIf="selectedAlert">
+  <div class="popup">
+    <div class="popup-header">
+      <h3>Alert Details</h3>
+      <button class="close-btn" (click)="closeDetails()">✕</button>
+    </div>
+
+    <div class="popup-body">
+      <p><strong>Type:</strong> {{ selectedAlert.type }}</p>
+      <p><strong>Status:</strong>
+        <span [ngClass]="selectedAlert.status === 'Active' ? 'active' : 'closed'">
+          {{ selectedAlert.status }}
+        </span>
+      </p>
+      <p><strong>Delivery Order ID:</strong> {{ selectedAlert.deliveryOrderId }}</p>
+      <p><strong>Created:</strong> {{ selectedAlert.createdAt }}</p>
+      <p><strong>Closed:</strong> {{ selectedAlert.closedAt || '---' }}</p>
+      <p><strong>Description:</strong> Temperature is greater than 8°C</p>
+      <div class="popup-footer">
+        <button class="details-btn">
+          Ver más detalles
+        </button>
+    </div>
+  </div>
 </div>

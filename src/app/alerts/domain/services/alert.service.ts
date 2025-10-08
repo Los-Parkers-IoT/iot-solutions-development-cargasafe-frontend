@@ -14,7 +14,20 @@ export class AlertsService {
 
   private loadAlerts(): void {
     this.http.get<Alert[]>(this.baseUrl).subscribe({
-      next: (alerts) => this.alertsSubject.next(alerts),
+      next: (alerts) => {
+        const updatedAlerts = alerts.map(alert => ({
+          ...alert,
+          createdAt:
+            alert.createdAt ||
+            new Date().toLocaleTimeString('es-PE', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            }),
+        }));
+
+        this.alertsSubject.next(updatedAlerts);
+      },
       error: (err) => console.error('Error loading alerts:', err),
     });
   }
@@ -22,7 +35,6 @@ export class AlertsService {
   getAlerts(): Observable<Alert[]> {
     return this.alertsSubject.asObservable();
   }
-
   markAsResolved(id: string) {
     const alert = this.alertsSubject.value.find((a) => a.id === id);
     if (!alert) return;
@@ -30,13 +42,15 @@ export class AlertsService {
     const updatedAlert = {
       ...alert,
       status: 'Closed' as const,
-      closedAt: new Date().toLocaleTimeString(),
+      closedAt: new Date().toLocaleTimeString('es-PE', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      }),
     };
 
     this.http.patch(`${this.baseUrl}/${id}`, updatedAlert).subscribe({
-      next: () => {
-        this.loadAlerts();
-      },
+      next: () => this.loadAlerts(),
       error: (err) => console.error('Error updating alert:', err),
     });
   }
