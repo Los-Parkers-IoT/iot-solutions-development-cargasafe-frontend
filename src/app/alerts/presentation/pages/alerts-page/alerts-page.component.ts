@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable, map } from 'rxjs';
-import { Alert } from '../../models/alert.model';
-import { AlertsService } from '../../services/alert.service';
-import { AlertTableComponent } from '../alert-table/alert-table.component';
+import { Alert } from '../../../domain/models/alert.model';
+import { AlertsService } from '../../../infrastructure/alerts-api';
+import { AlertTableComponent } from '../../components/alert-table/alert-table.component';
 import {MatIconModule} from '@angular/material/icon';
 
 @Component({

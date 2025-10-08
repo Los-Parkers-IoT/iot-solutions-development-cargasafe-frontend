@@ -4,8 +4,8 @@ import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
-import { Alert } from '../../models/alert.model';
-import { AlertsService } from '../../services/alert.service';
+import { Alert } from '../../../domain/models/alert.model';
+import { AlertsService } from '../../../infrastructure/alerts-api';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
@@ -102,7 +102,7 @@ export class AlertTableComponent
   }
 
   markAsResolved(id: string) {
-    this.alertsService.markAsResolved(id);
+    this.alertsService.markAsResolved(Number(id));
   }
   selectedAlert: Alert | null = null;
 
