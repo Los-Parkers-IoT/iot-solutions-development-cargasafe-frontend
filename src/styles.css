@@ -4,6 +4,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css2?family=Material+Icons+Outlined');
 
+:root {
+  --color-primary: #f2994a;
+  --color-secondary: #092c4c;
+  --color-severity-info: #2f80ed;
+  --color-severity-warning: #e2b93b;
+  --color-severity-error: #eb5757;
+  --color-severity-success: #27ae60;
+
+  --color-grey-1: #333;
+  --color-grey-2: #4f4f4f;
+  --color-grey-3: #828282;
+  --color-grey-4: #bdbdbd;
+  --color-grey-5: #e0e0e0;
+}
+
 html,
 body {
   height: 100%;
@@ -11,6 +26,13 @@ body {
 body {
   margin: 0;
   font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+  /* color for base text */
+  color: var(--color-grey-2);
+}
+
+/* MATERIAL BUTTON */
+.mdc-button {
+  border-radius: 8px !important;
 }
 
 /* Material Icons Global Styles */
