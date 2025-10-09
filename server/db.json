@@ -85,12 +85,149 @@
       "vehiclePlate": "TR-09"
     }
   ],
-  "trips": [],
+  "originPoints": [
+    {
+      "id": 1,
+      "name": "Main Warehouse Lima",
+      "address": "Av. Industrial 1200, Callao, Lima, Peru",
+      "latitude": -12.0223,
+      "longitude": -77.1111
+    },
+    {
+      "id": 2,
+      "name": "Arequipa Distribution Center",
+      "address": "Av. Metropolitana 450, Cerro Colorado, Arequipa, Peru",
+      "latitude": -16.392,
+      "longitude": -71.547
+    }
+  ],
+
+  "trips": [
+    {
+      "id": 1,
+      "statusId": 1,
+      "driverId": 101,
+      "coDriverId": 102,
+      "vehicleId": 12,
+      "createdAt": "2025-10-06T15:00:00.000Z",
+      "updatedAt": "2025-10-06T15:30:00.000Z",
+      "departureAt": "2025-10-06T16:00:00.000Z",
+      "merchantId": 501,
+      "originPointId": 1,
+      "polyline_encrypted": "a~l~Fjk~uOwHJy@P",
+      "totalDistanceKm": 120.5,
+      "totalDurationMin": 95
+    },
+    {
+      "id": 2,
+      "statusId": 2,
+      "driverId": 103,
+      "coDriverId": null,
+      "vehicleId": 14,
+      "createdAt": "2025-10-07T09:00:00.000Z",
+      "updatedAt": "2025-10-07T09:15:00.000Z",
+      "departureAt": null,
+      "merchantId": 502,
+      "originPointId": 2,
+      "polyline_encrypted": "udnnFjv~uPzLwK",
+      "totalDistanceKm": 86.2,
+      "totalDurationMin": 72
+    }
+  ],
+
+  "tripParameters": [
+    {
+      "id": 1,
+      "tripId": 1,
+      "minTemperature": 2,
+      "maxTemperature": 8,
+      "minHumidity": 30,
+      "maxHumidity": 70,
+      "maxVibration": 5,
+      "trip": null
+    },
+    {
+      "id": 2,
+      "tripId": 2,
+      "minTemperature": 0,
+      "maxTemperature": 10,
+      "minHumidity": 20,
+      "maxHumidity": 65,
+      "maxVibration": 6,
+      "trip": null
+    }
+  ],
+
+  "deliveryOrders": [
+    {
+      "id": 1,
+      "clientEmail": "juan.perez@mail.com",
+      "address": "Calle Los Pinos 340, Surco, Lima",
+      "latitude": -12.1453,
+      "longitude": -77.0034,
+      "sequenceOrder": 1,
+      "arrivalAt": "2025-10-06T17:45:00.000Z",
+      "notes": "Deliver to security gate",
+      "deliveryOrderStatusId": 1,
+      "realArrivalAt": "2025-10-06T17:47:00.000Z",
+      "maxHumidity": 70,
+      "minHumidity": 30,
+      "maxTemperature": 8,
+      "minTemperature": 2,
+      "maxVibration": 5,
+      "tripId": 1,
+      "trip": null
+    },
+    {
+      "id": 2,
+      "clientEmail": "empresa.alpha@mail.com",
+      "address": "Jr. Los Cedros 120, San Miguel, Lima",
+      "latitude": -12.082,
+      "longitude": -77.082,
+      "sequenceOrder": 2,
+      "arrivalAt": "2025-10-06T18:15:00.000Z",
+      "notes": "Handle with care",
+      "deliveryOrderStatusId": 2,
+      "realArrivalAt": null,
+      "maxHumidity": 65,
+      "minHumidity": 25,
+      "maxTemperature": 9,
+      "minTemperature": 3,
+      "maxVibration": 4,
+      "tripId": 1,
+      "trip": null
+    },
+    {
+      "id": 3,
+      "clientEmail": "maria.lopez@mail.com",
+      "address": "Av. Lambramani 800, Arequipa",
+      "latitude": -16.401,
+      "longitude": -71.535,
+      "sequenceOrder": 1,
+      "arrivalAt": "2025-10-07T10:00:00.000Z",
+      "notes": "Leave at reception",
+      "deliveryOrderStatusId": 1,
+      "realArrivalAt": null,
+      "maxHumidity": 60,
+      "minHumidity": 20,
+      "maxTemperature": 10,
+      "minTemperature": 1,
+      "maxVibration": 6,
+      "tripId": 2,
+      "trip": null
+    }
+  ],
 
   "plans": [
     { "id": "basic", "name": "BASIC", "price": 29, "currency": "PEN", "vehiclesLimit": 2 },
     { "id": "standard", "name": "STANDARD", "price": 59, "currency": "PEN", "vehiclesLimit": 5 },
-    { "id": "premium", "name": "PREMIUM", "price": 99, "currency": "PEN", "vehiclesLimit": "UNLIMITED" }
+    {
+      "id": "premium",
+      "name": "PREMIUM",
+      "price": 99,
+      "currency": "PEN",
+      "vehiclesLimit": "UNLIMITED"
+    }
   ],
   "subscriptions": [
     {
