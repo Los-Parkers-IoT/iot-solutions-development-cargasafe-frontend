@@ -118,7 +118,7 @@
       "totalDurationMin": 72
     }
   ],
-  "tripParameters": [
+  "trip_parameters": [
     {
       "id": 1,
       "tripId": 1,
@@ -140,7 +140,7 @@
       "trip": null
     }
   ],
-  "originPoints": [
+  "origin_points": [
     {
       "id": 1,
       "name": "Main Warehouse Lima",
@@ -156,7 +156,7 @@
       "longitude": -71.547
     }
   ],
-  "deliveryOrders": [
+  "delivery_orders": [
     {
       "id": 1,
       "clientEmail": "juan.perez@mail.com",
