@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-trip-list-page',
@@ -22,6 +23,7 @@ import { RouterModule } from '@angular/router';
     MatButtonModule,
     MatIconModule,
     RouterModule,
+    DatePipe,
   ],
   templateUrl: './trip-list-page.html',
   styleUrl: './trip-list-page.css',

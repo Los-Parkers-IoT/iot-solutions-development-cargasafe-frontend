@@ -81,7 +81,7 @@
     {
       "id": 1,
       "type": "High Temperature",
-      "deliveryOrderId": "T342",
+      "deliveryOrderId": "1",
       "status": "Closed",
       "createdAt": "2025-10-08T21:05:14.576Z",
       "closedAt": "2025-10-08T21:05:26.457Z",
@@ -90,7 +90,7 @@
     {
       "id": 2,
       "type": "Excessive vibration",
-      "deliveryOrderId": "T343",
+      "deliveryOrderId": "2",
       "status": "Closed",
       "createdAt": "2025-10-08T21:41:00.224Z",
       "closedAt": "2025-10-08T21:41:04.139Z",
@@ -99,7 +99,7 @@
     {
       "id": 3,
       "type": "Energy Loss",
-      "deliveryOrderId": "T344",
+      "deliveryOrderId": "2",
       "status": "Closed",
       "createdAt": "2025-10-08T21:41:04.464Z",
       "closedAt": "2025-10-08T21:41:04.583Z",
@@ -108,7 +108,7 @@
     {
       "id": 4,
       "type": "Trip Loss",
-      "deliveryOrderId": "T345",
+      "deliveryOrderId": "2",
       "status": "Active",
       "createdAt": "",
       "closedAt": "",
@@ -117,7 +117,7 @@
     {
       "id": 5,
       "type": "Gate Loss",
-      "deliveryOrderId": "T346",
+      "deliveryOrderId": "3",
       "status": "Active",
       "createdAt": "",
       "closedAt": "",

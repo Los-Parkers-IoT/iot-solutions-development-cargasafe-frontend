@@ -7,7 +7,7 @@ import { DeliveryOrderAssembler } from './delivery-order-assembler';
 import { DeliveryOrderResource } from './delivery-order-response';
 
 @Injectable({ providedIn: 'root' })
-export class DeliveryOrderApi {
+export class DeliveryOrdersApi {
   private baseUrl = environment.baseUrl;
   private deliveryOrdersEndpoint = `/delivery_orders`;
   private http = inject(HttpClient);

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { Alert } from '../domain/models/alert.model';
-import {environment} from '../../../environments/environment';
-import {AlertResource, AlertResponse} from './alert-response';
-import {AlertAssembler} from './alert-assembler';
+import { environment } from '../../../environments/environment';
+import { AlertResource, AlertResponse } from './alert-response';
+import { AlertAssembler } from './alert-assembler';
 
 @Injectable({ providedIn: 'root' })
 export class AlertsService {
@@ -18,7 +18,7 @@ export class AlertsService {
   private loadAlerts(): void {
     this.http.get<AlertResource[]>(this.alertsUrl).subscribe({
       next: (resources) => {
-        const entities = resources.map(r => AlertAssembler.toEntityFromResource(r));
+        const entities = resources.map((r) => AlertAssembler.toEntityFromResource(r));
         this.alertsSubject.next(entities);
       },
       error: (err) => console.error('Error loading alerts:', err),
@@ -26,11 +26,13 @@ export class AlertsService {
   }
 
   getAlerts(): Observable<Alert[]> {
-    return this.alertsSubject.asObservable();
+    return this.http
+      .get<AlertResource[]>(this.alertsUrl)
+      .pipe(map((resources) => resources.map((r) => AlertAssembler.toEntityFromResource(r))));
   }
 
   markAsResolved(id: number) {
-    const alert = this.alertsSubject.value.find(a => a.id === id);
+    const alert = this.alertsSubject.value.find((a) => a.id === id);
     if (!alert) return;
 
     alert.status = 'Closed';

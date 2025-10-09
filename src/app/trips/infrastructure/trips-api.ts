@@ -18,9 +18,9 @@ export class TripsApi {
       .pipe(map((response) => response.map(TripAssembler.toEntityFromResource)));
   }
 
-  getTripById(id: number): Observable<Trip | null> {
+  getTripById(id: number): Observable<Trip> {
     return this.http
       .get<TripResource>(`${this.baseUrl}${this.tripsEndpoint}/${id}`)
-      .pipe(map(TripAssembler.toEntityFromResource));
+      .pipe(map((resource) => TripAssembler.toEntityFromResource(resource)));
   }
 }

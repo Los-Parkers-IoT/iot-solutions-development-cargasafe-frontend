@@ -42,8 +42,7 @@
 /* 🟢 Las tres cards ahora en fila */
 .trip-info {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 1rem;
 }
 

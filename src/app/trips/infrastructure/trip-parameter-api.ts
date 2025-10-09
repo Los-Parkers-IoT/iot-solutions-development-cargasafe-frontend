@@ -7,7 +7,7 @@ import { TripParameterAssembler } from './trip-parameter-assembler';
 import { TripParameterResource } from './trip-parameter-response';
 
 @Injectable({ providedIn: 'root' })
-export class TripParameterApi {
+export class TripParametersApi {
   private baseUrl = environment.baseUrl;
   private tripParametersEndpoint = `/trip_parameters`;
   private http = inject(HttpClient);

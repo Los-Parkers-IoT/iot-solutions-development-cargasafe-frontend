@@ -17,4 +17,9 @@ export class OriginPointApi {
       .get<OriginPointResource[]>(`${this.baseUrl}${this.originPointsEndpoint}`)
       .pipe(map((resources) => OriginPointAssembler.toEntitiesFromResources(resources)));
   }
+  getOriginPointByTripId(id: number): Observable<OriginPoint> {
+    return this.http
+      .get<OriginPointResource[]>(`${this.baseUrl}${this.originPointsEndpoint}?tripId=${id}`)
+      .pipe(map(([resource]) => OriginPointAssembler.toEntityFromResource(resource)));
+  }
 }
