@@ -3,11 +3,80 @@
     {
       "id": 1,
       "email": "admin@mail.com",
-      "password": "admin"
+      "password": "admin",
+      "role": "ADMIN"
+    },
+    {
+      "id": 2,
+      "email": "driver@mail.com",
+      "password": "driver",
+      "role": "DRIVER"
+    },
+    {
+      "id": 3,
+      "email": "customer@mail.com",
+      "password": "customer",
+      "role": "CUSTOMER"
+    },
+    {
+      "id": 4,
+      "email": "operator@mail.com",
+      "password": "operator",
+      "role": "OPERATOR"
     }
   ],
-  "profiles": [],
-  "merchants": [],
+  "profiles": [
+    {
+      "id": 1,
+      "firstName": "María",
+      "lastName": "Lopez",
+      "avatarUrl": "https://i.pravatar.cc/150?img=1",
+      "phone": "+51 987654321",
+      "createdAt": "2025-10-09T08:00:00.000Z",
+      "updatedAt": "2025-10-09T08:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "firstName": "Carlos",
+      "lastName": "Ramos",
+      "avatarUrl": "https://i.pravatar.cc/150?img=2",
+      "phone": "+51 912345678",
+      "createdAt": "2025-10-09T08:05:00.000Z",
+      "updatedAt": "2025-10-09T08:05:00.000Z"
+    },
+    {
+      "id": 3,
+      "firstName": "Lucía",
+      "lastName": "Fernandez",
+      "avatarUrl": "https://i.pravatar.cc/150?img=3",
+      "phone": "+51 923456789",
+      "createdAt": "2025-10-09T08:10:00.000Z",
+      "updatedAt": "2025-10-09T08:10:00.000Z"
+    },
+    {
+      "id": 4,
+      "firstName": "Jorge",
+      "lastName": "Torres",
+      "avatarUrl": "https://i.pravatar.cc/150?img=4",
+      "phone": "+51 934567890",
+      "createdAt": "2025-10-09T08:15:00.000Z",
+      "updatedAt": "2025-10-09T08:15:00.000Z"
+    }
+  ],
+
+  "merchants": [
+    {
+      "id": 1,
+      "name": "Olva",
+      "contactEmail": "contact@olvaexpress.com",
+      "fiscalAddress": "Av. República de Panamá 3456, San Isidro, Lima, Peru",
+      "ruc": "20512345678",
+      "isActive": true,
+      "createdAt": "2025-10-09T08:30:00.000Z",
+      "usersId": [1, 2, 4]
+    }
+  ],
+
   "alerts": [
     {
       "id": 1,
