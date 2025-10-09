@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-trip-list-page',
@@ -24,6 +24,7 @@ import { DatePipe } from '@angular/common';
     MatIconModule,
     RouterModule,
     DatePipe,
+    DecimalPipe,
   ],
   templateUrl: './trip-list-page.html',
   styleUrl: './trip-list-page.css',
@@ -31,7 +32,16 @@ import { DatePipe } from '@angular/common';
 export class TripListPage implements OnInit {
   readonly store = inject(TripsStore);
 
-  displayedColumns: string[] = ['id', 'driver', 'codriver', 'createdAt', 'departure', 'actions'];
+  displayedColumns: string[] = [
+    'id',
+    'status',
+    'driver',
+    'codriver',
+    'deliveries',
+    'createdAt',
+    'departure',
+    'actions',
+  ];
 
   dataSource = new MatTableDataSource<Trip>([]);
 

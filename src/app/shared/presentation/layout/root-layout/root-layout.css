@@ -157,7 +157,7 @@
 }
 
 /* When closed on small screens, move sidebar off-canvas */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .app-layout {
     flex-direction: column;
   }

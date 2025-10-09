@@ -57,3 +57,10 @@ body {
 mat-icon {
   font-family: 'Material Icons' !important;
 }
+
+.mat-mdc-cell,
+.mat-mdc-header-cell {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* optional: adds "…" if text is too long */
+}
