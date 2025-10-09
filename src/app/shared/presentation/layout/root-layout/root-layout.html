@@ -1,6 +1,16 @@
 <section class="app-layout">
+  <!-- Mobile header (shown on small screens) -->
+  <header class="mobile-header">
+    <button class="menu-btn" aria-label="Open menu" (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="mobile-brand">
+      <img src="assets/svgs/logo-white.svg" alt="CargoSafe Logo" class="mobile-logo" />
+    </div>
+  </header>
+
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="sidebarOpen()">
     <div class="sidebar__brand">
       <img src="assets/svgs/logo-white.svg" alt="CargoSafe Logo" class="sidebar__logo" />
     </div>
@@ -26,7 +36,11 @@
           </a>
         </li>
         <li>
-          <a routerLink="/trips" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          <a
+            routerLink="/trips"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
             <mat-icon>route</mat-icon>
             <span>Trips</span>
           </a>
@@ -53,6 +67,8 @@
       </a>
     </div>
   </aside>
+  <!-- Overlay for mobile when sidebar is open -->
+  <div class="overlay" *ngIf="sidebarOpen()" (click)="toggleSidebar(false)"></div>
 
   <!-- Main Content -->
   <main class="main-content">
