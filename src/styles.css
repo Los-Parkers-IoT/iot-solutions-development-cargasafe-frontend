@@ -30,6 +30,10 @@ body {
   color: var(--color-grey-2);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 /* MATERIAL BUTTON */
 .mdc-button {
   border-radius: 8px !important;
