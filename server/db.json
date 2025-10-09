@@ -85,22 +85,6 @@
       "vehiclePlate": "TR-09"
     }
   ],
-  "originPoints": [
-    {
-      "id": 1,
-      "name": "Main Warehouse Lima",
-      "address": "Av. Industrial 1200, Callao, Lima, Peru",
-      "latitude": -12.0223,
-      "longitude": -77.1111
-    },
-    {
-      "id": 2,
-      "name": "Arequipa Distribution Center",
-      "address": "Av. Metropolitana 450, Cerro Colorado, Arequipa, Peru",
-      "latitude": -16.392,
-      "longitude": -71.547
-    }
-  ],
 
   "trips": [
     {
@@ -134,7 +118,6 @@
       "totalDurationMin": 72
     }
   ],
-
   "tripParameters": [
     {
       "id": 1,
@@ -157,7 +140,22 @@
       "trip": null
     }
   ],
-
+  "originPoints": [
+    {
+      "id": 1,
+      "name": "Main Warehouse Lima",
+      "address": "Av. Industrial 1200, Callao, Lima, Peru",
+      "latitude": -12.0223,
+      "longitude": -77.1111
+    },
+    {
+      "id": 2,
+      "name": "Arequipa Distribution Center",
+      "address": "Av. Metropolitana 450, Cerro Colorado, Arequipa, Peru",
+      "latitude": -16.392,
+      "longitude": -71.547
+    }
+  ],
   "deliveryOrders": [
     {
       "id": 1,
