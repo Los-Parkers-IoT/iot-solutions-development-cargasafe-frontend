@@ -54,7 +54,10 @@
     </section>
 
     <section class="trip-map">
-      <img src="assets/mock-map.png" alt="Trip map" />
+      <!-- <img src="assets/mock-map.png" alt="Trip map" /> -->
+      <google-map class="trip-map-cmp" [center]="center" [zoom]="zoom">
+        <map-marker *ngFor="let marker of markers" [position]="marker"></map-marker>
+      </google-map>
     </section>
   </div>
 

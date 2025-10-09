@@ -3,14 +3,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 @Component({
   selector: 'app-trip-detail-page',
-  imports: [MatTableModule, MatPaginatorModule, MatIconModule, MatSortModule],
+  imports: [MatTableModule, MatPaginatorModule, MatIconModule, MatSortModule, GoogleMapsModule],
   templateUrl: './trip-detail-page.html',
   styleUrl: './trip-detail-page.css',
 })
 export class TripDetailPage {
+  center: google.maps.LatLngLiteral = { lat: -12.072847, lng: -77.080581 };
+  zoom = 12;
+  markers = [];
+
   trip = {
     id: '00000001',
     status: 'In course',

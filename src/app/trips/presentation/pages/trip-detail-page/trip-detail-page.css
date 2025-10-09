@@ -89,3 +89,12 @@
 table {
   width: 100%;
 }
+
+.trip-map-cmp {
+  display: block;
+  width: 100%;
+}
+
+.trip-map-cmp ::ng-deep .map-container {
+  width: 100% !important;
+}

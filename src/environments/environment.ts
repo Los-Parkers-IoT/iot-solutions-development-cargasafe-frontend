@@ -3,4 +3,5 @@ export const environment = {
   baseUrl: 'https://iot-solutions-development-cargasafe-fake.onrender.com/api/v1',
   tripsEndpointPath: '/trips',
   alertsEndpointPath: '/alerts',
+  googleMapsApiKey: 'AIzaSyDEpu21mrXEAewZHnvMxOfR3Nj3VLZLECk',
 } as const;
