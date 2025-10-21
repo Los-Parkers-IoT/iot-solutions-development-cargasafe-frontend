@@ -3,10 +3,24 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatRadioModule } from '@angular/material/radio';
+
 @Component({
   selector: 'app-register-page',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatRadioModule
+  ],
   templateUrl: './register-page.html',
   styleUrls: ['./register-page.css']
 })
@@ -15,7 +29,7 @@ export class RegisterPageComponent {
 
   companyContactEmail: string = '';
   legalName: string = '';
-  taxId: string = '';
+  rucId: string = '';
   fiscalAddress: string = '';
 
   firstName: string = '';
@@ -39,7 +53,7 @@ export class RegisterPageComponent {
       return;
     }
 
-    if (this.segment === 'Shipping Company' && (!this.legalName || !this.taxId)) {
+    if (this.segment === 'Shipping Company' && (!this.legalName || !this.rucId)) {
       alert('Please complete all Company Data fields.');
       return;
     }
@@ -48,9 +62,8 @@ export class RegisterPageComponent {
       segment: this.segment,
       firstName: this.firstName,
       email: this.email,
-      companyData: this.segment === 'Shipping Company' ? { legalName: this.legalName, taxId: this.taxId } : 'N/A'
+      companyData: this.segment === 'Shipping Company' ? { legalName: this.legalName, taxId: this.rucId } : 'N/A'
     });
-
   }
 
   onBackToLogin(event: Event): void {

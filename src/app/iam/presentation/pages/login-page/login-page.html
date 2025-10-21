@@ -23,43 +23,46 @@
       <p class="welcome-subtitle">Enter your credentials to access your account</p>
 
       <form class="login-form" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="email">Email address</label>
+
+        <mat-form-field appearance="outline" class="full-width-input">
+          <mat-label>Email address</mat-label>
           <input
+            matInput
             type="email"
             id="email"
-            class="form-control"
             [(ngModel)]="email"
             name="email"
             required>
-        </div>
+        </mat-form-field>
 
-        <div class="form-group">
-          <label for="password">Password</label>
+        <mat-form-field appearance="outline" class="full-width-input">
+          <mat-label>Password</mat-label>
           <input
+            matInput
             type="password"
             id="password"
-            class="form-control"
             [(ngModel)]="password"
             name="password"
             required>
-        </div>
+        </mat-form-field>
 
         <div class="form-options">
           <div class="remember-me">
-            <input
-              type="checkbox"
+            <mat-checkbox
               id="remember"
               [(ngModel)]="rememberMe"
               name="remember">
-            <label for="remember">Remember me</label>
+              Remember me
+            </mat-checkbox>
           </div>
           <a href="#" class="forgot-password" (click)="onForgotPassword($event)">
             Forgot your password?
           </a>
         </div>
 
-        <button type="submit" class="btn-signin">Sign in</button>
+        <button mat-raised-button color="primary" type="submit" class="btn-signin-mat">
+          Sign in
+        </button>
 
         <p class="signup-text">
           Don't have an account?
