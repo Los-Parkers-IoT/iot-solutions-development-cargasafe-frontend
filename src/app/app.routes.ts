@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { RootLayout } from './shared/presentation/layout/root-layout/root-layout';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
-import { DashboardComponent } from './features/dashboard/components/dashboard.component';
-import { TripDetailComponent } from './features/dashboard/components/trip-detail/trip-detail.component';
+import { DashboardComponent } from './dashboard/presentation/pages/dashboard.component';
+import { TripDetailComponent } from './dashboard/presentation/components/trip-detail/trip-detail.component';
 import { LoginPageComponent } from './iam/presentation/pages/login-page/login-page';
 import { PasswordRecoveryPageComponent } from './iam/presentation/pages/password-recovery-page/password-recovery-page';
 import { RegisterPageComponent } from './iam/presentation/pages/register-page/register-page';
@@ -33,6 +33,10 @@ export const routes: Routes = [
         component: DashboardComponent,
       },
       {
+        path: 'dashboard/trips/:id',
+        component: TripDetailComponent,
+      },
+      {
         path: 'trips',
         loadChildren: tripRoutes,
       },
@@ -52,6 +56,14 @@ export const routes: Routes = [
           { path: '', pathMatch: 'full', redirectTo: 'vehicles' },
         ],
       },
+
+      {
+        path: 'subscriptions/change-card',
+        loadComponent: () =>
+          import('./subscription/presentation/pages/change-card/change-card.page')
+            .then(m => m.ChangeCardPage),
+      },
+
 
       { path: 'subscriptions', component: SubscriptionsPage },
 

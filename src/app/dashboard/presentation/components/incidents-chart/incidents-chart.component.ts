@@ -1,118 +1,13 @@
 import { Component, Input, ElementRef, ViewChild, AfterViewInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IncidentsByMonthData, Alert, AlertType } from '../../models/trip.model';
+import { IncidentsByMonthData, Alert, AlertType } from '../../../domain/entities';
 
 @Component({
   selector: 'app-incidents-chart',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-    <div class="incidents-chart">
-      <div class="incidents-chart__header">
-        <h2>Incidencias por Mes</h2>
-        <div class="chart-filters">
-          <div class="date-range-filters">
-            <label for="startDate">Fecha Inicio:</label>
-            <input 
-              id="startDate"
-              type="date" 
-              [(ngModel)]="startDate"
-              (change)="filterByDateRange()"
-              class="date-filter">
-            
-            <label for="endDate">Fecha Fin:</label>
-            <input 
-              id="endDate"
-              type="date" 
-              [(ngModel)]="endDate"
-              (change)="filterByDateRange()"
-              class="date-filter">
-          </div>
-          
-          <select [(ngModel)]="alertTypeFilter" (change)="filterByAlertType()" class="alert-type-filter">
-            <option value="">Todos los tipos</option>
-            <option value="TEMPERATURE">Temperatura</option>
-            <option value="MOVEMENT">Movimiento</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="incidents-chart__content" *ngIf="!loading; else loadingTemplate">
-        <div class="chart-container">
-          <canvas 
-            #chartCanvas
-            class="chart-canvas"
-            (mousemove)="onMouseMove($event)"
-            (mouseleave)="hideTooltip()">
-          </canvas>
-          
-          <!-- Tooltip -->
-          <div 
-            class="chart-tooltip" 
-            [style.display]="tooltipVisible ? 'block' : 'none'"
-            [style.left.px]="tooltipX"
-            [style.top.px]="tooltipY">
-            <div class="tooltip-content" *ngIf="tooltipData">
-              <h4>{{ tooltipData.month }} {{ tooltipData.year }}</h4>
-              <div class="tooltip-incidents">
-                <div class="incident-item">
-                  <span class="incident-type temperature">Temperatura:</span>
-                  <span class="incident-count">{{ tooltipData.temperatureIncidents }}</span>
-                </div>
-                <div class="incident-item">
-                  <span class="incident-type movement">Movimiento:</span>
-                  <span class="incident-count">{{ tooltipData.movementIncidents }}</span>
-                </div>
-                <div class="incident-total">
-                  <strong>Total: {{ tooltipData.totalIncidents }}</strong>
-                </div>
-              </div>
-              
-              <!-- Detalles de incidencias -->
-              <div class="incident-details" *ngIf="tooltipData.incidents.length > 0">
-                <h5>Detalles de Incidencias:</h5>
-                <div class="incident-list">
-                  <div 
-                    class="incident-detail" 
-                    *ngFor="let incident of tooltipData.incidents.slice(0, 3)">
-                    <div class="incident-info">
-                      <span class="incident-date">{{ incident.timestamp | date:'short' }}</span>
-                      <span class="incident-vehicle">{{ incident.vehiclePlate }}</span>
-                      <span class="incident-device">IOT: {{ incident.deviceId }}</span>
-                      <span class="incident-type-badge" [ngClass]="incident.type.toLowerCase()">
-                        {{ getAlertTypeText(incident.type) }}
-                      </span>
-                    </div>
-                  </div>
-                  <div *ngIf="tooltipData.incidents.length > 3" class="more-incidents">
-                    +{{ tooltipData.incidents.length - 3 }} más...
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="chart-legend">
-          <div class="legend-item">
-            <div class="legend-color temperature"></div>
-            <span>Incidencias de Temperatura</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-color movement"></div>
-            <span>Incidencias de Movimiento</span>
-          </div>
-        </div>
-      </div>
-
-      <ng-template #loadingTemplate>
-        <div class="loading">
-          <p>Cargando datos del gráfico...</p>
-        </div>
-      </ng-template>
-    </div>
-  `,
+  templateUrl: './incidents-chart.component.html',
   styleUrls: ['./incidents-chart.component.css']
 })
 export class IncidentsChartComponent implements AfterViewInit, OnChanges {
@@ -496,9 +391,9 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
   getAlertTypeText(type: AlertType): string {
     switch (type) {
       case AlertType.TEMPERATURE:
-        return 'Temperatura';
+        return 'Temperature';
       case AlertType.MOVEMENT:
-        return 'Movimiento';
+        return 'Movement';
       default:
         return type;
     }

@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Trip } from '../../models/trip.model';
-import { DashboardService } from '../../services/dashboard.service';
+import { Trip } from '../../../domain/entities';
+import { DashboardService } from '../../../application/services/dashboard.service';
 
 interface SensorData {
   name: string;
@@ -40,9 +40,9 @@ export class TripDetailComponent implements OnInit {
   showLegend = false;
   showXAxisLabel = true;
   showYAxisLabel = true;
-  xAxisLabel = 'Tiempo';
-  yAxisLabelTemp = 'Temperatura (°C)';
-  yAxisLabelVib = 'Vibración (g)';
+  xAxisLabel = 'Time';
+  yAxisLabelTemp = 'Temperature (°C)';
+  yAxisLabelVib = 'Vibration (g)';
   timeline = true;
   autoScale = true;
 
