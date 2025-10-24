@@ -8,51 +8,86 @@ import { PasswordRecoveryPageComponent } from './iam/presentation/pages/password
 import { RegisterPageComponent } from './iam/presentation/pages/register-page/register-page';
 import { OtpVerificationComponent} from './iam/presentation/pages/otp-verification-page/otp-verification-page';
 import { NewPasswordComponent} from './iam/presentation/pages/new-password-page/new-password-page';
+import {RootLayout} from './shared/presentation/layout/root-layout/root-layout';
+import {DashboardComponent} from './dashboard/presentation/pages/dashboard.component';
+import {VehicleManagementComponent} from './fleet/presentation/pages/vehicle-management/vehicle-management';
+import {DeviceManagementComponent} from './fleet/presentation/pages/device-management/device-management';
+import {SubscriptionsPage} from './subscription/presentation/pages/subscriptions/subscriptions.page';
 
 const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
+const alertRoutes = () => import('./alerts/presentation/alert.routes').then((m) => m.routes);
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: '/login',
     pathMatch: 'full'
   },
   {
     path: 'login',
-    component: LoginPageComponent,
+    component: LoginPageComponent
   },
-
-  { path: 'register',
+  {
+    path: 'register',
     component: RegisterPageComponent
   },
-
   {
     path: 'password-recovery',
     children: [
-      { path: '',
+      {
+        path: '',
         component: PasswordRecoveryPageComponent,
         pathMatch: 'full'
       },
-      { path: 'otp-verify',
+      {
+        path: 'otp-verify',
         component: OtpVerificationComponent
       },
-      { path: 'new-password',
+      {
+        path: 'new-password',
         component: NewPasswordComponent
-      },
+      }
     ]
   },
+
   {
-    path: 'trips',
-    loadChildren: tripRoutes,
-  },
-  {
-    path: 'alerts',
-    component: AlertsPageComponent,
+    path: '',
+    component: RootLayout,
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent
+      },
+      {
+        path: 'trips',
+        loadChildren: tripRoutes
+      },
+      {
+        path: 'alerts',
+        loadChildren: alertRoutes
+      },
+      {
+        path: 'fleet',
+        children: [
+          { path: 'vehicles', component: VehicleManagementComponent },
+          { path: 'devices', component: DeviceManagementComponent },
+          { path: '', pathMatch: 'full', redirectTo: 'vehicles' }
+        ]
+      },
+      {
+        path: 'subscriptions',
+        component: SubscriptionsPage
+      },
+      {
+        path: 'logout',
+        redirectTo: '/login',
+        pathMatch: 'full'
+      }
+    ]
   },
 
-  // Ruta Wildcard
   {
     path: '**',
-    component: PageNotFound,
-  },
+    component: PageNotFound
+  }
 ];

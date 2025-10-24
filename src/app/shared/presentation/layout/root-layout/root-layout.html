@@ -1,6 +1,16 @@
 <section class="app-layout">
+  <!-- Mobile header -->
+  <header class="mobile-header">
+    <button class="menu-btn" aria-label="Open menu" (click)="toggleSidebar()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="mobile-brand">
+      <img src="assets/svgs/logo-white.svg" alt="CargoSafe Logo" class="mobile-logo" />
+    </div>
+  </header>
+
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="sidebarOpen()">
     <div class="sidebar__brand">
       <img src="assets/svgs/logo-white.svg" alt="CargoSafe Logo" class="sidebar__logo" />
     </div>
@@ -8,50 +18,54 @@
     <nav class="sidebar__nav">
       <ul>
         <li>
-          <a routerLink="/dashboard">
-            <img src="assets/icons/dashboard.svg" alt="" />
+          <a routerLink="/dashboard" routerLinkActive="active" (click)="toggleSidebar(false)">
+            <mat-icon>dashboard</mat-icon>
             <span>Dashboard</span>
           </a>
         </li>
         <li>
-          <a routerLink="/vehicles">
-            <img src="assets/icons/truck.svg" alt="" />
+          <a routerLink="/fleet/vehicles" routerLinkActive="active" (click)="toggleSidebar(false)">
+            <mat-icon>local_shipping</mat-icon>
             <span>Vehicles</span>
           </a>
         </li>
         <li>
-          <a routerLink="/sensors">
-            <img src="assets/icons/iot.svg" alt="" />
+          <a routerLink="/fleet/devices" routerLinkActive="active" (click)="toggleSidebar(false)">
+            <mat-icon>sensors</mat-icon>
             <span>Sensors</span>
           </a>
         </li>
         <li>
-          <a routerLink="/trips">
-            <img src="assets/icons/trip.svg" alt="" />
+          <a routerLink="/trips" routerLinkActive="active" (click)="toggleSidebar(false)">
+            <mat-icon>route</mat-icon>
             <span>Trips</span>
           </a>
         </li>
         <li>
-          <a routerLink="/alerts">
-            <img src="assets/icons/alert.svg" alt="" />
+          <a routerLink="/alerts" routerLinkActive="active" (click)="toggleSidebar(false)">
+            <mat-icon>notifications</mat-icon>
             <span>Alerts</span>
           </a>
         </li>
         <li>
-          <a routerLink="/subscriptions"
-            ><img src="assets/icons/subscription.svg" alt="" /><span>Subscriptions</span>
+          <a routerLink="/subscriptions" routerLinkActive="active" (click)="toggleSidebar(false)">
+            <mat-icon>card_membership</mat-icon>
+            <span>Subscriptions</span>
           </a>
         </li>
       </ul>
     </nav>
 
     <div class="sidebar__footer">
-      <a routerLink="/logout">
-        <img src="assets/icons/logout.svg" alt="" />
+      <a (click)="onLogout()" style="cursor: pointer;">
+        <mat-icon>logout</mat-icon>
         <span>Log out</span>
       </a>
     </div>
   </aside>
+
+  <!-- Overlay para móvil -->
+  <div class="overlay" *ngIf="sidebarOpen()" (click)="toggleSidebar(false)"></div>
 
   <!-- Main Content -->
   <main class="main-content">

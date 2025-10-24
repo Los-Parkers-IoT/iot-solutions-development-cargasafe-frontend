@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-new-password',
@@ -24,24 +25,41 @@ export class NewPasswordComponent {
   newPassword: string = '';
   confirmPassword: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private snackBar: MatSnackBar) {}
 
   onResetPassword(): void {
-    if (this.newPassword !== this.confirmPassword) {
-      // Translated alert
-      alert('Passwords do not match. Please verify.');
+    if (!this.newPassword || !this.confirmPassword) {
+      this.showNotification('Please fill in both password fields');
       return;
     }
 
-    if (this.newPassword.length < 8) {
-      alert('The password must be at least 8 characters long.');
+
+    if (this.newPassword.length < 6) {
+      this.showNotification('Password must be at least 6 characters long');
       return;
     }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.showNotification('Passwords do not match. Please verify');
+      return;
+    }
+
 
     console.log('Password ready to be reset.');
 
-    alert('Password successfully reset! You will be redirected to the login page.');
-    this.router.navigate(['/login']);
+    this.showNotification('Password successfully reset! Redirecting to login...');
+
+    setTimeout(() => {
+      this.router.navigate(['/login']);
+    }, 2000);
+  }
+
+  showNotification(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+    });
   }
 
   onBackToLogin(event: Event): void {

@@ -10,6 +10,10 @@ export class Trip implements BaseEntity {
   private _updatedAt: Date;
   private _departureAt: Date | null;
   private _merchantId: number;
+  private _originPointId: number;
+  private _polyline_encrypted: string;
+  private _totalDistanceKm: number;
+  private _totalDurationMin: number;
 
   constructor(trip: {
     id: number;
@@ -21,6 +25,10 @@ export class Trip implements BaseEntity {
     updatedAt: Date;
     departureAt: Date | null;
     merchantId: number;
+    originPointId: number;
+    polyline_encrypted: string;
+    totalDistanceKm: number;
+    totalDurationMin: number;
   }) {
     this._id = trip.id;
     this._statusId = trip.statusId;
@@ -31,6 +39,10 @@ export class Trip implements BaseEntity {
     this._updatedAt = trip.updatedAt;
     this._departureAt = trip.departureAt;
     this._merchantId = trip.merchantId;
+    this._totalDistanceKm = trip.totalDistanceKm;
+    this._totalDurationMin = trip.totalDurationMin;
+    this._originPointId = trip.originPointId;
+    this._polyline_encrypted = trip.polyline_encrypted;
   }
 
   get id(): number {
@@ -81,5 +93,31 @@ export class Trip implements BaseEntity {
   }
   set statusId(value: number) {
     this._statusId = value;
+  }
+
+  get totalDistanceKm(): number {
+    return this._totalDistanceKm;
+  }
+  set totalDistanceKm(value: number) {
+    this._totalDistanceKm = value;
+  }
+  get totalDurationMin(): number {
+    return this._totalDurationMin;
+  }
+  set totalDurationMin(value: number) {
+    this._totalDurationMin = value;
+  }
+
+  get originPointId(): number {
+    return this._originPointId;
+  }
+  set originPointId(value: number) {
+    this._originPointId = value;
+  }
+  get polyline_encrypted(): string {
+    return this._polyline_encrypted;
+  }
+  set polyline_encrypted(value: string) {
+    this._polyline_encrypted = value;
   }
 }

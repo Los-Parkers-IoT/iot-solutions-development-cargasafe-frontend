@@ -32,8 +32,16 @@
             id="email"
             [(ngModel)]="email"
             name="email"
-            required>
+            required
+            email
+            #emailInput="ngModel"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+          <mat-error *ngIf="emailInput.invalid && emailInput.touched">
+            <span *ngIf="emailInput.errors?.['required']">Email is required</span>
+            <span *ngIf="emailInput.errors?.['email'] || emailInput.errors?.['pattern']">Please enter a valid email address</span>
+          </mat-error>
         </mat-form-field>
+
 
         <mat-form-field appearance="outline" class="full-width-input">
           <mat-label>Password</mat-label>
@@ -43,7 +51,13 @@
             id="password"
             [(ngModel)]="password"
             name="password"
-            required>
+            required
+            minlength="6"
+            #passwordInput="ngModel">
+          <mat-error *ngIf="passwordInput.invalid && passwordInput.touched">
+            <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
+            <span *ngIf="passwordInput.errors?.['minlength']">Password must be at least 6 characters</span>
+          </mat-error>
         </mat-form-field>
 
         <div class="form-options">

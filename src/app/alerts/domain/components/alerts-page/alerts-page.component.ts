@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Alert } from '../../models/alert.model';
-import { AlertsService } from '../../services/alert.service';
+import { AlertsService} from '../../../infrastructure/alerts-api';
 import { AlertTableComponent } from '../alert-table/alert-table.component';
 
 @Component({
