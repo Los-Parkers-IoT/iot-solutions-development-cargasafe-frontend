@@ -16,6 +16,7 @@ import { ChangePlanDialog} from '../../dialogs/change-plan.dialog';
 import { Plan } from '../../../domain/plan';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-subscriptions-page',
   standalone: true,
@@ -28,6 +29,7 @@ import { Router } from '@angular/router';
     MatProgressSpinnerModule,
     MatTooltipModule,
     MatDialogModule,
+
   ],
   templateUrl: './subscriptions.page.html',
   styleUrl: './subscriptions.page.css',
@@ -36,6 +38,7 @@ export class SubscriptionsPage implements OnInit {
   private http = inject(HttpClient);
   private API_URL = environment.baseUrl;
   private router = inject(Router);
+
 
   // 👇 registramos íconos locales SOLO para esta feature
   constructor() {
@@ -146,5 +149,6 @@ export class SubscriptionsPage implements OnInit {
 
   onChangeCard() {
     this.router.navigate(['/subscriptions/change-card']);
+
   }
 }

@@ -50,6 +50,7 @@
       class="pill"
       (click)="onDownloadReceipt(invoices()[0])"
       [disabled]="!invoices().length || !canDownload(invoices()[0])"
+
     >
       <mat-icon>download</mat-icon> Download receipt
     </button>
