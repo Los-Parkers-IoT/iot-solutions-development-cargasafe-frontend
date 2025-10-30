@@ -6,7 +6,7 @@
       <h2 class="summary__title">Subscription</h2>
 
       <div class="kv">
-        <span>Current Plan:</span><strong class="value">{{ sub()?.planId || '—' }}</strong>
+        <span>Current Plan:</span><strong class="value">{{ sub()?.plan?.name || '—' }}</strong>
       </div>
       <div class="kv">
         <span>Amount:</span><strong class="value">{{ amountLabel }}</strong>
@@ -19,7 +19,7 @@
         ><strong class="value">{{ sub()?.renewalDate | date : 'MM/dd/yyyy' }}</strong>
       </div>
       <div class="kv">
-        <span>Payment Method:</span><strong class="value">{{ pmMask }}</strong>
+        <span>Payment Method:</span><strong class="value">{{ sub()?.paymentMethodLabel || '-' }}</strong>
       </div>
     </mat-card>
 
@@ -30,7 +30,7 @@
     <div class="actions">
 
       <button mat-stroked-button color="warn" class="pill"
-              (click)="onCancelPlan()"
+              (click)="onCancel()"
               [disabled]="sub()?.status !== 'ACTIVE'">
         <mat-icon>cancel</mat-icon> CANCEL YOUR PLAN
       </button>
