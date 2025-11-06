@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:3000/api/v1',
+  baseUrl: 'http://localhost:8080/api/v1',
+  iamPath: '/authentication',
   tripsEndpointPath: '/trips',
   alertsEndpointPath: '/alerts',
   googleMapsApiKey: 'AIzaSyDEpu21mrXEAewZHnvMxOfR3Nj3VLZLECk',

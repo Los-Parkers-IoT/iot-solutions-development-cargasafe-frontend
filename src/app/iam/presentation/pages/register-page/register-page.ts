@@ -8,7 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+
+import {Authentication} from '../../../infrastructure/authentication';
 
 @Component({
   selector: 'app-register-page',
@@ -20,7 +22,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
     MatFormFieldModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSnackBarModule,
   ],
   templateUrl: './register-page.html',
   styleUrls: ['./register-page.css']
@@ -42,7 +45,7 @@ export class RegisterPageComponent {
 
   termsAccepted: boolean = false;
 
-  constructor(private router: Router, private snackBar: MatSnackBar) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private auth: Authentication) {}
 
   onRegister(): void {
     if (!this.termsAccepted) {
@@ -83,6 +86,22 @@ export class RegisterPageComponent {
       }
     }
 
+    const body = {
+      username: this.email,
+      password: this.password,
+      fistName: this.firstName,
+      lastName: this.lastName
+    };
+
+    this.auth.signUp(body).subscribe({
+      next: () => {
+        this.showNotification('Registration successful! Redirecting to login...');
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.showNotification('Could not register. Please try again');
+      }
+    })
 
     console.log('Registration attempt:', {
       segment: this.segment,

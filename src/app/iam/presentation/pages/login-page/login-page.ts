@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -6,7 +6,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Authentication} from '../../../infrastructure/authentication';
+import { MatIconModule} from '@angular/material/icon';
 
 @Component({
   selector: 'app-login-page',
@@ -18,52 +20,50 @@ import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
     MatFormFieldModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule,
   ],
   templateUrl: './login-page.html',
-  styleUrls: ['./login-page.css']
+  styleUrls: ['./login-page.css'],
 })
 export class LoginPageComponent {
-  email: string = '';
-  password: string = '';
-  rememberMe: boolean = false;
+  private auth = inject(Authentication);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
-  constructor(private router: Router, private snackBar: MatSnackBar) {}
+  email = '';
+  username = '';
+  password = '';
+  rememberMe = false;
+  showPassword = false;
+  isLoading = false;
 
-  onSubmit(): void {
-    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-
-    if (!this.email || !this.password) {
-      this.showNotification('Please fill in all fields');
-      return;
-    }
-
-    if (!emailRegex.test(this.email)) {
-      this.showNotification('Please enter a valid email address');
-      return;
-    }
-
-    if (this.password.length < 6) {
-      this.showNotification('Password must be at least 6 characters');
-      return;
-    }
-
-    console.log('Login attempt:', {
-      email: this.email,
-      password: '***',
-      rememberMe: this.rememberMe
-    });
-
-    // TODO: Aquí conectarás con tu backend
-    this.router.navigate(['/dashboard']);
+  isFormValid(): boolean {
+    return !!this.email && !!this.password;
   }
 
-  showNotification(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
+  onSubmit(): void {
+    if (!this.isFormValid() || this.isLoading) return;
+
+    this.isLoading = true;
+    console.log('[Login] submit', {email: this.email}); //solo para prueba
+    this.auth
+      .signIn({ username: this.email, password: this.password })
+      .subscribe({
+        next: (tokens) => {
+          this.auth.saveTokens(tokens);
+          this.snackBar.open('Login successful!', undefined, { duration: 1500, horizontalPosition: 'right', verticalPosition: 'top' });
+          this.router.navigate(['/dashboard']);
+        },
+        error: () => {
+          this.snackBar.open('Invalid credentials', undefined, { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
+        },
+      })
+      .add(() => (this.isLoading = false));
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   onForgotPassword(event: Event): void {

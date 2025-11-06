@@ -43,21 +43,26 @@
         </mat-form-field>
 
 
-        <mat-form-field appearance="outline" class="full-width-input">
+        <mat-form-field appearance="fill" class="w-full">
           <mat-label>Password</mat-label>
           <input
             matInput
-            type="password"
-            id="password"
-            [(ngModel)]="password"
+            [type]="showPassword ? 'text' : 'password'"
             name="password"
+            [(ngModel)]="password"
             required
-            minlength="6"
-            #passwordInput="ngModel">
-          <mat-error *ngIf="passwordInput.invalid && passwordInput.touched">
-            <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
-            <span *ngIf="passwordInput.errors?.['minlength']">Password must be at least 6 characters</span>
-          </mat-error>
+            autocomplete="current-password"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-pressed]="showPassword"
+            aria-label="Mostrar u ocultar contraseña"
+          >
+            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
         </mat-form-field>
 
         <div class="form-options">
@@ -74,9 +79,17 @@
           </a>
         </div>
 
-        <button mat-raised-button color="primary" type="submit" class="btn-signin-mat">
-          Sign in
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="onSubmit()"
+          [disabled]="isLoading"
+          class="w-full"
+        >
+          {{ isLoading ? 'Signing in…' : 'Sign in' }}
         </button>
+
 
         <p class="signup-text">
           Don't have an account?

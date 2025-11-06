@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
 import { AlertsPageComponent } from './alerts/domain/components/alerts-page/alerts-page.component';
+import { authGuard } from './iam/infrastructure/auth.guard';
+import { logoutGuard} from './iam/infrastructure/logout.guard';
 
 
 import { LoginPageComponent } from './iam/presentation/pages/login-page/login-page';
@@ -56,6 +58,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [authGuard],
         component: DashboardComponent
       },
       {
@@ -80,8 +83,8 @@ export const routes: Routes = [
       },
       {
         path: 'logout',
-        redirectTo: '/login',
-        pathMatch: 'full'
+        canActivate: [logoutGuard],
+        component: LoginPageComponent
       }
     ]
   },
