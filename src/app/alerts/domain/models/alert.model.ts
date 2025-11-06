@@ -1,34 +1,39 @@
-import {BaseEntity} from '../../../shared/domain/model/base-entity';
+import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { Incident} from './incident.model';
+import { Notification} from './notification.model';
 
-export class Alert implements BaseEntity{
+export class Alert implements BaseEntity {
   private _id: number;
-  private _type: string;
-  private _deliveryOrderId: string;
-  private _status: 'Active' | 'Closed';
-  private _createdAt: Date;
-  private _closedAt: Date| null;
+  private _alertType: string;
+  private _alertStatus: 'OPEN' | 'ACKNOWLEDGED' | 'CLOSED';
   private _description: string;
+  private _createdAt: Date;
+  private _closedAt: Date | null;
+  private _incidents: Incident[];
+  private _notifications: Notification[];
 
+  private _viewed: boolean = false;
 
   constructor(alert: {
-    id: number,
-    type: string,
-    deliveryOrderId: string,
-    status: "Active" | "Closed",
-    createdAt: Date,
-    closedAt: Date | null,
-    description: string
+    id: number;
+    alertType: string;
+    alertStatus: 'OPEN' | 'ACKNOWLEDGED' | 'CLOSED';
+    description: string;
+    createdAt: Date;
+    closedAt: Date | null;
+    incidents: Incident[];
+    notifications: Notification[];
   }) {
-
     this._id = alert.id;
-    this._type = alert.type;
-    this._deliveryOrderId = alert.deliveryOrderId;
-    this._status = alert.status;
-    this._createdAt = alert.createdAt;
-    this._closedAt = alert.closedAt;
+    this._alertType = alert.alertType;
+    this._alertStatus = alert.alertStatus;
     this._description = alert.description;
-  }
+    this._createdAt = new Date(alert.createdAt);
+    this._closedAt = alert.closedAt ? new Date(alert.closedAt) : null;
 
+    this._incidents = alert.incidents || [];
+    this._notifications = alert.notifications || [];
+  }
 
   get id(): number {
     return this._id;
@@ -38,28 +43,28 @@ export class Alert implements BaseEntity{
     this._id = value;
   }
 
-  get type(): string {
-    return this._type;
+  get alertType(): string {
+    return this._alertType;
   }
 
-  set type(value: string) {
-    this._type = value;
+  set alertType(value: string) {
+    this._alertType = value;
   }
 
-  get deliveryOrderId(): string {
-    return this._deliveryOrderId;
+  get alertStatus(): "OPEN" | "ACKNOWLEDGED" | "CLOSED" {
+    return this._alertStatus;
   }
 
-  set deliveryOrderId(value: string) {
-    this._deliveryOrderId = value;
+  set alertStatus(value: "OPEN" | "ACKNOWLEDGED" | "CLOSED") {
+    this._alertStatus = value;
   }
 
-  get status(): "Active" | "Closed" {
-    return this._status;
+  get description(): string {
+    return this._description;
   }
 
-  set status(value: "Active" | "Closed") {
-    this._status = value;
+  set description(value: string) {
+    this._description = value;
   }
 
   get createdAt(): Date {
@@ -78,11 +83,27 @@ export class Alert implements BaseEntity{
     this._closedAt = value;
   }
 
-  get description(): string {
-    return this._description;
+  get incidents(): Incident[] {
+    return this._incidents;
   }
 
-  set description(value: string) {
-    this._description = value;
+  set incidents(value: Incident[]) {
+    this._incidents = value;
+  }
+
+  get notifications(): Notification[] {
+    return this._notifications;
+  }
+
+  set notifications(value: Notification[]) {
+    this._notifications = value;
+  }
+
+  get viewed(): boolean {
+    return this._viewed;
+  }
+
+  set viewed(value: boolean) {
+    this._viewed = value;
   }
 }

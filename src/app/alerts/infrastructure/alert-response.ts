@@ -1,13 +1,31 @@
-export interface AlertResource{
+export interface IncidentResource {
   id: number;
-  type: string;
-  deliveryOrderId: string;
-  status: 'Active' | 'Closed';
+  alertId: number;
+  description: string;
+  createdAt: string;
+  acknowledgedAt?: string | null;
+  closedAt?: string | null;
+}
+
+export interface NotificationResource {
+  id: number;
+  alertId: number;
+  notificationChannel: string;
+  message: string;
+  sentAt: string;
+}
+
+export interface AlertResource {
+  id: number;
+  alertType: string;
+  alertStatus: 'OPEN' | 'ACKNOWLEDGED' | 'CLOSED';
   createdAt: string;
   closedAt?: string | null;
   description: string;
+  incidents?: IncidentResource[];
+  notifications?: NotificationResource[];
 }
 
-export interface AlertResponse{
+export interface AlertResponse {
   alerts: AlertResource[];
 }

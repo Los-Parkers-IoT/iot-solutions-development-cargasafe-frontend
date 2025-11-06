@@ -126,3 +126,9 @@ button[mat-icon-button] mat-icon {
   background-color: #ef6c00;
 }
 
+.disabled-btn {
+  background-color: #828282 !important;
+  color: #ffffff !important;
+  cursor: not-allowed;
+}
+
