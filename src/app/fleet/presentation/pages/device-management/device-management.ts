@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { Router } from '@angular/router';
-import {DeviceService} from '../../../data-access/services/device.service';
+import {DeviceService} from '../../../application/services/device.service';
 import {Device} from '../../../domain/model/device.model';
 import {DeviceFormDialogComponent} from '../../components/device-form-dialog/device-form-dialog.component';
 

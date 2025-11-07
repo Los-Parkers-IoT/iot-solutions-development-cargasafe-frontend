@@ -9,7 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { Vehicle } from '../../../domain/model/vehicle.model';
 import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {VehicleService} from '../../../data-access/services/vehicle.service';
+import {VehicleService} from '../../../application/services/vehicle.service';
 
 @Component({
   selector: 'app-vehicle-detail-page',

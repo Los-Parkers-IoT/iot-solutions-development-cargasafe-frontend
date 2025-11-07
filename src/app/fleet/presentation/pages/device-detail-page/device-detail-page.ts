@@ -9,7 +9,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { Device } from '../../../domain/model/device.model';
 import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {DeviceService} from '../../../data-access/services/device.service';
+import {DeviceService} from '../../../application/services/device.service';
 
 @Component({
   selector: 'app-device-detail-page',

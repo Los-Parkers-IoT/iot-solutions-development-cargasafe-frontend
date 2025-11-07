@@ -14,7 +14,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model';
 import { Router } from '@angular/router';
 import { VehicleFormDialogComponent } from '../../components/vehicle-form-dialog/vehicle-form-dialog';
-import {VehicleService} from '../../../data-access/services/vehicle.service';
+import {VehicleService} from '../../../application/services/vehicle.service';
 
 @Component({
   selector: 'app-vehicle-management',
