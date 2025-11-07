@@ -40,9 +40,9 @@
     <mat-label>All states</mat-label>
     <mat-select (selectionChange)="applyStatus($event.value)" [value]="''">
       <mat-option value="">All states</mat-option>
-      <mat-option value="Available">Available</mat-option>
-      <mat-option value="In Service">In Service</mat-option>
-      <mat-option value="In Maint.">In Maint.</mat-option>
+      <mat-option *ngFor="let s of ['IN_SERVICE','OUT_OF_SERVICE','MAINTENANCE','RETIRED']" [value]="s">
+        {{ s.replaceAll('_',' ') | titlecase }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -71,7 +71,7 @@
 
     <ng-container matColumnDef="type">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-      <td mat-cell *matCellDef="let r">{{r.type}}</td>
+      <td mat-cell *matCellDef="let r">{{ r.type.replaceAll('_',' ') | titlecase }}</td>
     </ng-container>
 
     <ng-container matColumnDef="capabilities">
@@ -81,13 +81,20 @@
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-      <td mat-cell *matCellDef="let r">{{r.status}}</td>
+      <td mat-cell *matCellDef="let r">{{ r.status.replaceAll('_',' ') | titlecase }}</td>
     </ng-container>
 
-    <ng-container matColumnDef="deviceImei">
+    <ng-container matColumnDef="deviceImeis">
       <th mat-header-cell *matHeaderCellDef>IoT</th>
-      <td mat-cell *matCellDef="let r">{{r.deviceImei || '—'}}</td>
+      <td mat-cell *matCellDef="let r">
+        <ng-container *ngIf="(r.deviceImeis?.length ?? 0) > 0; else noIoT">
+          <!-- Muestra el primero y un +n si hay más -->
+          {{ r.deviceImeis[0] }}<ng-container *ngIf="r.deviceImeis.length > 1"> (+{{ r.deviceImeis.length - 1 }})</ng-container>
+        </ng-container>
+        <ng-template #noIoT>—</ng-template>
+      </td>
     </ng-container>
+
 
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>

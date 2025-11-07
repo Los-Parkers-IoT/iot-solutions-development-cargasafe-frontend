@@ -13,8 +13,9 @@ import { MatOptionModule } from '@angular/material/core';
 
 import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model';
 import { Router } from '@angular/router';
-import { VehicleFormDialogComponent } from '../../components/vehicle-form-dialog/vehicle-form-dialog';
-import {VehicleService} from '../../../application/services/vehicle.service';
+import {VehicleCreateAndEditComponent} from '../../components/vehicle-create-and-edit/vehicle-create-and-edit';
+import {FleetFacade} from '../../../application/services/fleet.facade';
+
 
 @Component({
   selector: 'app-vehicle-management',
@@ -30,12 +31,12 @@ import {VehicleService} from '../../../application/services/vehicle.service';
 })
 export class VehicleManagementComponent implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
-  service = inject(VehicleService);
+  facade = inject(FleetFacade);
 
   constructor(private router: Router) {}
 
   // tabla
-  columns: string[] = ['id', 'plate', 'type', 'capabilities', 'status', 'deviceImei', 'actions'];
+  columns: string[] = ['id', 'plate', 'type', 'capabilities', 'status', 'deviceImeis', 'actions']; // rename
   dataSource = new MatTableDataSource<Vehicle>([]);
 
   // métricas
@@ -53,18 +54,16 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    // Filtro compuesto (texto libre + estado + capability)
     this.dataSource.filterPredicate = (row, filterStr) => {
       const f = JSON.parse(filterStr) as { q: string; status: string; cap: string };
       const toL = (s: string | null | undefined) => (s ?? '').toLowerCase();
-
 
       const q = toL(f.q);
       const matchesQ =
         !q ||
         toL(row.plate).includes(q) ||
         toL(row.type).includes(q) ||
-        toL(row.deviceImei).includes(q) ||
+        (row.deviceImeis ?? []).some(imei => toL(imei).includes(q)) ||
         (row.capabilities ?? []).some(c => toL(c).includes(q));
 
       const matchesStatus = !f.status || row.status === f.status;
@@ -73,8 +72,22 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       return matchesQ && matchesStatus && matchesCap;
     };
 
-    this.fetch();
+
+    this.facade.vehicles$.subscribe(rows => {
+      this.dataSource.data = rows;
+      // métricas
+      this.totalCount     = rows.length;
+      this.availableCount = rows.filter(r => r.status === 'Available').length;
+      this.inServiceCount = rows.filter(r => r.status === 'In Service').length;
+      // capabilities únicas
+      const set = new Set<string>();
+      rows.forEach(r => (r.capabilities ?? []).forEach(c => set.add(c)));
+      this.capabilityOptions = Array.from(set).sort();
+      this.applyFilters();
+    });
+    this.facade.loadVehicles();
   }
+
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -88,39 +101,31 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
 
   // crear (dialog)
   openCreateDialog() {
-    const empty: Vehicle = { ...defaultVehicle };
-    const ref = this.dialog.open(VehicleFormDialogComponent, {
-      width: '920px',
-      maxWidth: '95vw',
-      data: { editMode: false, data: empty },
-      autoFocus: false
+    const ref = this.dialog.open(VehicleCreateAndEditComponent, {
+      width: '920px', maxWidth: '95vw',
+      data: { editMode: false, data: { ...defaultVehicle } }
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action === 'add' && res.payload) {
-        this.service.create(res.payload).subscribe(() => this.fetch());
-      }
+      if (res?.action==='add' && res.payload) this.facade.createVehicle(res.payload);
     });
   }
 
   // editar (dialog)
   onEdit(v: Vehicle): void {
     const model = { ...v, capabilities: Array.isArray(v.capabilities) ? [...v.capabilities] : [] };
-    const ref = this.dialog.open(VehicleFormDialogComponent, {
-      width: '920px',
-      maxWidth: '95vw',
-      data: { editMode: true, data: model },
-      autoFocus: false
+    const ref = this.dialog.open(VehicleCreateAndEditComponent, {
+      width: '920px', maxWidth: '95vw',
+      data: { editMode: true, data: model }
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action === 'update' && res.payload) {
-        this.service.update(res.payload).subscribe(() => this.fetch());
-      }
+      if (res?.action==='update' && res.payload) this.facade.updateVehicle(res.payload);
     });
   }
 
+
   // eliminar
   onDelete(v: Vehicle): void {
-    if (v.id) this.service.delete(v.id).subscribe(() => this.fetch());
+    if (v.id) this.facade.deleteVehicle(v.id);
   }
 
   // búsqueda + filtros (handlers)
@@ -136,7 +141,7 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // carga y métricas
+  /*// carga y métricas
   private fetch(): void {
     this.service.getAll().subscribe(rows => {
       this.dataSource.data = rows;
@@ -154,5 +159,5 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       // re-aplicar filtros vigentes
       this.applyFilters();
     });
-  }
+  }*/
 }
