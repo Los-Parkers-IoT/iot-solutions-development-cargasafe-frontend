@@ -1,14 +1,15 @@
 export type VehicleType = 'Truck' | 'Van' | 'Trailer';
-export type VehicleStatus = 'Available' | 'Reserved' | 'In Service' | 'In Maintenance' | 'Out of Service';
+export type VehicleStatus =
+  | 'Available' | 'Reserved' | 'In Service' | 'In Maintenance' | 'Out of Service';
 
 export interface Vehicle {
-  id?: number;
+  id?: number;                  // Long en backend
   plate: string;
-  type: VehicleType;
+  type: VehicleType | string;   // backend envía string; mantenemos union flexible
   capabilities: string[];
-  status: VehicleStatus;
+  status: VehicleStatus | string;
   odometerKm: number;
-  deviceImei?: string | null;
+  deviceImeis: string[];        // <-- ahora es lista
 }
 
 export const defaultVehicle: Vehicle = {
@@ -17,5 +18,5 @@ export const defaultVehicle: Vehicle = {
   capabilities: [],
   status: 'Available',
   odometerKm: 0,
-  deviceImei: null
+  deviceImeis: []
 };
