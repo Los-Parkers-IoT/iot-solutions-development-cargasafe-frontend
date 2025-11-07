@@ -1,4 +1,3 @@
-
 <div class="card">
   <h3>{{ editMode ? 'Edit Vehicle' : 'Add Vehicle' }}</h3>
 
@@ -11,28 +10,26 @@
     <mat-form-field appearance="outline">
       <mat-label>Type</mat-label>
       <mat-select [(ngModel)]="data.type">
-        <mat-option *ngFor="let t of vehicleTypes" [value]="t">{{t}}</mat-option>
+        <mat-option *ngFor="let t of vehicleTypes" [value]="t">{{ t.replaceAll('_',' ') | titlecase }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <div class="col-2">
       <div class="label">Capabilities</div>
-
       <mat-chip-set>
         <mat-chip-option
           *ngFor="let c of caps"
           [selected]="isSelected(c)"
           (selectionChange)="onChipSelectionChange(c, $event)">
-          {{ c }}
+          {{ c.replaceAll('_',' ') | titlecase }}
         </mat-chip-option>
       </mat-chip-set>
     </div>
 
-
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
       <mat-select [(ngModel)]="data.status">
-        <mat-option *ngFor="let s of statuses" [value]="s">{{s}}</mat-option>
+        <mat-option *ngFor="let s of statuses" [value]="s">{{ s.replaceAll('_',' ') | titlecase }}</mat-option>
       </mat-select>
     </mat-form-field>
 
@@ -42,13 +39,15 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>IoT Device IMEI</mat-label>
-      <input matInput [(ngModel)]="data.deviceImei" />
+      <mat-label>IoT Device IMEIs (comma or space separated)</mat-label>
+      <input matInput [(ngModel)]="imeisText" />
     </mat-form-field>
   </div>
 
   <div class="actions">
-    <button mat-stroked-button (click)="cancelRequested.emit()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="submit()">{{ editMode ? 'Update' : 'Create' }}</button>
+    <button mat-stroked-button (click)="onCancel()">Cancel</button>
+    <button mat-raised-button color="primary" (click)="submit()">
+      {{ editMode ? 'Update' : 'Create' }}
+    </button>
   </div>
 </div>

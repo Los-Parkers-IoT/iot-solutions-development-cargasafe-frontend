@@ -1,20 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {MatChipSelectionChange, MatChipsModule} from '@angular/material/chips';
+import { MatChipsModule, MatChipSelectionChange } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
-import {defaultVehicle, Vehicle, VehicleStatus, VehicleType} from '../../../domain/model/vehicle.model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { defaultVehicle, Vehicle, VehicleStatus, VehicleType } from '../../../domain/model/vehicle.model';
 
+export type VehicleDialogData = { editMode: boolean; data: Vehicle };
 
 @Component({
   selector: 'app-vehicle-create-and-edit',
-  imports: [
-    CommonModule, FormsModule,
-    MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule],
   templateUrl: './vehicle-create-and-edit.html',
   styleUrl: './vehicle-create-and-edit.css'
 })
@@ -25,31 +25,51 @@ export class VehicleCreateAndEditComponent {
   @Output() addRequested = new EventEmitter<Vehicle>();
   @Output() updateRequested = new EventEmitter<Vehicle>();
 
-  // PUBLIC lists
-  vehicleTypes: VehicleType[] = ['Truck', 'Van', 'Trailer'];
-  statuses: VehicleStatus[] = ['Available', 'Reserved', 'In Service', 'In Maintenance', 'Out of Service'];
-  caps: string[] = ['Reefer', 'Box', 'Flatbed', 'Liftgate'];
+  imeisText = ''; // texto editable
 
-  toggleCap(c: string): void {
-    const set = new Set(this.data.capabilities || []);
-    set.has(c) ? set.delete(c) : set.add(c);
-    this.data.capabilities = Array.from(set);
+  constructor(
+    @Optional() private dialogRef?: MatDialogRef<VehicleCreateAndEditComponent, {action:'add'|'update'|'cancel'; payload?:Vehicle}>,
+    @Optional() @Inject(MAT_DIALOG_DATA) dialogData?: VehicleDialogData
+  ){
+    if (dialogData) {
+      this.editMode = dialogData.editMode;
+      this.data = { ...dialogData.data };
+    }
+    this.imeisText = (this.data.deviceImeis ?? []).join(', ');
   }
 
-  submit(): void {
-    this.editMode ? this.updateRequested.emit(this.data) : this.addRequested.emit(this.data);
+  // listas públicas
+  vehicleTypes: string[] = ['TRUCK', 'VAN', 'CAR', 'MOTORCYCLE'];
+  statuses: string[]     = ['IN_SERVICE', 'OUT_OF_SERVICE', 'MAINTENANCE', 'RETIRED'];
+  caps: string[]         = ['REFRIGERATED', 'BOX', 'GPS_ONLY', 'HEAVY_LOAD', 'FRAGILE_CARGO'];
+
+  private parseImeis() {
+    const parts = (this.imeisText ?? '').split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
+    this.data.deviceImeis = parts;
+  }
+
+  onCancel() {
+    if (this.dialogRef) this.dialogRef.close({ action: 'cancel' });
+    else this.cancelRequested.emit();
+  }
+
+  submit() {
+    this.parseImeis();
+    if (this.editMode) {
+      if (this.dialogRef) this.dialogRef.close({ action: 'update', payload: this.data });
+      else this.updateRequested.emit(this.data);
+    } else {
+      if (this.dialogRef) this.dialogRef.close({ action: 'add', payload: this.data });
+      else this.addRequested.emit(this.data);
+    }
   }
 
   isSelected(cap: string): boolean {
     const list = this.data.capabilities;
     return Array.isArray(list) ? list.includes(cap) : false;
   }
-
   onChipSelectionChange(cap: string, ev: MatChipSelectionChange) {
     const list = Array.isArray(this.data.capabilities) ? [...this.data.capabilities] : [];
-    this.data.capabilities = ev.selected
-      ? (list.includes(cap) ? list : [...list, cap])
-      : list.filter(x => x !== cap);
+    this.data.capabilities = ev.selected ? (list.includes(cap) ? list : [...list, cap]) : list.filter(x => x !== cap);
   }
-
 }
