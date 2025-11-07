@@ -12,9 +12,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { Router } from '@angular/router';
-import {DeviceService} from '../../../application/services/device.service';
 import {Device} from '../../../domain/model/device.model';
-import {DeviceFormDialogComponent} from '../../components/device-form-dialog/device-form-dialog.component';
+import {DeviceCreateAndEditComponent} from '../../components/device-create-and-edit/device-create-and-edit.component';
+import {FleetFacade} from '../../../application/services/fleet.facade';
 
 
 @Component({
@@ -33,11 +33,11 @@ import {DeviceFormDialogComponent} from '../../components/device-form-dialog/dev
 })
 export class DeviceManagementComponent implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
-  service = inject(DeviceService);
+  facade = inject(FleetFacade);
 
   constructor(private router: Router) {}
 
-  columns: string[] = ['id', 'imei', 'type', 'online', 'vehiclePlate', 'actions'];
+  columns: string[] = ['id', 'imei', 'online', 'vehiclePlate', 'actions'];
   dataSource = new MatTableDataSource<Device>([]);
 
   // 🔎 filtros
@@ -48,28 +48,28 @@ export class DeviceManagementComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    // filtro compuesto: texto + estado
     this.dataSource.filterPredicate = (row, filterStr) => {
       const f = JSON.parse(filterStr) as { q: string; state: string };
       const toL = (s: string | null | undefined) => (s ?? '').toLowerCase();
 
-      // Texto libre: IMEI, Type, Vehicle
       const q = toL(f.q);
       const matchesQ =
         !q ||
         toL(row.imei).includes(q) ||
-        toL(row.type).includes(q) ||
-        toL(row.vehiclePlate).includes(q);
+        toL(row.vehiclePlate ?? '').includes(q);                 // ✅ null-safe
 
-      // Estado mostrado (string)
-      const currentState = row.online ? 'Online' : (row as any).connectivity ?? 'Offline';
-      // ^ si no tienes "connectivity" en el modelo, quedará Online/Offline.
+      const currentState = row.online ? 'Online' : 'Offline';
       const matchesState = !f.state || currentState === f.state;
 
       return matchesQ && matchesState;
     };
 
-    this.fetch();
+    // ✅ suscríbete al estado del facade
+    this.facade.devices$.subscribe(rows => {
+      this.dataSource.data = rows;
+      this.applyFilters();
+    });
+    this.facade.loadDevices();                                   // ✅ dispara carga
   }
 
   ngAfterViewInit(): void {
@@ -82,50 +82,39 @@ export class DeviceManagementComponent implements OnInit, AfterViewInit {
 
   // CREATE
   openCreateDialog(): void {
-    const empty: Device = {
-      imei: '',
-      type: 'Temp + GPS',
-      firmware: 'v1.0.0',
-      online: false,
-      vehiclePlate: null
-    };
-    const ref = this.dialog.open(DeviceFormDialogComponent, {
+    const ref = this.dialog.open(DeviceCreateAndEditComponent, {
       width: '920px', maxWidth: '95vw',
-      data: { editMode: false, data: empty },
-      autoFocus: false
+      data: { editMode: false, data: { imei:'', firmware:'v1.0.0', online:false, vehiclePlate: null } }
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action === 'add' && res.payload) {
-        this.service.create(res.payload).subscribe(() => this.fetch());
-      }
+      if (res?.action === 'add' && res.payload) this.facade.createDevice(res.payload); // ✅ sin subscribe extra
     });
   }
+
 
   // EDIT
   onEdit(row: Device): void {
-    const ref = this.dialog.open(DeviceFormDialogComponent, {
+    const ref = this.dialog.open(DeviceCreateAndEditComponent, {
       width: '920px', maxWidth: '95vw',
-      data: { editMode: true, data: { ...row } },
-      autoFocus: false
+      data: { editMode: true, data: { ...row } }
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action === 'update' && res.payload) {
-        this.service.update(res.payload).subscribe(() => this.fetch());
-      }
+      if (res?.action === 'update' && res.payload) this.facade.updateDevice(res.payload); // ✅
     });
   }
+
 
   // DELETE
   onDelete(row: Device): void {
-    if (row.id) this.service.delete(row.id).subscribe(() => this.fetch());
+    if (row.id) this.facade.deleteDevice(row.id); // ✅
   }
 
-  private fetch(): void {
+  /*private fetch(): void {
     this.service.getAll().subscribe(rows => {
       this.dataSource.data = rows;
       this.applyFilters(); // re-evalúa si ya había texto o estado
     });
-  }
+  }*/
 
   // handlers de la UI
   applySearch(value: string)   { this.searchTerm = value; this.applyFilters(); }
