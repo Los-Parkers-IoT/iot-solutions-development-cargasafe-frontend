@@ -13,7 +13,7 @@
 <ng-container *ngIf="(device$ | async) as d">
   <!-- Page header -->
   <div class="dd-header">
-    <h1 class="dd-title">Device IMEI-{{ d.imei }}</h1>
+    <h1 class="dd-title">Device {{ d.imei }}</h1>
 
     <div class="dd-actions">
       <button mat-raised-button color="primary" (click)="linkToVehicle(d)">
@@ -31,11 +31,6 @@
         <div class="dd-card-title">Technical Card</div>
 
         <div class="dd-tech">
-          <div class="kv">
-            <div class="k">Type:</div>
-            <div class="v">{{ d.type }}</div>
-          </div>
-
           <div class="kv">
             <div class="k">Status:</div>
             <div class="v">{{ d.online ? 'Online' : 'Offline' }}</div>
