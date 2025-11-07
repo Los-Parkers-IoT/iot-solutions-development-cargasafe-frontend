@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+/*import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Device } from '../../domain/model/device.model';
@@ -15,4 +15,4 @@ export class DeviceService {
   create(payload: Device): Observable<Device> { return this.http.post<Device>(this.baseUrl, payload); }
   update(payload: Device): Observable<Device> { return this.http.put<Device>(`${this.baseUrl}/${payload.id}`, payload); }
   delete(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/${id}`); }
-}
+}*/

@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+/*import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../../domain/model/vehicle.model';
@@ -14,4 +14,4 @@ export class VehicleService {
   create(payload: Vehicle): Observable<Vehicle> { return this.http.post<Vehicle>(this.baseUrl, payload); }
   update(payload: Vehicle): Observable<Vehicle> { return this.http.put<Vehicle>(`${this.baseUrl}/${payload.id}`, payload); }
   delete(id: number): Observable<void> { return this.http.delete<void>(`${this.baseUrl}/${id}`); }
-}
+}*/
