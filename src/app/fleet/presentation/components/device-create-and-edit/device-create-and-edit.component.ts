@@ -1,20 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, Output, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
-import {defaultDevice, Device, DeviceType} from '../../../domain/model/device.model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { defaultDevice, Device } from '../../../domain/model/device.model';
+
+export type DeviceDialogData = { editMode: boolean; data: Device };
 
 @Component({
   selector: 'app-device-create-and-edit',
   standalone: true,
-  imports: [
-    CommonModule, FormsModule,
-    MatFormFieldModule, MatInputModule, MatSelectModule, MatCheckboxModule, MatButtonModule
-  ],
+  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatCheckboxModule, MatButtonModule],
   templateUrl: './device-create-and-edit.component.html',
   styleUrl: './device-create-and-edit.component.css'
 })
@@ -25,10 +24,28 @@ export class DeviceCreateAndEditComponent {
   @Output() addRequested = new EventEmitter<Device>();
   @Output() updateRequested = new EventEmitter<Device>();
 
-  // PUBLIC so the template can read it
-  deviceTypes: DeviceType[] = ['Temp + GPS', 'GPS', 'Env Sensor'];
+  constructor(
+    @Optional() private dialogRef?: MatDialogRef<DeviceCreateAndEditComponent, {action:'add'|'update'|'cancel'; payload?:Device}>,
+    @Optional() @Inject(MAT_DIALOG_DATA) dialogData?: DeviceDialogData
+  ){
+    if (dialogData) {
+      this.editMode = dialogData.editMode;
+      this.data = { ...dialogData.data };
+    }
+  }
 
-  submit(): void {
-    this.editMode ? this.updateRequested.emit(this.data) : this.addRequested.emit(this.data);
+  onCancel() {
+    if (this.dialogRef) this.dialogRef.close({ action: 'cancel' });
+    else this.cancelRequested.emit();
+  }
+
+  submit() {
+    if (this.editMode) {
+      if (this.dialogRef) this.dialogRef.close({ action: 'update', payload: this.data });
+      else this.updateRequested.emit(this.data);
+    } else {
+      if (this.dialogRef) this.dialogRef.close({ action: 'add', payload: this.data });
+      else this.addRequested.emit(this.data);
+    }
   }
 }
