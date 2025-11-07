@@ -13,11 +13,11 @@
 <ng-container *ngIf="(vehicle$ | async) as v">
   <!-- Page header -->
   <div class="vd-header">
-    <h1 class="vd-title">Vehicles {{ v.plate }}</h1>
+    <h1 class="vd-title">Vehicle {{ v.plate }}</h1> <!-- en vez de Vehicles -->
 
     <div class="vd-actions">
       <button mat-raised-button color="primary" (click)="setAvailable(v)">
-        Set Available
+        Set in service
       </button>
       <button mat-raised-button color="warn" (click)="setOutOfService(v)">
         Set out of Service
@@ -44,10 +44,16 @@
           </div>
 
           <div class="kv">
-            <div class="k">IoT Device:</div>
+            <div class="k">IoT Devices:</div>
             <div class="v">
-              {{ v.deviceImei ?? '—' }}
-              <span class="hint">Synced</span>
+              <ng-container *ngIf="(v.deviceImeis?.length ?? 0) > 0; else noIoT">
+                <mat-chip-set>
+                  <mat-chip *ngFor="let imei of v.deviceImeis; trackBy: trackByValue" appearance="outlined" selected>
+                    {{ imei }}
+                  </mat-chip>
+                </mat-chip-set>
+              </ng-container>
+              <ng-template #noIoT>—</ng-template>
             </div>
           </div>
 

@@ -9,7 +9,7 @@ import { MatListModule } from '@angular/material/list';
 import { Vehicle } from '../../../domain/model/vehicle.model';
 import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import {VehicleService} from '../../../application/services/vehicle.service';
+import {FleetFacade} from '../../../application/services/fleet.facade';
 
 @Component({
   selector: 'app-vehicle-detail-page',
@@ -22,22 +22,16 @@ import {VehicleService} from '../../../application/services/vehicle.service';
 export class VehicleDetailPageComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private service = inject(VehicleService);
+  /*private service = inject(VehicleService);*/
+  private facade = inject(FleetFacade);
   private snack = inject(MatSnackBar, { optional: true });
 
   private refresh$ = new BehaviorSubject<void>(undefined);
 
   vehicle$ = this.route.paramMap.pipe(
     map(pm => Number(pm.get('id'))),
-    switchMap(id =>
-      this.refresh$.pipe(
-        switchMap(() => this.service.getById(id)),
-      )
-    ),
-    catchError(err => {
-      console.error('[VehicleDetail] error:', err);
-      return of(null);
-    })
+    switchMap(id => this.refresh$.pipe(switchMap(() => this.facade.loadVehicleById(id)))), // ✅ usa refresh$
+    catchError(() => of(null))
   );
 
   back() { this.router.navigate(['/fleet/vehicles']); }
@@ -47,26 +41,16 @@ export class VehicleDetailPageComponent {
 
   setAvailable(v: Vehicle) {
     if (!v?.id) return;
-    const next: Vehicle = { ...v, status: 'Available' };
-    this.service.update(next).subscribe({
-      next: () => {
-        this.snack?.open('Vehicle set to Available', 'OK', { duration: 2000 });
-        this.refresh$.next();
-      },
-      error: () => this.snack?.open('Could not update status', 'Close', { duration: 2500 })
-    });
+    this.facade.updateVehicle({ ...v, status: 'IN_SERVICE' }); // ✅ facade
+    this.snack?.open('Vehicle set to Available', 'OK', { duration: 2000 });
+    this.refresh$.next();
   }
 
   setOutOfService(v: Vehicle) {
     if (!v?.id) return;
-    const next: Vehicle = { ...v, status: 'Out of Service' };
-    this.service.update(next).subscribe({
-      next: () => {
-        this.snack?.open('Vehicle set Out of Service', 'OK', { duration: 2000 });
-        this.refresh$.next();
-      },
-      error: () => this.snack?.open('Could not update status', 'Close', { duration: 2500 })
-    });
+    this.facade.updateVehicle({ ...v, status: 'Out_of_Service' }); // ✅ facade
+    this.snack?.open('Vehicle set Out of Service', 'OK', { duration: 2000 });
+    this.refresh$.next();
   }
 
   trackByValue = (_: number, val: string) => val;
