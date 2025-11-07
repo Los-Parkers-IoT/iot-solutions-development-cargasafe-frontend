@@ -45,6 +45,25 @@ export class Trip implements BaseEntity {
     this._polyline_encrypted = trip.polyline_encrypted;
   }
 
+  private _externalId?: string;
+  get externalId(): string | undefined { return this._externalId; }
+  set externalId(value: string | undefined) { this._externalId = value; }
+
+  private _status?: 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  get status(): 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | undefined { return this._status; }
+  set status(value: 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | undefined) { this._status = value; }
+
+
+
+  private _startedAt: Date | null = null;
+  get startedAt(): Date | null { return this._startedAt; }
+  set startedAt(value: Date | null) { this._startedAt = value; }
+
+  private _completedAt: Date | null = null;
+  get completedAt(): Date | null { return this._completedAt; }
+  set completedAt(value: Date | null) { this._completedAt = value; }
+
+
   get id(): number {
     return this._id;
   }

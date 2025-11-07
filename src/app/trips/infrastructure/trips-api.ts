@@ -12,15 +12,20 @@ export class TripsApi {
   private tripsEndpoint = environment.tripsEndpointPath;
   private http = inject(HttpClient);
 
+
   getTrips(): Observable<Trip[]> {
     return this.http
-      .get<TripResource[]>(`${this.baseUrl}${this.tripsEndpoint}`)
-      .pipe(map((response) => response.map(TripAssembler.toEntityFromResource)));
+      .get<TripResource[] | { content: TripResource[] }>(`${this.baseUrl}${this.tripsEndpoint}`)
+      .pipe(
+        map((response) => Array.isArray(response) ? response : (response?.content ?? [])),
+        map((items) => items.map(TripAssembler.toEntityFromResource))
+      );
   }
 
-  getTripById(id: number): Observable<Trip> {
+  getTripById(id: string | number): Observable<Trip> {
     return this.http
       .get<TripResource>(`${this.baseUrl}${this.tripsEndpoint}/${id}`)
       .pipe(map((resource) => TripAssembler.toEntityFromResource(resource)));
   }
+
 }

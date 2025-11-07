@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
+import {Component, computed, effect, inject, OnInit} from '@angular/core';
 import { TripsStore } from '../../../application/trips.store';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import {DatePipe, DecimalPipe, SlicePipe} from '@angular/common';
 
 @Component({
   selector: 'app-trip-list-page',
@@ -24,14 +24,27 @@ import { DatePipe } from '@angular/common';
     MatIconModule,
     RouterModule,
     DatePipe,
+    DecimalPipe,
+    SlicePipe,
   ],
   templateUrl: './trip-list-page.html',
   styleUrl: './trip-list-page.css',
+  standalone: true
 })
 export class TripListPage implements OnInit {
   readonly store = inject(TripsStore);
+  trips = computed(() => this.store.trips());
 
-  displayedColumns: string[] = ['id', 'driver', 'codriver', 'createdAt', 'departure', 'actions'];
+  displayedColumns: string[] = [
+    'id',
+    'status',
+    'driver',
+    'codriver',
+    'deliveries',
+    'createdAt',
+    'departure',
+    'actions',
+  ];
 
   dataSource = new MatTableDataSource<Trip>([]);
 
