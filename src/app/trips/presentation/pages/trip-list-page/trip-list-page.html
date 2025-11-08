@@ -51,16 +51,28 @@
 
   <!-- FILTERS -->
   <section class="trips-filters">
+    <!-- Search -->
     <mat-form-field subscriptSizing="dynamic" appearance="outline" class="search-field">
       <mat-label>Search</mat-label>
-      <input matInput placeholder="Search by trip ID, route, driver..." type="text" />
+      <input
+        matInput
+        placeholder="Search by trip ID, route, driver..."
+        type="text"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+      />
     </mat-form-field>
 
     <div class="filters-actions">
       <div class="filter-group">
+        <!-- 🏷️ Status -->
         <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
           <mat-label>Status</mat-label>
-          <mat-select>
+          <mat-select
+            [(ngModel)]="statusFilter"
+            (selectionChange)="onStatusChange($event.value)"
+          >
+            <mat-option value="all">All</mat-option>
             <mat-option value="0">Completado</mat-option>
             <mat-option value="1">Cancelado</mat-option>
             <mat-option value="2">En curso</mat-option>
@@ -68,13 +80,39 @@
           </mat-select>
         </mat-form-field>
 
+        <!-- ↕️ Created At (orden) -->
         <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
           <mat-label>Created At</mat-label>
-          <mat-select>
-            <mat-option value="recent">Recent</mat-option>
-            <mat-option value="oldest">Oldest</mat-option>
+          <mat-select
+            [(ngModel)]="createdOrder"
+            (selectionChange)="onCreatedOrderChange($event.value)"
+          >
+            <mat-option value="desc">Recent</mat-option>
+            <mat-option value="asc">Oldest</mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+
+      <!-- 🗓️ Created Between (NO tocar; ya funciona) -->
+      <div class="filter-group">
+        <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
+          <mat-label>Created Between</mat-label>
+
+          <mat-date-range-input [rangePicker]="picker" [comparisonStart]="fromDate" [comparisonEnd]="toDate">
+            <input matStartDate placeholder="From" [(ngModel)]="fromDate">
+            <input matEndDate placeholder="To" [(ngModel)]="toDate">
+          </mat-date-range-input>
+
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+
+        <button mat-stroked-button color="primary" (click)="applyDateFilter()">
+          Apply
+        </button>
+        <button mat-button (click)="clearDateFilter()">
+          Clear
+        </button>
       </div>
     </div>
   </section>
