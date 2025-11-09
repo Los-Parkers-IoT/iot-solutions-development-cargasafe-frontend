@@ -6,26 +6,14 @@ import {DeviceManagementComponent} from './fleet/presentation/pages/device-manag
 import {VehicleDetailPageComponent} from './fleet/presentation/pages/vehicle-detail-page/vehicle-detail-page';
 import {DeviceDetailPageComponent} from './fleet/presentation/pages/device-detail-page/device-detail-page';
 
+// app.routes.ts (root)
 export const routes: Routes = [
   {
     path: '',
     component: RootLayout,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'fleet/vehicles' },
-
-      {
-        path: 'fleet',
-        children: [
-          { path: 'vehicles', component: VehicleManagementComponent },
-          { path: 'devices', component: DeviceManagementComponent },
-
-          { path: 'vehicles/:id', component: VehicleDetailPageComponent },
-          { path: 'devices/:id', component: DeviceDetailPageComponent },
-
-          { path: '', pathMatch: 'full', redirectTo: 'vehicles' },
-        ],
-      },
-
+      { path: 'fleet', loadChildren: () => import('./fleet/fleet.routes').then(m => m.FLEET_ROUTES) },
       { path: '**', component: PageNotFound },
     ],
   },
