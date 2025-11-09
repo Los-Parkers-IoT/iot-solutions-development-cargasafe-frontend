@@ -14,13 +14,6 @@
   <!-- Page header -->
   <div class="dd-header">
     <h1 class="dd-title">Device {{ d.imei }}</h1>
-
-    <div class="dd-actions">
-      <button mat-raised-button color="primary" (click)="linkToVehicle(d)">
-        <mat-icon>add</mat-icon>
-        Link to Vehicle
-      </button>
-    </div>
   </div>
 
   <div class="dd-grid">
@@ -65,10 +58,24 @@
       <mat-card class="dd-card">
         <div class="dd-card-title">Actions</div>
         <div class="dd-actions-col">
-          <button mat-stroked-button (click)="testPing(d)">Test Ping</button>
-          <button mat-raised-button color="warn" (click)="unlink(d)">Unlink</button>
+          <button mat-raised-button color="primary" (click)="toggleOnline(d)">
+            {{ d.online ? 'Set Offline' : 'Set Online' }}
+          </button>
+
+          <button mat-stroked-button (click)="openUpdateFirmwareDialog(d)">
+            Update Firmware
+          </button>
+
+          <button mat-stroked-button (click)="openAssignVehicleDialog(d)">
+            Link to Vehicle
+          </button>
+
+          <button mat-raised-button color="warn" (click)="unlink(d)" [disabled]="!d.vehiclePlate">
+            Unlink
+          </button>
         </div>
       </mat-card>
+
     </aside>
   </div>
 

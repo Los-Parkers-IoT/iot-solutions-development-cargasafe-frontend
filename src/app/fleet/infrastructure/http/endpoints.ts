@@ -14,9 +14,12 @@ export const endpoints = {
   vehicles:           `${base}/vehicles`,
   vehicleById:        (id: number) => `${base}/vehicles/${id}`,
   vehicleAssign:      (id: number, imei: string) => `${base}/vehicles/${id}/assign-device/${encodeURIComponent(imei)}`,
-  vehicleUnassign:    (imei: string) => `${base}/vehicles/unassign-device/${encodeURIComponent(imei)}`,
+  vehicleUnassign: (id: number, imei: string) => `${base}/vehicles/${id}/unassign-device/${encodeURIComponent(imei)}`,
   vehicleStatus:      (id: number) => `${base}/vehicles/${id}/status`,
   vehiclesByType:     (type: string) => `${base}/vehicles/by-type/${encodeURIComponent(type)}`,
   vehiclesByStatus:   (status: string) => `${base}/vehicles/by-status/${encodeURIComponent(status)}`,
   vehicleByPlate:     (plate: string) => `${base}/vehicles/by-plate/${encodeURIComponent(plate)}`
+
+
+
 };

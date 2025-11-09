@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { DeviceRepository } from '../../domain/repositories/device.repository';
 import { endpoints } from './endpoints';
@@ -28,7 +28,10 @@ export class DeviceHttpRepository implements DeviceRepository {
   }
 
   updateFirmware(id: number, firmware: string): Observable<Device> {
-    return this.http.post<any>(endpoints.deviceFirmware(id), { firmware }).pipe(map(toDevice));
+    const params = new HttpParams().set('firmware', (firmware ?? '').trim());
+    return this.http
+      .post<any>(endpoints.deviceFirmware(id), null, { params }) // body null, query param
+      .pipe(map(toDevice));
   }
   updateOnline(id: number, online: boolean): Observable<Device> {
     return this.http.patch<any>(endpoints.deviceOnline(id), { online }).pipe(map(toDevice));
