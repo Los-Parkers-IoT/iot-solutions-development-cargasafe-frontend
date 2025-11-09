@@ -1,6 +1,6 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
-import { Incident} from './incident.model';
-import { Notification} from './notification.model';
+import { Incident } from './incident.model';
+import { Notification } from './notification.model';
 
 export class Alert implements BaseEntity {
   private _id: number;
@@ -11,6 +11,7 @@ export class Alert implements BaseEntity {
   private _closedAt: Date | null;
   private _incidents: Incident[];
   private _notifications: Notification[];
+  private _deliveryOrderId?: number;
 
   private _viewed: boolean = false;
 
@@ -51,11 +52,11 @@ export class Alert implements BaseEntity {
     this._alertType = value;
   }
 
-  get alertStatus(): "OPEN" | "ACKNOWLEDGED" | "CLOSED" {
+  get alertStatus(): 'OPEN' | 'ACKNOWLEDGED' | 'CLOSED' {
     return this._alertStatus;
   }
 
-  set alertStatus(value: "OPEN" | "ACKNOWLEDGED" | "CLOSED") {
+  set alertStatus(value: 'OPEN' | 'ACKNOWLEDGED' | 'CLOSED') {
     this._alertStatus = value;
   }
 
@@ -105,5 +106,13 @@ export class Alert implements BaseEntity {
 
   set viewed(value: boolean) {
     this._viewed = value;
+  }
+
+  get deliveryOrderId(): number | undefined {
+    return this._deliveryOrderId;
+  }
+
+  set deliveryOrderId(value: number) {
+    this._deliveryOrderId = value;
   }
 }
