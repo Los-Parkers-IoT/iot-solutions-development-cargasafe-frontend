@@ -120,7 +120,7 @@
       <!-- ID -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let trip">{{ trip.externalId || trip.id | slice : 0 : 8 }}</td>
+        <td mat-cell *matCellDef="let trip">{{ trip.id }}</td>
       </ng-container>
 
       <!-- DRIVER -->
@@ -168,9 +168,10 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let trip">
           <button mat-stroked-button color="primary" [routerLink]="trip.id">See more</button>
-          <button *ngIf="trip.statusId !== 'Completado'" mat-stroked-button color="warn">
-            Modify
-          </button>
+
+          @if (trip.statusId !== 'Completado') {
+          <button mat-stroked-button color="warn">Modify</button>
+          }
         </td>
       </ng-container>
 

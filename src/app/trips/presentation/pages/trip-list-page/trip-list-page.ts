@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
-import { DatePipe, DecimalPipe, SlicePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -28,7 +28,6 @@ import { MatNativeDateModule } from '@angular/material/core';
     RouterModule,
     DatePipe,
     DecimalPipe,
-    SlicePipe,
     FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
@@ -127,6 +126,10 @@ export class TripListPage implements OnInit {
     };
   }
 
+  ngOnInit(): void {
+    this.store.loadTrips();
+  }
+
   applyDateFilter(): void {
     const payload = JSON.stringify({
       from: this.fromDate ? this.fromDate.toISOString() : undefined,
@@ -207,9 +210,5 @@ export class TripListPage implements OnInit {
       default:
         return true;
     }
-  }
-
-  ngOnInit(): void {
-    this.store.loadTrips();
   }
 }
