@@ -29,9 +29,14 @@ export class VehicleHttpRepository implements VehicleRepository {
   assignDevice(vehicleId: number, imei: string): Observable<Vehicle> {
     return this.http.post<any>(endpoints.vehicleAssign(vehicleId, imei), {}).pipe(map(toVehicle));
   }
-  unassignDevice(imei: string): Observable<void> {
-    return this.http.post<void>(endpoints.vehicleUnassign(imei), {});
+
+  unassignDevice(vehicleId: number, imei: string): Observable<void> {
+    return this.http.post<void>(endpoints.vehicleUnassign(vehicleId, imei), {});
   }
+
+
+
+
   updateStatus(id: number, status: Vehicle['status']): Observable<Vehicle> {
     return this.http.patch<any>(endpoints.vehicleStatus(id), { status }).pipe(map(toVehicle));
   }
