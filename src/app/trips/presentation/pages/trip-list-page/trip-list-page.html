@@ -68,10 +68,7 @@
         <!-- 🏷️ Status -->
         <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
           <mat-label>Status</mat-label>
-          <mat-select
-            [(ngModel)]="statusFilter"
-            (selectionChange)="onStatusChange($event.value)"
-          >
+          <mat-select [(ngModel)]="statusFilter" (selectionChange)="onStatusChange($event.value)">
             <mat-option value="all">All</mat-option>
             <mat-option value="0">Completado</mat-option>
             <mat-option value="1">Cancelado</mat-option>
@@ -98,21 +95,21 @@
         <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
           <mat-label>Created Between</mat-label>
 
-          <mat-date-range-input [rangePicker]="picker" [comparisonStart]="fromDate" [comparisonEnd]="toDate">
-            <input matStartDate placeholder="From" [(ngModel)]="fromDate">
-            <input matEndDate placeholder="To" [(ngModel)]="toDate">
+          <mat-date-range-input
+            [rangePicker]="picker"
+            [comparisonStart]="fromDate"
+            [comparisonEnd]="toDate"
+          >
+            <input matStartDate placeholder="From" [(ngModel)]="fromDate" />
+            <input matEndDate placeholder="To" [(ngModel)]="toDate" />
           </mat-date-range-input>
 
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
 
-        <button mat-stroked-button color="primary" (click)="applyDateFilter()">
-          Apply
-        </button>
-        <button mat-button (click)="clearDateFilter()">
-          Clear
-        </button>
+        <button mat-stroked-button color="primary" (click)="applyDateFilter()">Apply</button>
+        <button mat-button (click)="clearDateFilter()">Clear</button>
       </div>
     </div>
   </section>
@@ -123,7 +120,7 @@
       <!-- ID -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let trip">{{ (trip.externalId || trip.id) | slice:0:8 }}</td>
+        <td mat-cell *matCellDef="let trip">{{ trip.externalId || trip.id | slice : 0 : 8 }}</td>
       </ng-container>
 
       <!-- DRIVER -->

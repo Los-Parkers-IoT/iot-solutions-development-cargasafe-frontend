@@ -57,6 +57,14 @@ export const routes: Routes = [
         ],
       },
 
+      {
+        path: 'subscriptions/change-card',
+        loadComponent: () =>
+          import('./subscription/presentation/pages/change-card/change-card.page')
+            .then(m => m.ChangeCardPage),
+      },
+
+
       { path: 'subscriptions', component: SubscriptionsPage },
 
       { path: '**', component: PageNotFound },

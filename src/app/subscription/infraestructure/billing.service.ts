@@ -1,13 +1,52 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
-import { Subscription } from '../domain/subscription';
-import { PaymentMethod } from '../domain/payment-method';
 import { Invoice } from '../domain/invoice';
 import { Plan } from '../domain/plan';
 import { environment } from '../../../environments/environment';
 
-const ACCOUNT_ID = '1';
+//POR EL MOMENTO YA QUE AUN NO HAY UN AUTH
+const USER_ID = '1';
+
+  type BackendPlan = {
+    id: number;
+    name: string;
+    limits: string;
+    price: number;
+    description: string;
+  };
+
+  type BackendPayment = {
+    id: number;
+    userId: number;
+    receiptUrl: string;
+    transactionId: string;
+    status: string;
+    amount: number;
+    paymentDate: string;
+  };
+
+  type BackendSubscriptionByUser = {
+    id: number;
+    userId: number;
+    status: 'ACTIVE' | 'CANCELED' | 'PENDING' | 'PAST_DUE';
+    renewal: string;
+    paymentMethod: string;
+    plan: BackendPlan;
+};
+
+export type SubscriptionVm = {
+  id: number;
+  userId: number;
+  planId: string | number;
+  status: 'ACTIVE' | 'CANCELED' | 'PENDING' | 'PAST_DUE';
+  amount: number;
+  currency: string;
+  renewalDate: string;
+  paymentMethodLabel?: string;
+  plan?: Plan;
+};
+
 
 @Injectable({ providedIn: 'root' })
 export class BillingService {
@@ -15,28 +54,93 @@ export class BillingService {
   private API_URL = environment.baseUrl;
 
   getPlans(): Observable<Plan[]> {
-    return this.http.get<Plan[]>(`${this.API_URL}/plans`);
+    return this.http.get<BackendPlan[]>(`${this.API_URL}/plans`).pipe(
+      map((arr) =>
+        arr.map((p) => ({
+          id: String(p.id),
+          name: p.name,
+          price: p.price,
+          currency: 'PEN',
+          vehiclesLimit: undefined as any,
+        }))
+      )
+    );
   }
 
-  getCurrentSubscription(): Observable<Subscription | null> {
-    const params = new HttpParams().set('accountId', ACCOUNT_ID).set('_limit', 1);
+  getSubscription(): Observable<SubscriptionVm | null> {
+    return this.http.get<BackendSubscriptionByUser>(`${this.API_URL}/subscription/user-id/${USER_ID}`).pipe(
+      map((s) => ({
+        id: s.id,
+        userId: s.userId,
+        planId: s.plan?.id ?? '',
+        status: s.status,
+        amount: s.plan?.price ?? 0,
+        currency: 'PEN',
+        renewalDate: s.renewal,
+        paymentMethodLabel: s.paymentMethod,
+        plan: s.plan
+          ? {
+            id: String(s.plan.id),
+            name: s.plan.name,
+            price: s.plan.price,
+            currency: 'PEN',
+            vehiclesLimit: undefined as any }
+          : undefined,
+      }))
+    );
+  }
+
+  changePlan(subscriptionId: number, newPlanId: number): Observable<SubscriptionVm> {
     return this.http
-      .get<Subscription[]>(`${this.API_URL}/subscriptions`, { params })
-      .pipe(map((arr) => arr[0] ?? null));
+      .put<BackendSubscriptionByUser>(
+        `${this.API_URL}/subscription/${subscriptionId}/plan`,
+        { newPlanId }
+      )
+      .pipe(
+        map((s) => ({
+          id: s.id,
+          userId: s.userId,
+          planId: s.plan?.id ?? '',
+          status: s.status,
+          amount: s.plan?.price ?? 0,
+          currency: 'PEN',
+          renewalDate: s.renewal,
+          paymentMethodLabel: s.paymentMethod,
+          plan: s.plan
+            ? {
+              id: String(s.plan.id),
+              name: s.plan.name,
+              price: s.plan.price,
+              currency: 'PEN',
+              vehiclesLimit: undefined as any,
+            }
+            : undefined,
+        }))
+      );
   }
 
-  getPaymentMethod(): Observable<PaymentMethod | null> {
-    const params = new HttpParams().set('accountId', ACCOUNT_ID).set('_limit', 1);
-    return this.http
-      .get<PaymentMethod[]>(`${this.API_URL}/paymentMethods`, { params })
-      .pipe(map((arr) => arr[0] ?? null));
+
+  cancelSubscription(subscriptionId: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/subscription/${subscriptionId}`);
   }
 
-  getInvoices(subscriptionId: number | string): Observable<Invoice[]> {
-    const params = new HttpParams()
-      .set('subscriptionId', String(subscriptionId))
-      .set('_sort', 'date')
-      .set('_order', 'desc');
-    return this.http.get<Invoice[]>(`${this.API_URL}/invoices`, { params });
+  getPayments(): Observable<Invoice[]> {
+    return this.http.get<BackendPayment[]>(`${this.API_URL}/payments/user-id/${USER_ID}`).pipe(
+      map((arr) =>
+        arr
+          .sort((a, b) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime())
+          .map((p) => ({
+            id: p.id,
+            subscriptionId: 0,
+            date: new Date(p.paymentDate).toISOString(),
+            amount: p.amount,
+            currency: 'PEN',
+            status: (p.status ?? 'SUCCEEDED') as any,
+            receiptUrl: p.receiptUrl,
+            hostedInvoiceUrl: undefined,
+            invoicePdfUrl: undefined,
+          }))
+      )
+    );
   }
 }

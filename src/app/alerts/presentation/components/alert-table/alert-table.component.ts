@@ -1,11 +1,21 @@
-import {Component, Input, OnInit, ViewChild, AfterViewInit, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+  AfterViewInit,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { Alert } from '../../../domain/models/alert.model';
-import { AlertsService } from '../../../infrastructure/alerts-api';
+import { AlertsService } from '../../../application/services/alerts-services';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
@@ -28,15 +38,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   templateUrl: './alert-table.component.html',
   styleUrls: ['./alert-table.component.css'],
 })
-export class AlertTableComponent
-  implements OnInit, AfterViewInit, OnChanges
-{
+export class AlertTableComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() alerts: Alert[] | null = [];
+  @Output() closeAlert = new EventEmitter<number>();
+  @Output() acknowledgeAlert = new EventEmitter<number>();
 
   displayedColumns: string[] = [
     'id',
     'type',
-    'deliveryOrderId',
     'status',
     'createdAt',
     'closedAt',
@@ -52,27 +61,22 @@ export class AlertTableComponent
   searchTerm = '';
   statusFilter = '';
 
-  constructor(private alertsService: AlertsService) {}
+  selectedAlert: Alert | null = null;
 
   ngOnInit() {
-    if (this.alerts) {
+    this.setupFilter();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['alerts'] && this.alerts) {
       this.dataSource.data = this.alerts;
+
+      this.dataSource.data.forEach(alert => {
+        alert.viewed = localStorage.getItem(`alert-viewed-${alert.id}`) === 'true';
+      });
+
+      this.applyCombinedFilter();
     }
-
-    this.dataSource.filterPredicate = (data: Alert, filter: string): boolean => {
-      const search = this.searchTerm.toLowerCase();
-      const status = this.statusFilter.toLowerCase();
-
-      const matchesSearch =
-        !search ||
-        data.id.toString().includes(search) ||
-        data.type.toLowerCase().includes(search) ||
-        data.deliveryOrderId.toLowerCase().includes(search);
-
-      const matchesStatus = !status || data.status.toLowerCase() === status;
-
-      return matchesSearch && matchesStatus;
-    };
   }
 
   ngAfterViewInit() {
@@ -80,11 +84,19 @@ export class AlertTableComponent
     this.dataSource.sort = this.sort;
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['alerts'] && this.alerts) {
-      this.dataSource.data = this.alerts;
-      this.applyCombinedFilter();
-    }
+  setupFilter() {
+    this.dataSource.filterPredicate = (data: Alert, _: string): boolean => {
+      const search = this.searchTerm.toLowerCase();
+      const status = this.statusFilter.toLowerCase();
+
+      const matchesSearch =
+        !search ||
+        data.id.toString().includes(search) ||
+        data.alertType.toLowerCase().includes(search);
+
+      const matchesStatus = !status || data.alertStatus.toLowerCase() === status;
+      return matchesSearch && matchesStatus;
+    };
   }
 
   applySearch(event: Event) {
@@ -101,13 +113,28 @@ export class AlertTableComponent
     this.dataSource.filter = Math.random().toString();
   }
 
-  markAsResolved(id: string) {
-    this.alertsService.markAsResolved(Number(id));
+  markAsResolved(id: number) {
+    this.closeAlert.emit(id);
   }
-  selectedAlert: Alert | null = null;
+
+  markAsAcknowledged(id: number) {
+    this.acknowledgeAlert.emit(id);
+  }
 
   openDetails(alert: Alert) {
     this.selectedAlert = alert;
+
+    if (!alert.viewed) {
+      alert.viewed = true;
+      localStorage.setItem(`alert-viewed-${alert.id}`, 'true');
+
+      if (alert.alertStatus === 'OPEN') {
+        alert.alertStatus = 'ACKNOWLEDGED';
+        this.markAsAcknowledged(alert.id);
+      }
+
+      this.dataSource.data = [...this.dataSource.data];
+    }
   }
 
   closeDetails() {

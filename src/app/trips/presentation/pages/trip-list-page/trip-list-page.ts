@@ -1,4 +1,4 @@
-import {Component, computed, effect, inject, OnInit} from '@angular/core';
+import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import { TripsStore } from '../../../application/trips.store';
 
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -10,10 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
-import {DatePipe, DecimalPipe, SlicePipe} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material/core';
+import { DatePipe, DecimalPipe, SlicePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-trip-list-page',
@@ -35,7 +35,7 @@ import {MatNativeDateModule} from '@angular/material/core';
   ],
   templateUrl: './trip-list-page.html',
   styleUrl: './trip-list-page.css',
-  standalone: true
+  standalone: true,
 })
 export class TripListPage implements OnInit {
   fromDate: Date | null = null;
@@ -63,12 +63,12 @@ export class TripListPage implements OnInit {
   dataSource = new MatTableDataSource<Trip>([]);
 
   constructor() {
-      effect(() => {
+    effect(() => {
       const data = this.store.trips();
       this.dataSource.data = this.sortByCreated([...data], this.createdOrder);
     });
 
-      this.dataSource.filterPredicate = (data: any, filter: string) => {
+    this.dataSource.filterPredicate = (data: any, filter: string) => {
       if (!filter) return true;
 
       const { from, to, search, status } = JSON.parse(filter) as {
@@ -78,7 +78,7 @@ export class TripListPage implements OnInit {
         status?: string;
       };
 
-        if (from || to) {
+      if (from || to) {
         const created = new Date(data.createdAt);
 
         if (from) {
@@ -92,19 +92,23 @@ export class TripListPage implements OnInit {
         }
       }
 
-        if (status && status !== 'all') {
+      if (status && status !== 'all') {
         if (!this.statusMatches(data.statusId, status)) return false;
       }
 
-        if (search && search.trim().length > 0) {
+      if (search && search.trim().length > 0) {
         const q = search.trim().toLowerCase();
 
-        const idStr = ((data.externalId ?? data.id) ?? '').toString().toLowerCase();
+        const idStr = (data.externalId ?? data.id ?? '').toString().toLowerCase();
         const driverStr = (data.driverId ?? '').toString().toLowerCase();
         const coDriverStr = (data.coDriverId ?? '').toString().toLowerCase();
         const statusStr = (data.statusId ?? '').toString().toLowerCase();
-        const createdStr = data.createdAt ? new Date(data.createdAt).toLocaleString().toLowerCase() : '';
-        const departureStr = data.departureAt ? new Date(data.departureAt).toLocaleString().toLowerCase() : '';
+        const createdStr = data.createdAt
+          ? new Date(data.createdAt).toLocaleString().toLowerCase()
+          : '';
+        const departureStr = data.departureAt
+          ? new Date(data.departureAt).toLocaleString().toLowerCase()
+          : '';
         const deliveriesStr = (data.totalDistanceKm ?? '').toString().toLowerCase();
 
         const hit =
@@ -123,7 +127,7 @@ export class TripListPage implements OnInit {
     };
   }
 
-    applyDateFilter(): void {
+  applyDateFilter(): void {
     const payload = JSON.stringify({
       from: this.fromDate ? this.fromDate.toISOString() : undefined,
       to: this.toDate ? this.toDate.toISOString() : undefined,
@@ -133,7 +137,7 @@ export class TripListPage implements OnInit {
     this.dataSource.filter = payload + ' ';
   }
 
-    clearDateFilter(): void {
+  clearDateFilter(): void {
     this.fromDate = null;
     this.toDate = null;
     const payload = JSON.stringify({
@@ -161,7 +165,7 @@ export class TripListPage implements OnInit {
     this.dataSource.data = this.sortByCreated([...this.dataSource.data], this.createdOrder);
   }
 
-    private pushFilter(): void {
+  private pushFilter(): void {
     const payload = JSON.stringify({
       from: this.fromDate ? this.fromDate.toISOString() : undefined,
       to: this.toDate ? this.toDate.toISOString() : undefined,
@@ -192,7 +196,12 @@ export class TripListPage implements OnInit {
       case '1':
         return code === '1' || text.includes('cancel');
       case '2':
-        return code === '2' || text.includes('curso') || text.includes('progress') || text.includes('ongo');
+        return (
+          code === '2' ||
+          text.includes('curso') ||
+          text.includes('progress') ||
+          text.includes('ongo')
+        );
       case '3':
         return code === '3' || text.includes('program');
       default:

@@ -35,7 +35,7 @@ export class AlertsService {
     const alert = this.alertsSubject.value.find((a) => a.id === id);
     if (!alert) return;
 
-    alert.status = 'Closed';
+    alert.alertStatus = 'CLOSED';
     alert.closedAt = new Date();
 
     const updatedAlert = AlertAssembler.toResourceFromEntity(alert);

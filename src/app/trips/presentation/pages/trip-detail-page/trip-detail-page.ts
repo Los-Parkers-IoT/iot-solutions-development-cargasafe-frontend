@@ -176,6 +176,6 @@ export class TripDetailPage implements OnInit {
   }
 
   getIncidentsNumberByOrderId(orderId: number): number {
-    return this.alerts().filter((alert) => alert.deliveryOrderId === String(orderId)).length;
+    return this.alerts().filter((alert) => alert.deliveryOrderId === orderId).length;
   }
 }

@@ -1,12 +1,12 @@
 <section class="subscriptions-page">
   <h1 class="title">Manage your plan and payments</h1>
 
-  <div class="grid">
+  <div class="plan-content">
     <mat-card class="summary" *ngIf="sub(); else loadingTpl">
       <h2 class="summary__title">Subscription</h2>
 
       <div class="kv">
-        <span>Current Plan:</span><strong class="value">{{ sub()?.planId || '—' }}</strong>
+        <span>Current Plan:</span><strong class="value">{{ sub()?.plan?.name || '—' }}</strong>
       </div>
       <div class="kv">
         <span>Amount:</span><strong class="value">{{ amountLabel }}</strong>
@@ -15,10 +15,11 @@
         <span>Status:</span><strong class="value">{{ sub()?.status }}</strong>
       </div>
       <div class="kv">
-        <span>Renewal:</span><strong class="value">{{ sub()?.renewalDate | date:'MM/dd/yyyy' }}</strong>
+        <span>Renewal:</span
+        ><strong class="value">{{ sub()?.renewalDate | date : 'MM/dd/yyyy' }}</strong>
       </div>
       <div class="kv">
-        <span>Payment Method:</span><strong class="value">{{ pmMask }}</strong>
+        <span>Payment Method:</span><strong class="value">{{ sub()?.paymentMethodLabel || '-' }}</strong>
       </div>
     </mat-card>
 
@@ -27,9 +28,13 @@
     </ng-template>
 
     <div class="actions">
-      <button mat-stroked-button color="warn" class="pill" (click)="onCancelPlan()">
+
+      <button mat-stroked-button color="warn" class="pill"
+              (click)="onCancel()"
+              [disabled]="sub()?.status !== 'ACTIVE'">
         <mat-icon>cancel</mat-icon> CANCEL YOUR PLAN
       </button>
+
       <button mat-stroked-button color="primary" class="pill" (click)="onChangePlan()">
         <mat-icon>upgrade</mat-icon> CHANGE YOUR PLAN
       </button>
@@ -40,9 +45,13 @@
   </div>
 
   <div class="receipt-cta">
-    <button mat-stroked-button class="pill"
-            (click)="onDownloadReceipt(invoices()[0])"
-            [disabled]="!invoices().length">
+    <button
+      mat-stroked-button
+      class="pill"
+      (click)="onDownloadReceipt(invoices()[0])"
+      [disabled]="!invoices().length || !canDownload(invoices()[0])"
+
+    >
       <mat-icon>download</mat-icon> Download receipt
     </button>
   </div>
@@ -50,36 +59,50 @@
   <mat-card class="history" *ngIf="invoices().length">
     <h3 class="history__title">PAYMENT HISTORY</h3>
 
-    <table mat-table [dataSource]="invoices()" class="history__table">
-      <ng-container matColumnDef="date">
-        <th mat-header-cell *matHeaderCellDef>Date</th>
-        <td mat-cell *matCellDef="let r">{{ r.date | date:'MM/dd/yyyy' }}</td>
-      </ng-container>
+    <div class="history__table-container">
+      <table mat-table [dataSource]="invoices()" class="history__table">
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let r">{{ r.date | date : 'MM/dd/yyyy' }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef>Amount</th>
-        <td mat-cell *matCellDef="let r">{{ r.amount | currency:r.currency:'symbol':'1.2-2' }}</td>
-      </ng-container>
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let r">
+            {{ r.amount | currency : r.currency : 'symbol' : '1.2-2' }}
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>State</th>
-        <td mat-cell *matCellDef="let r">{{ r.status }}</td>
-      </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>State</th>
+          <td mat-cell *matCellDef="let r">{{ r.status }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="reference">
-        <th mat-header-cell *matHeaderCellDef>Ref. No. transaction</th>
-        <td mat-cell *matCellDef="let r">{{ r.reference || '-------' }}</td>
-      </ng-container>
+        <ng-container matColumnDef="reference">
+          <th mat-header-cell *matHeaderCellDef>Ref. No. transaction</th>
+          <td mat-cell *matCellDef="let r">{{ r.reference || '-------' }}</td>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let r">
-          <button mat-button (click)="onDownloadReceipt(r)">View receipt</button>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let r" class="actions-cell">
+            <button mat-stroked-button
+                    (click)="onViewInvoice(r)"
+                    [disabled]="!canViewInvoice(r)">
+              View receipt
+            </button>
 
-      <tr mat-header-row *matHeaderRowDef="displayed"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayed"></tr>
-    </table>
+            <button mat-stroked-button
+                    (click) = "onDownloadReceipt(r)"
+                    [disabled]= "!canDownload(r)">
+              Download receipt
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayed"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayed"></tr>
+      </table>
+    </div>
   </mat-card>
 </section>

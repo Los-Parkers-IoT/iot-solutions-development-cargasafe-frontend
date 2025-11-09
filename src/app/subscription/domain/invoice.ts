@@ -5,6 +5,7 @@ export interface Invoice {
   amount: number;
   currency: string;
   status: 'Accepted' | 'Pending' | 'Declined';
-  reference?: string | null;
   receiptUrl?: string;
+  hostedInvoiceUrl?: string;
+  invoicePdfUrl?: string;
 }
