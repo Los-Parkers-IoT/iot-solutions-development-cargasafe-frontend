@@ -11,7 +11,7 @@ export abstract class VehicleRepository {
 
   // Extras
   abstract assignDevice(vehicleId: number, imei: string): Observable<Vehicle>;
-  abstract unassignDevice(imei: string): Observable<void>;
+  abstract unassignDevice(vehicleId: number, imei: string): Observable<void>;
   abstract updateStatus(id: number, status: Vehicle['status']): Observable<Vehicle>;
   abstract findByType(type: Vehicle['type'] | string): Observable<Vehicle[]>;
   abstract findByStatus(status: Vehicle['status'] | string): Observable<Vehicle[]>;

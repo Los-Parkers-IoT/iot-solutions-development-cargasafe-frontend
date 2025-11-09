@@ -1,9 +1,12 @@
-import { inject } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../../domain/model/vehicle.model';
 import {VehicleHttpRepository} from '../../infrastructure/http/vehicle.http-repository';
 
-export function findVehiclesByTypeUseCase(type: Vehicle['type'] | string): Observable<Vehicle[]> {
-  const repo = inject(VehicleHttpRepository);
-  return repo.findByType(type);
+@Injectable({ providedIn: 'root' })
+export class FindVehiclesByTypeUseCase {
+  private repo = inject(VehicleHttpRepository);
+  execute(type: Vehicle['type'] | string) {
+    return this.repo.findByType(type);
+  }
 }
