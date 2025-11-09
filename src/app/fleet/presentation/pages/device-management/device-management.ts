@@ -75,6 +75,24 @@ export class DeviceManagementComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    // ⬇️ Accesor de orden para tipos correctos
+    this.dataSource.sortingDataAccessor = (item: Device, prop: string) => {
+      switch (prop) {
+        case 'id':           return item.id ?? 0;               // numérico real
+        case 'imei':         return (item.imei ?? '').toString();
+        case 'online':       return item.online ? 1 : 0;        // booleans
+        case 'vehiclePlate': return item.vehiclePlate ?? '\uffff'; // nulls al final
+        default:             return (item as any)[prop] ?? '';
+      }
+    };
+
+    // ⬇️ Estado inicial: ID asc (o 'desc' si quieres “más nuevo arriba”)
+    Promise.resolve().then(() => {
+      this.sort.active = 'id';
+      this.sort.direction = 'asc';
+      this.sort.sortChange.emit({ active: 'id', direction: 'asc' });
+    });
   }
 
   // NAV

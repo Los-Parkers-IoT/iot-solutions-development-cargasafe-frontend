@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import {MatSort, MatSortModule, Sort} from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -50,10 +50,14 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
   capabilityFilter = '';
   capabilityOptions: string[] = [];
 
+
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
+
+
     this.dataSource.filterPredicate = (row, filterStr) => {
       const f = JSON.parse(filterStr) as { q: string; status: string; cap: string };
       const toL = (s: string | null | undefined) => (s ?? '').toLowerCase();
@@ -62,7 +66,7 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       const matchesQ =
         !q ||
         toL(row.plate).includes(q) ||
-        toL(row.type).includes(q) ||
+        toL(String(row.type)).includes(q) ||
         (row.deviceImeis ?? []).some(imei => toL(imei).includes(q)) ||
         (row.capabilities ?? []).some(c => toL(c).includes(q));
 
@@ -74,11 +78,10 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
 
 
     this.facade.vehicles$.subscribe(rows => {
-      this.dataSource.data = rows;
-      // métricas
+      this.dataSource.data = rows;      // métricas
       this.totalCount     = rows.length;
-      this.availableCount = rows.filter(r => r.status === 'Available').length;
-      this.inServiceCount = rows.filter(r => r.status === 'In Service').length;
+      this.availableCount = rows.filter(r => r.status === 'IN_SERVICE').length;
+      this.inServiceCount = rows.filter(r => r.status === 'IN_SERVICE').length;
       // capabilities únicas
       const set = new Set<string>();
       rows.forEach(r => (r.capabilities ?? []).forEach(c => set.add(c)));
@@ -92,6 +95,20 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    // ordenar numéricamente por id y alfabéticamente el resto
+    this.dataSource.sortingDataAccessor = (item: Vehicle, prop: string) => {
+      if (prop === 'id') return item.id ?? 0;
+      const v = (item as any)[prop];
+      return typeof v === 'string' ? v : String(v ?? '');
+    };
+
+    // estado inicial: ID asc (defer para evitar ExpressionChanged)
+    Promise.resolve().then(() => {
+      this.sort.active = 'id';
+      this.sort.direction = 'asc';
+      this.sort.sortChange.emit({ active: 'id', direction: 'asc' });
+    });
   }
 
   // navegación
@@ -140,6 +157,9 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       cap: this.capabilityFilter,
     });
   }
+
+
+
 
   /*// carga y métricas
   private fetch(): void {
