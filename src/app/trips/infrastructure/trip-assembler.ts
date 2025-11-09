@@ -1,6 +1,5 @@
 import { Trip } from '../domain/model/trip.entity';
 import { TripResource, TripsResponse } from './trip-response';
-import {resource} from '@angular/core';
 
 export class TripAssembler {
   static toEntitiesFromResponse(responses: TripsResponse): Trip[] {
@@ -11,10 +10,11 @@ export class TripAssembler {
     const createdAt = resource.createdAt ? new Date(resource.createdAt) : new Date();
     const updatedAt = resource.updatedAt ? new Date(resource.updatedAt) : new Date();
 
-    const departureAt =
-      resource.departureAt
-        ? new Date(resource.departureAt)
-        : (resource.startedAt ? new Date(resource.startedAt) : null);
+    const departureAt = resource.departureAt
+      ? new Date(resource.departureAt)
+      : resource.startedAt
+      ? new Date(resource.startedAt)
+      : null;
 
     const trip = new Trip({
       id: Number.isFinite(resource.id as any) ? (resource.id as any as number) : 0,
@@ -36,11 +36,6 @@ export class TripAssembler {
     trip.startedAt = resource.startedAt ? new Date(resource.startedAt) : null;
     trip.completedAt = resource.completedAt ? new Date(resource.completedAt) : null;
 
-
-    try { trip.externalId = String(resource.id); } catch {}
-
     return trip;
   }
 }
-
-

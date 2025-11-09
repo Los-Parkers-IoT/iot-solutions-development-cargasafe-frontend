@@ -12,6 +12,9 @@ export interface TripResource {
   polyline_encrypted: string;
   totalDistanceKm: number;
   totalDurationMin: number;
+  startedAt: string | null;
+  completedAt: string | null;
+  status: 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
 }
 
 export interface TripsResponse {
