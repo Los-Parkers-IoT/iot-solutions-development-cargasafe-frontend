@@ -6,7 +6,9 @@ import { VehicleHttpRepository } from '../../infrastructure/http/vehicle.http-re
 @Injectable({ providedIn: 'root' })
 export class UnassignDeviceFromVehicleUseCase {
   private repo = inject(VehicleHttpRepository);
-  execute(imei: string): Observable<void> {
-    return this.repo.unassignDevice(imei);
+
+
+  execute(vehicleId: number, imei: string): Observable<void> {
+    return this.repo.unassignDevice(vehicleId, imei);
   }
 }
