@@ -1,6 +1,5 @@
-
 export interface Device {
-  id?: number;                 // Long en backend (autogenerado)
+  id?: number;
   imei: string;
   firmware: string;
   online: boolean;

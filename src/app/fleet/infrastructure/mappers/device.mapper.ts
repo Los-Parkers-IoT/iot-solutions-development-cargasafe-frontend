@@ -9,8 +9,8 @@ const toNum = (v: unknown): number | undefined => {
 // Backend -> Frontend
 export const toDevice = (dto: DeviceDto): Device => ({
   id: toNum(dto.id),
-  imei: dto.imei,
-  firmware: dto.firmware ?? 'v1.0.0',
+  imei: String(dto.imei ?? '').trim(),
+  firmware: String(dto.firmware ?? 'v1.0.0'),
   online: !!dto.online,
   vehiclePlate: dto.vehiclePlate ?? null
 });

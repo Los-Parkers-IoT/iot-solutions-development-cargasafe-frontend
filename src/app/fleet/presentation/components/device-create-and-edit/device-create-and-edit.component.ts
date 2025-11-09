@@ -41,11 +41,13 @@ export class DeviceCreateAndEditComponent {
 
   submit() {
     if (this.editMode) {
-      if (this.dialogRef) this.dialogRef.close({ action: 'update', payload: this.data });
-      else this.updateRequested.emit(this.data);
+      // No modificamos vehiclePlate en edición
+      const payload = { ...this.data }; // mantiene su valor actual (probablemente null)
+      this.dialogRef ? this.dialogRef.close({ action: 'update', payload }) : this.updateRequested.emit(payload);
     } else {
-      if (this.dialogRef) this.dialogRef.close({ action: 'add', payload: this.data });
-      else this.addRequested.emit(this.data);
+      // En creación, forzamos vehiclePlate = null (no se asigna aquí)
+      const payload = { ...this.data, vehiclePlate: null };
+      this.dialogRef ? this.dialogRef.close({ action: 'add', payload }) : this.addRequested.emit(payload);
     }
   }
 }
