@@ -4,25 +4,22 @@ import { Incident } from '../domain/models/incident.model';
 import { Notification } from '../domain/models/notification.model';
 
 export class AlertAssembler {
+
   static toEntitiesFromResponse(responses: AlertResponse): Alert[] {
     return responses.alerts.map((response) => this.toEntityFromResource(response));
   }
 
   static toEntityFromResource(resource: AlertResource): Alert {
-    return new Alert({
-      id: resource.id,
-      alertType: resource.alertType,
-      alertStatus: resource.alertStatus,
-      createdAt: resource.createdAt ? new Date(resource.createdAt) : new Date(),
-      closedAt: resource.closedAt ? new Date(resource.closedAt) : null,
-      description: resource.description,
-      incidents: resource.incidents
-        ? resource.incidents.map((incident) => AlertAssembler.toIncidentFromResource(incident))
-        : [],
-      notifications: resource.notifications
-        ? resource.notifications.map((notification) => AlertAssembler.toNotificationFromResource(notification))
-        : [],
-    });
+    return new Alert(
+      resource.id,
+      resource.alertType,
+      resource.alertStatus,
+      resource.description,
+      new Date(resource.createdAt),
+      resource.closedAt ? new Date(resource.closedAt) : null,
+      resource.incidents?.map(this.toIncidentFromResource) || [],
+      resource.notifications?.map(this.toNotificationFromResource) || []
+    );
   }
 
   static toIncidentFromResource(resource: IncidentResource): Incident {
@@ -32,7 +29,7 @@ export class AlertAssembler {
       description: resource.description,
       createdAt: new Date(resource.createdAt),
       acknowledgedAt: resource.acknowledgedAt ? new Date(resource.acknowledgedAt) : null,
-      closedAt: resource.closedAt ? new Date(resource.closedAt) : null,
+      closedAt: resource.closedAt ? new Date(resource.closedAt) : null
     });
   }
 
@@ -42,7 +39,7 @@ export class AlertAssembler {
       alertId: resource.alertId,
       notificationChannel: resource.notificationChannel,
       message: resource.message,
-      sentAt: new Date(resource.sentAt),
+      sentAt: new Date(resource.sentAt)
     });
   }
 
@@ -54,21 +51,21 @@ export class AlertAssembler {
       createdAt: alert.createdAt.toISOString(),
       closedAt: alert.closedAt ? alert.closedAt.toISOString() : undefined,
       description: alert.description,
-      incidents: alert.incidents?.map((i) => ({
+      incidents: alert.incidents.map(i => ({
         id: i.id,
         alertId: i.alertId,
         description: i.description,
         createdAt: i.createdAt.toISOString(),
         acknowledgedAt: i.acknowledgedAt ? i.acknowledgedAt.toISOString() : null,
-        closedAt: i.closedAt ? i.closedAt.toISOString() : null,
+        closedAt: i.closedAt ? i.closedAt.toISOString() : null
       })),
-      notifications: alert.notifications?.map((n) => ({
+      notifications: alert.notifications.map(n => ({
         id: n.id,
         alertId: n.alertId,
         notificationChannel: n.notificationChannel,
         message: n.message,
-        sentAt: n.sentAt.toISOString(),
-      })),
+        sentAt: n.sentAt.toISOString()
+      }))
     };
   }
 }

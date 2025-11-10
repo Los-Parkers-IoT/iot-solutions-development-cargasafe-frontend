@@ -1,25 +1,24 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   OnInit,
   ViewChild,
   AfterViewInit,
   OnChanges,
   SimpleChanges,
-  Output,
-  EventEmitter
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
+import { MatSortModule, MatSort } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { Alert } from '../../../domain/models/alert.model';
-import { AlertsService } from '../../../application/services/alerts-services';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormField, MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
 
 @Component({
   selector: 'app-alert-table',
@@ -39,7 +38,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   styleUrls: ['./alert-table.component.css'],
 })
 export class AlertTableComponent implements OnInit, OnChanges, AfterViewInit {
-  @Input() alerts: Alert[] | null = [];
+  @Input() alerts: Alert[] = [];
   @Output() closeAlert = new EventEmitter<number>();
   @Output() acknowledgeAlert = new EventEmitter<number>();
 
@@ -69,12 +68,11 @@ export class AlertTableComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['alerts'] && this.alerts) {
-      this.dataSource.data = this.alerts;
-
-      this.dataSource.data.forEach(alert => {
-        alert.viewed = localStorage.getItem(`alert-viewed-${alert.id}`) === 'true';
-      });
-
+      this.dataSource.data = this.alerts.map((alert) =>
+        Object.assign({}, alert, {
+          viewed: localStorage.getItem(`alert-viewed-${alert.id}`) === 'true',
+        })
+      );
       this.applyCombinedFilter();
     }
   }
@@ -117,10 +115,6 @@ export class AlertTableComponent implements OnInit, OnChanges, AfterViewInit {
     this.closeAlert.emit(id);
   }
 
-  markAsAcknowledged(id: number) {
-    this.acknowledgeAlert.emit(id);
-  }
-
   openDetails(alert: Alert) {
     this.selectedAlert = alert;
 
@@ -128,14 +122,21 @@ export class AlertTableComponent implements OnInit, OnChanges, AfterViewInit {
       alert.viewed = true;
       localStorage.setItem(`alert-viewed-${alert.id}`, 'true');
 
-      if (alert.alertStatus === 'OPEN') {
-        alert.alertStatus = 'ACKNOWLEDGED';
-        this.markAsAcknowledged(alert.id);
-      }
+      this.dataSource.data = this.dataSource.data.map(a =>
+        a.id === alert.id ? { ...a, viewed: true } : a
+      );
+    }
 
-      this.dataSource.data = [...this.dataSource.data];
+    if (alert.alertStatus === 'OPEN') {
+      this.acknowledgeAlert.emit(alert.id);
+
+      this.selectedAlert = {
+        ...this.selectedAlert,
+        alertStatus: 'ACKNOWLEDGED'
+      };
     }
   }
+
 
   closeDetails() {
     this.selectedAlert = null;
