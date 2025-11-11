@@ -1,0 +1,109 @@
+<div class="create-trip">
+  <h1 class="title">Create a trip</h1>
+
+  <!-- Bloque: Assign to / Departure -->
+  <section class="card">
+    <div class="row">
+      <div class="col">
+        <div class="group-label">Assign to</div>
+        <div class="inline">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Driver</mat-label>
+            <input matInput formControlName="driver" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Codriver</mat-label>
+            <input matInput formControlName="codriver" placeholder="Search by user" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-sm">
+        <div class="group-label">Departure at</div>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Schedule</mat-label>
+          <input matInput type="datetime-local" formControlName="departureAt" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="group-label">Vehicle</div>
+        <div class="inline">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Plate</mat-label>
+            <input matInput formControlName="vehicle" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Device IoT</mat-label>
+            <input matInput formControlName="device" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="row">
+      <div class="col-left">
+        <h3 class="section-title">Delivery Orders</h3>
+
+        <div class="orders">
+          <div
+            class="order-card"
+            *ngFor="let o of (form.value.deliveryOrders || []); let i = index"
+          >
+            <div class="order-head">
+              <strong>{{ o.address || ('Av ' + (800 + i)) }}</strong>
+              <span class="dots">⋮</span>
+            </div>
+
+            <div class="order-body">
+              <div class="row meta-row">
+                <div class="meta">
+                  <div class="meta-title">Location</div>
+                  <div class="mono">Latitude: {{ o.lat }}</div>
+                  <div class="mono">Longitude: {{ o.lng }}</div>
+                </div>
+
+                <div class="meta">
+                  <div class="meta-title">Parameters</div>
+                  <div>Min temperature: {{ o.minTemp }}°C</div>
+                  <div>Max temperature: {{ o.maxTemp }}°C</div>
+                  <div>Max humidity: 40%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button mat-flat-button color="primary" class="btn-add" (click)="addDeliveryOrder()">
+            + Add
+          </button>
+        </div>
+
+        <button mat-flat-button color="accent" class="btn-save" (click)="save()">
+          Save
+        </button>
+      </div>
+
+      <div class="col-right">
+        <h3 class="section-title">Shipping Route</h3>
+
+        <div class="inline">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Origin point</mat-label>
+            <input matInput value="Warehouse 1" />
+          </mat-form-field>
+          <button mat-stroked-button class="btn-clear" type="button">✕</button>
+        </div>
+
+        <div class="map">
+          <div class="map-placeholder">Map preview</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
