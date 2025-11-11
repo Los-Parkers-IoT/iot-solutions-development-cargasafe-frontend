@@ -11,9 +11,9 @@ import { BehaviorSubject, catchError, map, of, switchMap, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {FleetFacade} from '../../../application/services/fleet.facade';
 import {FormsModule} from '@angular/forms';
-import {AssignDeviceDialogComponent} from '../../dialogs/assign-device-dialog/assign-device-dialog';
+import {AssignDeviceDialogComponent} from '../../components/assign-device-dialog/assign-device-dialog';
 import { MatDialog } from '@angular/material/dialog';
-import {UnassignDeviceDialogComponent} from '../../dialogs/unassign-device-dialog/unassign-device-dialog';
+import {UnassignDeviceDialogComponent} from '../../components/unassign-device-dialog/unassign-device-dialog';
 
 
 @Component({

@@ -17,6 +17,7 @@ export interface CreateVehicleDto {
   deviceImeis: string[];           // enviar [] si vacío
 }
 
+
 export interface UpdateVehicleDto extends CreateVehicleDto {} // id en la URL
 
 export interface UpdateVehicleStatusDto {
