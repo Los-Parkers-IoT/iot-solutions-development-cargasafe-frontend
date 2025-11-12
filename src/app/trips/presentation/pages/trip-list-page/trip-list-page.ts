@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -18,6 +18,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 @Component({
   selector: 'app-trip-list-page',
   imports: [
+    CommonModule,
     MatTableModule,
     MatPaginatorModule,
     MatFormFieldModule,
@@ -152,7 +153,6 @@ export class TripListPage implements OnInit {
     this.dataSource.filter = payload + ' ';
   }
 
-  // 🔸 Handlers para Search/Status/Created Order
   onSearchChange(term: string): void {
     this.searchTerm = term;
     this.pushFilter();
@@ -211,4 +211,49 @@ export class TripListPage implements OnInit {
         return true;
     }
   }
+
+  isModifyOpen = false;
+  isSaving = false;
+  selectedTripId: number | null = null;
+
+  currentStatusLabel = 'schedule';
+  nextStatusLabel = 'completed';
+
+  showToast = false;
+  toastMessage = '';
+
+  openModifyModal(trip: any) {
+    this.selectedTripId = Number(trip?.id ?? null);
+
+    this.currentStatusLabel = 'schedule';
+    this.nextStatusLabel = 'completed';
+
+    this.isModifyOpen = true;
+  }
+
+  closeModifyModal() {
+    if (this.isSaving) return;
+    this.isModifyOpen = false;
+    this.selectedTripId = null;
+  }
+
+  toggleNextStatus() {
+    const options = ['completed', 'cancelled', 'in course'];
+    const i = options.indexOf(this.nextStatusLabel);
+    this.nextStatusLabel = options[(i + 1) % options.length];
+  }
+
+  confirmModify() {
+    this.isSaving = true;
+    setTimeout(() => {
+      this.isSaving = false;
+      this.isModifyOpen = false;
+
+      this.toastMessage = `Trip #${this.selectedTripId ?? ''} updated to ${this.nextStatusLabel}`;
+      this.showToast = true;
+      setTimeout(() => (this.showToast = false), 1800);
+
+    }, 900);
+  }
+
 }

@@ -155,17 +155,53 @@
           <button mat-stroked-button color="primary" [routerLink]="['/trips', trip.id]">See more</button>
 
           @if (trip.statusId !== 'Completado') {
-          <button mat-stroked-button color="warn">Modify</button>
+          <button mat-stroked-button color="warn" (click)="openModifyModal(trip)">Modify</button>
           }
         </td>
       </ng-container>
 
-      <!-- HEADER & ROWS -->
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
 
-    <!-- PAGINATOR -->
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
   </div>
+
+  <!-- ===== Modify modal (front-only) ===== -->
+  <div class="m-overlay" [class.open]="isModifyOpen" (click)="closeModifyModal()"></div>
+
+  <div class="m-box" [class.open]="isModifyOpen" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-labelledby="modifyTitle">
+    <div class="m-header">
+      <h3 id="modifyTitle">Modificar viaje</h3>
+    </div>
+
+    <div class="m-body">
+      <p class="m-desc">
+        ¿Estás seguro que deseas modificar el viaje? Realizar estos cambios pueden afectar al flujo.
+      </p>
+
+      <div class="m-flow">
+        <span class="chip chip-gray">{{ currentStatusLabel }}</span>
+        <span class="arrow">→</span>
+        <button class="chip chip-orange" type="button" (click)="toggleNextStatus()">
+          {{ nextStatusLabel }}
+        </button>
+      </div>
+
+      <hr class="m-sep" />
+
+      <div class="m-actions">
+        <button class="btn-cancel" type="button" (click)="closeModifyModal()" [disabled]="isSaving">Cancel</button>
+        <button class="btn-confirm" type="button" (click)="confirmModify()" [disabled]="isSaving">
+          <span class="spinner" *ngIf="isSaving"></span>
+          {{ isSaving ? 'Saving…' : 'Confirm' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="m-toast" [class.show]="showToast">{{ toastMessage }}</div>
+
+
 </section>
+
