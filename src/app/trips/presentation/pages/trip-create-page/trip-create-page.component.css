@@ -6,6 +6,23 @@
   color: #2b2f36;
 }
 
+.btn-back {
+  background: none;
+  border: none;
+  color: #0b5ed7;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: color 0.2s ease;
+}
+
+.btn-back:hover {
+  color: #084298;
+  text-decoration: underline;
+}
+
+
 .title { font-size: 26px; font-weight: 700; margin-bottom: 18px; }
 
 .grid {
