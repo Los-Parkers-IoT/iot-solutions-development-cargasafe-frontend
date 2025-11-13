@@ -1,6 +1,7 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 import { DeliveryOrder } from './delivery-order.entity';
 import { OriginPoint } from './origin-point.entity';
+import { TripStatus } from './trip-status.vo';
 
 export class Trip implements BaseEntity {
   private _id: number;
@@ -14,6 +15,7 @@ export class Trip implements BaseEntity {
   private _completedAt: Date | null;
   private _originPoint: OriginPoint | null;
   private _deliveryOrders: DeliveryOrder[];
+  private _status: TripStatus;
 
   constructor(trip: {
     id: number;
@@ -27,6 +29,7 @@ export class Trip implements BaseEntity {
     completedAt: Date | null;
     createdAt: Date;
     updatedAt: Date;
+    status: TripStatus;
   }) {
     this._id = trip.id;
     this._driverId = trip.driverId;
@@ -42,6 +45,17 @@ export class Trip implements BaseEntity {
     this._createdAt = trip.createdAt;
     this._updatedAt = trip.updatedAt;
     this._deliveryOrders = trip.deliveryOrders ?? [];
+    this._status = trip.status;
+  }
+
+  isCompleted(): boolean {
+    return this._status === TripStatus.COMPLETED;
+  }
+  isInProgress(): boolean {
+    return this._status === TripStatus.IN_PROGRESS;
+  }
+  isCreated(): boolean {
+    return this._status === TripStatus.CREATED;
   }
 
   get startedAt(): Date | null {
@@ -104,5 +118,11 @@ export class Trip implements BaseEntity {
   }
   set deliveryOrders(value: DeliveryOrder[]) {
     this._deliveryOrders = value;
+  }
+  get status(): TripStatus {
+    return this._status;
+  }
+  set status(value: TripStatus) {
+    this._status = value;
   }
 }
