@@ -2,12 +2,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Vehicle } from '../../domain/model/vehicle.model';
-import {environment} from '../../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class VehicleService {
   private http = inject(HttpClient);
-  private baseUrl = `${environment.apiBaseUrl}/vehicles`;
+  private baseUrl = `${environment.baseUrl}/vehicles`;
 
   getAll(): Observable<Vehicle[]> { return this.http.get<Vehicle[]>(this.baseUrl); }
   getById(id: number) { return this.http.get<Vehicle>(`${this.baseUrl}/${id}`); }

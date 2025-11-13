@@ -1,5 +1,8 @@
 export const environment = {
-  production: false,
-  apiBaseUrl: 'http://localhost:8080/api/v1'  // tu JSON-Server
-  //apiUrl: 'https://fake-api-murex-one.vercel.app'  // tu JSON-Server
-};
+  production: true,
+  baseUrl: 'http://localhost:8080/api/v1',
+  tripsEndpointPath: '/trips',
+  deliveryOrdersEndpointPath: '/delivery-orders',
+  alertsEndpointPath: '/alerts',
+  googleMapsApiKey: 'AIzaSyDEpu21mrXEAewZHnvMxOfR3Nj3VLZLECk',
+} as const;
