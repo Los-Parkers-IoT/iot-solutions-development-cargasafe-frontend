@@ -51,6 +51,22 @@ export class Trip implements BaseEntity {
     this._deviceId = trip.deviceId;
   }
 
+  static createEmpty(): Trip {
+    return new Trip({
+      id: 0,
+      driverId: 0,
+      vehicleId: 0,
+      deviceId: 0,
+      merchantId: 0,
+      originPointId: 0,
+      startedAt: null,
+      completedAt: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      status: TripStatus.CREATED,
+    });
+  }
+
   isCompleted(): boolean {
     return this._status === TripStatus.COMPLETED;
   }
@@ -93,6 +109,9 @@ export class Trip implements BaseEntity {
   get vehicleId(): number {
     return this._vehicleId;
   }
+  set vehicleId(value: number) {
+    this._vehicleId = value;
+  }
 
   get createdAt(): Date {
     return this._createdAt;
@@ -104,6 +123,9 @@ export class Trip implements BaseEntity {
 
   get merchantId(): number {
     return this._merchantId;
+  }
+  set merchantId(value: number) {
+    this._merchantId = value;
   }
 
   get originPointId(): number {

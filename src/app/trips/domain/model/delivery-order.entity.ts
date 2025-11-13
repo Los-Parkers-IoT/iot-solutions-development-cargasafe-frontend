@@ -56,6 +56,28 @@ export class DeliveryOrder implements BaseEntity {
     this._status = deliveryOrder.status;
   }
 
+  static createEmpty(): DeliveryOrder {
+    return new DeliveryOrder({
+      id: 0,
+      clientEmail: '',
+      address: '',
+      latitude: 0,
+      longitude: 0,
+      sequenceOrder: 0,
+      arrivalAt: null,
+      notes: '',
+      maxHumidity: null,
+      minHumidity: null,
+      maxTemperature: null,
+      minTemperature: null,
+
+      maxVibration: null,
+      tripId: 0,
+      trip: null,
+      status: DeliveryOrderStatus.PENDING,
+    });
+  }
+
   isPending(): boolean {
     return this._status === DeliveryOrderStatus.PENDING;
   }

@@ -139,6 +139,18 @@
     >
       <!-- Address -->
       <mat-form-field appearance="outline" class="full">
+        <mat-label>Client Email</mat-label>
+        <input matInput formControlName="clientEmail" placeholder="example@mail.com" />
+
+        <mat-error
+          *ngIf="orderForm.get('clientEmail')?.touched && orderForm.get('clientEmail')?.invalid"
+        >
+          Email is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Address -->
+      <mat-form-field appearance="outline" class="full">
         <mat-label>Address</mat-label>
         <input
           addressInput

@@ -23,15 +23,21 @@ import { Device } from '../../../../fleet/domain/model/device.model';
 import { FleetFacade } from '../../../../fleet/application/services/fleet.facade';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AddressInputDirective } from '../../../../shared/presentation/directives/address-input.directive';
+import { Trip } from '../../../domain/model/trip.entity';
+import { DeliveryOrder } from '../../../domain/model/delivery-order.entity';
+import { TripsStore } from '../../../application/trips.store';
+import { Router } from '@angular/router';
 
-interface DeliveryOrder {
+interface DeliveryOrderViewModel {
   address: string;
+  clientEmail: string;
   enableTemperature: boolean;
-  minTemperature?: number | null;
-  maxTemperature?: number | null;
+  minTemperature: number | null;
+  maxTemperature: number | null;
 
   enableHumidity: boolean;
-  minHumidity?: number | null;
+  minHumidity: number | null;
+  maxHumidity: number | null;
 
   enableVibration: boolean;
   maxVibration?: number | null;
@@ -73,8 +79,10 @@ interface TripForm {
 })
 export class TripCreatePageComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private tripsStore = inject(TripsStore);
   private originPointsStore = inject(OriginPointsStore);
   private fleetStore = inject(FleetFacade);
+  private router = inject(Router);
   // -------------------------------------------------------
   // SIGNALS
   // -------------------------------------------------------
@@ -85,7 +93,7 @@ export class TripCreatePageComponent implements OnInit {
   devices = computed<Device[]>(() => this.fleetStore.devicesSig());
 
   /** Delivery orders stored in signal */
-  deliveryOrders = signal<DeliveryOrder[]>([]);
+  deliveryOrders = signal<DeliveryOrderViewModel[]>([]);
 
   isOrderModalOpen = signal(false);
   isSaving = signal(false);
@@ -125,6 +133,7 @@ export class TripCreatePageComponent implements OnInit {
 
   orderForm = this.fb.group({
     address: ['', [Validators.required, Validators.minLength(3)]],
+    clientEmail: ['', [Validators.required, Validators.email]],
 
     enableTemperature: [false, []],
     minTemperature: [null as null | number],
@@ -207,6 +216,7 @@ export class TripCreatePageComponent implements OnInit {
   resetOrderForm() {
     this.orderForm.reset({
       address: '',
+      clientEmail: '',
       enableTemperature: false,
       minTemperature: null,
       maxTemperature: null,
@@ -275,13 +285,15 @@ export class TripCreatePageComponent implements OnInit {
     setTimeout(() => {
       const value = this.orderForm.getRawValue();
 
-      const newOrder: DeliveryOrder = {
+      const newOrder: DeliveryOrderViewModel = {
         address: value.address!,
         enableTemperature: value.enableTemperature!,
-        minTemperature: value.minTemperature ?? undefined,
-        maxTemperature: value.maxTemperature ?? undefined,
+        clientEmail: value.clientEmail!,
+        maxHumidity: value.maxHumidity,
+        minTemperature: value.minTemperature,
+        maxTemperature: value.maxTemperature,
         enableHumidity: value.enableHumidity!,
-        minHumidity: value.minHumidity ?? undefined,
+        minHumidity: value.minHumidity,
         enableVibration: value.enableVibration!,
         maxVibration: value.maxVibration ?? undefined,
         notes: value.notes ?? undefined,
@@ -335,5 +347,38 @@ export class TripCreatePageComponent implements OnInit {
 
   saveTrip() {
     console.log('Trip saved', this.tripForm.value, this.deliveryOrders());
+    const trip = Trip.createEmpty();
+    trip.deviceId = this.device()?.id ?? 0;
+    trip.driverId = 1;
+    trip.vehicleId = this.tripForm.value.vehicleId!;
+    trip.merchantId = 1;
+    trip.originPointId = this.tripForm.value.originPoint!.id;
+    trip.deliveryOrders = this.deliveryOrders().map((o, i) => {
+      const order = DeliveryOrder.createEmpty();
+      order.address = o.address;
+      order.latitude = o.lat!;
+      order.longitude = o.lng!;
+      order.sequenceOrder = i + 1;
+      order.notes = o.notes || '';
+      order.clientEmail = o.clientEmail;
+
+      if (o.enableTemperature) {
+        order.minTemperature = o.minTemperature!;
+        order.maxTemperature = o.maxTemperature!;
+      }
+      if (o.enableHumidity) {
+        order.maxHumidity = o.maxHumidity!;
+        order.minHumidity = o.minHumidity!;
+      }
+      if (o.enableVibration) {
+        order.maxVibration = o.maxVibration!;
+      }
+      return order;
+    });
+
+    this.tripsStore.createTrip(trip).subscribe(() => {
+      this.showToastMsg('Trip created successfully');
+      this.router.navigate(['/trips']);
+    });
   }
 }
