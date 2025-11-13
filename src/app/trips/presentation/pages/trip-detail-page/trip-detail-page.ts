@@ -16,7 +16,7 @@ import { DeliveryOrdersApi } from '../../../infrastructure/delivery-order-api';
 import { Trip } from '../../../domain/model/trip.entity';
 import { TripParameter } from '../../../domain/model/trip-parameter.entity';
 import { DeliveryOrder } from '../../../domain/model/delivery-order.entity';
-import { AlertsService } from '../../../../alerts/infrastructure/alerts-api';
+import {AlertsApi} from '../../../../alerts/infrastructure/alerts-api';
 import { Alert } from '../../../../alerts/domain/models/alert.model';
 import { OriginPointApi as OriginPointsApi } from '../../../infrastructure/origin-point-api';
 import { OriginPoint } from '../../../domain/model/origin-point.entity';
@@ -55,7 +55,7 @@ export class TripDetailPage implements OnInit {
   private deliveryOrdersApi = inject(DeliveryOrdersApi);
   private originPointsApi = inject(OriginPointsApi);
   private route = inject(ActivatedRoute);
-  private alertsApi = inject(AlertsService);
+  private alertsApi = inject(AlertsApi);
 
   // ------------------------
   // ⚡ Reactive state (signals)
