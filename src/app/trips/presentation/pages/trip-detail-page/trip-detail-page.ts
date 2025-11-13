@@ -33,13 +33,6 @@ import { TripsStore } from '../../../application/trips.store';
 })
 export class TripDetailPage implements OnInit {
   // ------------------------
-  // 🗺️ Google Maps
-  // ------------------------
-  center: google.maps.LatLngLiteral = { lat: -12.072847, lng: -77.080581 };
-  zoom = 12;
-  markers: google.maps.LatLngLiteral[] = [];
-
-  // ------------------------
   // 🧩 Dependencies
   // ------------------------
   private route = inject(ActivatedRoute);
@@ -49,9 +42,25 @@ export class TripDetailPage implements OnInit {
   trip = computed(() => this.tripState().data() as Trip);
 
   // ------------------------
+  // 🗺️ Google Maps
+  // ------------------------
+  center: google.maps.LatLngLiteral = { lat: -12.072847, lng: -77.080581 };
+  zoom = 12;
+  orderMarkers = computed(() =>
+    this.trip().deliveryOrders.map<google.maps.LatLngLiteral>((order) => ({
+      lat: order.latitude,
+      lng: order.longitude,
+    }))
+  );
+  originMarker = computed<google.maps.LatLngLiteral>(() => ({
+    lat: this.trip().originPoint?.latitude ?? 0,
+    lng: this.trip().originPoint?.longitude ?? 0,
+  }));
+  // markers: google.maps.LatLngLiteral[] = [];
+
+  // ------------------------
   // ⚡ Reactive state (signals)
   // ------------------------
-  tripId = 0;
   totalDistance = signal(0);
   totalDuration = signal(0);
   alerts = signal<Alert[]>([]);
@@ -71,19 +80,12 @@ export class TripDetailPage implements OnInit {
     'actions',
   ];
 
-  polylinePath: google.maps.LatLngLiteral[] = [];
-  polylineOptions: google.maps.PolylineOptions = {
-    strokeColor: '#4285F4',
-    strokeOpacity: 1.0,
-    strokeWeight: 3,
-  };
-
   // ------------------------
   // 🚀 Lifecycle
   // ------------------------
   ngOnInit(): void {
-    this.tripId = Number(this.route.snapshot.params['id']);
-    this.store.loadTripById(this.tripId);
+    const tripId = Number(this.route.snapshot.params['id']);
+    this.store.loadTripById(tripId);
   }
 
   getIncidentsNumberByOrderId(orderId: number): number {

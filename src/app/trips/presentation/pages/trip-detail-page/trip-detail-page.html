@@ -14,7 +14,7 @@
   } @else if (tripState().data()) {
   <div>
     <header class="trip-header">
-      <h1>Trip #{{ tripId }}</h1>
+      <h1>Trip #{{ trip().id }}</h1>
       <!-- <span class="status-badge">{{ trip()?.statusId }}</span> -->
       <div class="trip-dates">
         <p>Created at {{ trip().createdAt | date : 'short' }}</p>
@@ -60,10 +60,13 @@
 
       <section class="trip-map">
         <google-map class="trip-map-cmp" [center]="center" [zoom]="zoom">
-          @for (marker of markers; track marker) {
+          @for (marker of orderMarkers(); track marker) {
           <map-marker [position]="marker"></map-marker>
           }
-          <map-polyline [path]="polylinePath" [options]="polylineOptions"></map-polyline>
+          <map-marker
+            [position]="originMarker()"
+            icon="http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+          ></map-marker>
         </google-map>
       </section>
     </div>
