@@ -2,7 +2,12 @@ import { TripStatus } from '../domain/model/trip-status.vo';
 import { Trip } from '../domain/model/trip.entity';
 import { DeliveryOrderAssembler } from './delivery-order-assembler';
 import { OriginPointAssembler } from './origin-point-assembler';
-import { TripResource, TripsResponse } from './trip-response';
+import {
+  CreateTripDeliveryOrderResource,
+  CreateTripResource,
+  TripResource,
+  TripsResponse,
+} from './trip-response';
 
 export class TripAssembler {
   static toEntitiesFromResponse(responses: TripsResponse): Trip[] {
@@ -14,6 +19,7 @@ export class TripAssembler {
     const trip = new Trip({
       id: Number.isFinite(resource.id as any) ? (resource.id as any as number) : 0,
       driverId: resource.driverId,
+      deviceId: resource.deviceId,
       vehicleId: resource.vehicleId,
       createdAt: new Date(resource.createdAt),
       updatedAt: new Date(resource.updatedAt),
@@ -42,5 +48,26 @@ export class TripAssembler {
       default:
         throw new Error(`Unknown trip status: ${status}`);
     }
+  }
+
+  static toCreateResourceFromEntity(entity: Trip): CreateTripResource {
+    return {
+      driverId: entity.driverId,
+      deviceId: entity.deviceId,
+      merchantId: entity.merchantId,
+      vehicleId: entity.vehicleId,
+      originPointId: entity.originPointId,
+      deliveryOrders: entity.deliveryOrders.map<CreateTripDeliveryOrderResource>((o) => ({
+        address: o.address,
+        clientEmail: o.clientEmail,
+        latitude: o.latitude,
+        longitude: o.longitude,
+        sequenceOrder: o.sequenceOrder,
+        maxHumidity: o.maxHumidity,
+        minHumidity: o.minHumidity,
+        maxTemperature: o.maxTemperature,
+        minTemperature: o.minTemperature,
+      })),
+    };
   }
 }

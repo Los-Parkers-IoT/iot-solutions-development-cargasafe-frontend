@@ -100,4 +100,10 @@ export class TripsStore {
 
     return request$;
   }
+
+  createTrip(trip: Trip) {
+    const request$ = this.tripsApi.createTrip(trip);
+    request$.subscribe();
+    return request$;
+  }
 }

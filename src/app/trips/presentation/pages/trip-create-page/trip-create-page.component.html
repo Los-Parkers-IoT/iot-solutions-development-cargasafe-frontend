@@ -46,13 +46,13 @@
       </mat-select>
     </mat-form-field>
   </form>
-  <div class="field full">
+  <!-- <div class="field full">
     <div class="map-placeholder">
       <div class="map-box">
         <span>Map preview</span>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <section class="orders">
     <div class="orders-header">
@@ -60,7 +60,7 @@
       <button class="btn add" (click)="openAddOrder()">+ Add</button>
     </div>
 
-    <div class="cards" *ngIf="deliveryOrders.length; else emptyState">
+    <div class="cards" *ngIf="deliveryOrders().length; else emptyState">
       <div class="card" *ngFor="let o of deliveryOrders(); let i = index">
         <div class="card-header">
           <div class="address">{{ o.address }}</div>
@@ -114,9 +114,14 @@
     <ng-template #emptyState>
       <div class="empty">No delivery orders yet. Click <b>+ Add</b> to create one.</div>
     </ng-template>
-
-    <button class="btn primary mt16">Save</button>
   </section>
+
+  <div style="margin-top: 1rem; display: flex; justify-content: flex-end">
+    <button matButton="filled" (click)="saveTrip()">
+      <mat-icon slot="icon">save</mat-icon>
+      Save
+    </button>
+  </div>
 
   <div class="overlay" [class.open]="isOrderModalOpen()" (click)="closeOrderModal()"></div>
 
@@ -135,7 +140,13 @@
       <!-- Address -->
       <mat-form-field appearance="outline" class="full">
         <mat-label>Address</mat-label>
-        <input matInput formControlName="address" placeholder="Av. Javier Prado" />
+        <input
+          addressInput
+          matInput
+          formControlName="address"
+          placeholder="Av. Javier Prado"
+          (placeChanged)="onChangeAddress($event)"
+        />
 
         <button
           mat-icon-button
@@ -238,12 +249,12 @@
         [disabled]="isSaving()"
       >
         <mat-progress-spinner
-          *ngIf="isSaving"
+          *ngIf="isSaving()"
           mode="indeterminate"
           diameter="20"
         ></mat-progress-spinner>
 
-        <span *ngIf="!isSaving">Save/Update</span>
+        <span *ngIf="!isSaving()">Save/Update</span>
       </button>
     </form>
 

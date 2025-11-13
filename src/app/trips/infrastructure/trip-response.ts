@@ -5,6 +5,7 @@ export interface TripResource {
   id: number;
   statusId: number;
   driverId: number;
+  deviceId: number;
   vehicleId: number;
   departureAt: string | null;
   merchantId: number;
@@ -19,4 +20,26 @@ export interface TripResource {
 
 export interface TripsResponse {
   trips: TripResource[];
+}
+
+export interface CreateTripResource {
+  driverId: number;
+  deviceId: number;
+  vehicleId: number;
+  merchantId: number;
+  deliveryOrders: CreateTripDeliveryOrderResource[];
+  originPointId: number;
+}
+
+export interface CreateTripDeliveryOrderResource {
+  clientEmail: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  sequenceOrder: number;
+  maxHumidity?: number | null;
+  minHumidity?: number | null;
+  maxTemperature?: number | null;
+  minTemperature?: number | null;
+  maxVibration?: number | null;
 }

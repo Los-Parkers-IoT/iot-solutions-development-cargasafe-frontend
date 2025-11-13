@@ -6,6 +6,7 @@ import { TripStatus } from './trip-status.vo';
 export class Trip implements BaseEntity {
   private _id: number;
   private _driverId: number;
+  private _deviceId: number;
   private _vehicleId: number;
   private _createdAt: Date;
   private _updatedAt: Date;
@@ -21,6 +22,7 @@ export class Trip implements BaseEntity {
     id: number;
     driverId: number;
     vehicleId: number;
+    deviceId: number;
     merchantId: number;
     originPointId: number;
     originPoint?: OriginPoint | null;
@@ -46,6 +48,7 @@ export class Trip implements BaseEntity {
     this._updatedAt = trip.updatedAt;
     this._deliveryOrders = trip.deliveryOrders ?? [];
     this._status = trip.status;
+    this._deviceId = trip.deviceId;
   }
 
   isCompleted(): boolean {
@@ -124,5 +127,12 @@ export class Trip implements BaseEntity {
   }
   set status(value: TripStatus) {
     this._status = value;
+  }
+
+  get deviceId(): number {
+    return this._deviceId;
+  }
+  set deviceId(value: number) {
+    this._deviceId = value;
   }
 }

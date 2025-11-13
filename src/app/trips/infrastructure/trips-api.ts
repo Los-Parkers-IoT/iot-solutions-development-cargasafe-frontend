@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { Trip } from '../domain/model/trip.entity';
 import { HttpClient } from '@angular/common/http';
 import { TripAssembler } from './trip-assembler';
-import { TripResource } from './trip-response';
+import { CreateTripResource, TripResource } from './trip-response';
 import { TotalTripSummary } from '../application/dto/trip-summary.dto';
 
 @Injectable({ providedIn: 'root' })
@@ -44,5 +44,11 @@ export class TripsApi {
         subscriber.complete();
       }, 300);
     });
+  }
+
+  createTrip(trip: Trip): Observable<unknown> {
+    const resource = TripAssembler.toCreateResourceFromEntity(trip);
+
+    return this.http.post<unknown>(`${this.baseUrl}${this.tripsEndpoint}`, resource);
   }
 }
