@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { GoogleMapsModule } from '@angular/google-maps';
@@ -8,18 +8,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { forkJoin } from 'rxjs';
 
-import { TripsApi } from '../../../infrastructure/trips-api';
-import { TripParametersApi } from '../../../infrastructure/trip-parameter-api';
-import { DeliveryOrdersApi } from '../../../infrastructure/delivery-order-api';
 import { Trip } from '../../../domain/model/trip.entity';
-import { TripParameter } from '../../../domain/model/trip-parameter.entity';
-import { DeliveryOrder } from '../../../domain/model/delivery-order.entity';
-import { AlertsApi } from '../../../../alerts/infrastructure/alerts-api';
 import { Alert } from '../../../../alerts/domain/models/alert.model';
-import { OriginPointApi as OriginPointsApi } from '../../../infrastructure/origin-point-api';
-import { OriginPoint } from '../../../domain/model/origin-point.entity';
+import { TripsStore } from '../../../application/trips.store';
 
 @Component({
   selector: 'app-trip-detail-page',
@@ -50,25 +42,18 @@ export class TripDetailPage implements OnInit {
   // ------------------------
   // 🧩 Dependencies
   // ------------------------
-  private tripsApi = inject(TripsApi);
-  private tripParametersApi = inject(TripParametersApi);
-  private deliveryOrdersApi = inject(DeliveryOrdersApi);
-  private originPointsApi = inject(OriginPointsApi);
   private route = inject(ActivatedRoute);
-  private alertsApi = inject(AlertsApi);
+  private store = inject(TripsStore);
+
+  tripState = computed(() => this.store.tripState);
+  trip = computed(() => this.tripState().data() as Trip);
 
   // ------------------------
   // ⚡ Reactive state (signals)
   // ------------------------
   tripId = 0;
-  loading = signal(false);
-  error = signal<string | null>(null);
-  trip = signal<Trip | null>(null);
   totalDistance = signal(0);
   totalDuration = signal(0);
-  tripParameters = signal<TripParameter | null>(null);
-  deliveryOrders = signal<DeliveryOrder[]>([]);
-  originPoint = signal<OriginPoint | null>(null);
   alerts = signal<Alert[]>([]);
 
   // ------------------------
@@ -79,10 +64,11 @@ export class TripDetailPage implements OnInit {
     'sequenceOrder',
     'clientEmail',
     'address',
+    'temperatureThreshold',
+    'humidityThreshold',
     'arrivalAt',
-    'realArrivalAt',
-    'deliveryOrderStatusId',
-    'incidents',
+    'status',
+    'actions',
   ];
 
   polylinePath: google.maps.LatLngLiteral[] = [];
@@ -97,85 +83,15 @@ export class TripDetailPage implements OnInit {
   // ------------------------
   ngOnInit(): void {
     this.tripId = Number(this.route.snapshot.params['id']);
-    this.load();
-  }
-
-  // ------------------------
-  // 🔁 Load data
-  // ------------------------
-  load(): void {
-    this.loading.set(true);
-    this.error.set(null);
-    this.trip.set(null);
-    this.deliveryOrders.set([]);
-
-    forkJoin({
-      trip: this.tripsApi.getTripById(this.tripId),
-      params: this.tripParametersApi.getTripParametersByTripId(this.tripId),
-      orders: this.deliveryOrdersApi.getAll(),
-      alerts: this.alertsApi.getAlerts(),
-      origin: this.originPointsApi.getOriginPointByTripId(this.tripId),
-    }).subscribe({
-      next: ({ trip, params, orders, alerts, origin }) => {
-        if (!trip) {
-          this.error.set('Trip not found.');
-          this.loading.set(false);
-          return;
-        }
-
-        if (!origin) {
-          this.error.set('Origin point not found for this trip.');
-          this.loading.set(false);
-          return;
-        }
-
-        // 🧠 Assign data
-        this.trip.set(trip);
-        this.tripParameters.set(params?.[0] ?? null);
-        this.deliveryOrders.set(orders);
-        this.alerts.set(
-          alerts.filter(
-            (alert) =>
-              alert.deliveryOrderId && orders.some((o) => o.id === Number(alert.deliveryOrderId))
-          )
-        );
-
-        // Optionally: center map to first delivery point
-        if (orders?.length > 0 && orders[0].latitude && orders[0].longitude) {
-          this.center = { lat: orders[0].latitude, lng: orders[0].longitude };
-
-          this.markers = orders.map((o) => ({
-            lat: o.latitude,
-            lng: o.longitude,
-          }));
-
-          this.polylinePath = this.markers;
-        }
-
-        // Set origin point marker
-        this.markers.unshift({ lat: origin.latitude, lng: origin.longitude });
-        this.polylinePath.unshift({ lat: origin.latitude, lng: origin.longitude });
-        this.center = { lat: origin.latitude, lng: origin.longitude };
-        this.originPoint.set(origin);
-
-        this.loading.set(false);
-      },
-      error: (err) => {
-        console.error('❌ Error loading trip data', err);
-        this.error.set(err?.message ?? 'An unexpected error occurred while loading the trip.');
-        this.loading.set(false);
-      },
-    });
-  }
-
-  // ------------------------
-  // 🔁 Retry button
-  // ------------------------
-  retry(): void {
-    this.load();
+    this.store.loadTripById(this.tripId);
   }
 
   getIncidentsNumberByOrderId(orderId: number): number {
     return this.alerts().filter((alert) => alert.deliveryOrderId === orderId).length;
+  }
+
+  markOrderAsDelivered(orderId: number) {
+    console.log('Marking order as delivered:', orderId);
+    this.store.markOrderAsDelivered(orderId);
   }
 }

@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { DeliveryOrderStatus } from './delivery-order-status.vo';
 import { Trip } from './trip.entity';
 
 export class DeliveryOrder implements BaseEntity {
@@ -17,6 +18,7 @@ export class DeliveryOrder implements BaseEntity {
   private _maxVibration: number | null;
   private _tripId: number;
   private _trip: Trip | null;
+  private _status: DeliveryOrderStatus;
 
   constructor(deliveryOrder: {
     id: number;
@@ -34,6 +36,7 @@ export class DeliveryOrder implements BaseEntity {
     maxVibration: number | null;
     tripId: number;
     trip: Trip | null;
+    status: DeliveryOrderStatus;
   }) {
     this._id = deliveryOrder.id;
     this._clientEmail = deliveryOrder.clientEmail;
@@ -50,6 +53,20 @@ export class DeliveryOrder implements BaseEntity {
     this._maxVibration = deliveryOrder.maxVibration;
     this._tripId = deliveryOrder.tripId;
     this._trip = deliveryOrder.trip;
+    this._status = deliveryOrder.status;
+  }
+
+  isPending(): boolean {
+    return this._status === DeliveryOrderStatus.PENDING;
+  }
+  isDelivered(): boolean {
+    return this._status === DeliveryOrderStatus.DELIVERED;
+  }
+  isCancelled(): boolean {
+    return this._status === DeliveryOrderStatus.CANCELLED;
+  }
+  markAsDelivered() {
+    this._status = DeliveryOrderStatus.DELIVERED;
   }
 
   get id(): number {
@@ -97,6 +114,9 @@ export class DeliveryOrder implements BaseEntity {
   get trip(): Trip | null {
     return this._trip;
   }
+  get status(): DeliveryOrderStatus {
+    return this._status;
+  }
 
   set trip(value: Trip | null) {
     this._trip = value;
@@ -142,5 +162,8 @@ export class DeliveryOrder implements BaseEntity {
   }
   set tripId(value: number) {
     this._tripId = value;
+  }
+  set status(value: DeliveryOrderStatus) {
+    this._status = value;
   }
 }

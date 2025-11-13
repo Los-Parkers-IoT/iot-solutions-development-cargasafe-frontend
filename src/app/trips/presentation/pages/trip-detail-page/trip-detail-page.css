@@ -204,3 +204,29 @@ table {
     color: #666;
   }
 }
+
+.mat-mdc-table {
+  background: none;
+}
+
+.mat-column-id {
+  border-right: 1px solid #74777f;
+}
+.mat-column-id,
+.mat-column-sequenceOrder {
+  width: 3.75rem;
+}
+
+.mat-column-clientEmail {
+  width: 17.5rem;
+}
+
+.mat-column-status {
+  width: 8.5rem;
+}
+.mat-column-arrivalAt {
+  width: 12rem;
+}
+.mat-column-actions {
+  width: 12rem;
+}

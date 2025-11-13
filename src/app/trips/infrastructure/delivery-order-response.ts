@@ -3,7 +3,6 @@ export interface DeliveryOrderResource {
   tripId: number;
   clientEmail: string;
   sequenceOrder: number;
-  status: string;
   address: string;
   latitude: number;
   longitude: number;
@@ -15,4 +14,5 @@ export interface DeliveryOrderResource {
   arrivalAt: string | null;
   createdAt: string;
   updatedAt: string;
+  status: string;
 }

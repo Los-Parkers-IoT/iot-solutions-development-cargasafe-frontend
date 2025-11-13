@@ -29,7 +29,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text {
@@ -223,12 +225,12 @@
 
 /* Vibration Chart Legend */
 .safe-zone {
-  background: #E7F7DD;
-  border: 1px solid #E7F7DD;
+  background: #e7f7dd;
+  border: 1px solid #e7f7dd;
 }
 
 .vibration-line {
-  background: #9263F8;
+  background: #9263f8;
 }
 
 /* ngx-charts Customization */
