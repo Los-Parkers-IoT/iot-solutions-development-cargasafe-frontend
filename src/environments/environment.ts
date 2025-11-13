@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:8080/api/v1',
+  baseUrl: 'https://iot-solutions-development-cargasafe.onrender.com/api/v1',
   tripsEndpointPath: '/trips',
   deliveryOrdersEndpointPath: '/delivery-orders',
   alertsEndpointPath: '/alerts',
