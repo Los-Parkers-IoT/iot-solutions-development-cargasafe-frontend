@@ -18,15 +18,20 @@
     </mat-form-field>
 
     <!-- Plate -->
-    <mat-form-field appearance="outline">
-      <mat-label>Plate</mat-label>
-      <input matInput formControlName="plate" placeholder="Plate" />
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Vehicle</mat-label>
+
+      <mat-select formControlName="vehicleId">
+        @for (item of vehicles(); track $index) {
+        <mat-option [value]="item.id"> {{ item.plate }} </mat-option>
+        }
+      </mat-select>
     </mat-form-field>
 
     <!-- Device IoT -->
     <mat-form-field appearance="outline">
-      <mat-label>Device IoT</mat-label>
-      <input matInput formControlName="device" placeholder="Device IoT" />
+      <mat-label>Device IMEI</mat-label>
+      <input disabled matInput [value]="device()?.imei" readonly />
     </mat-form-field>
 
     <!-- Origin Point -->

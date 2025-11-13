@@ -18,6 +18,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { OriginPointsStore } from '../../../application/origin-points.store';
 import { MatSelectModule } from '@angular/material/select';
 import { OriginPoint } from '../../../domain/model/origin-point.entity';
+import { createAsyncState } from '../../../../shared/helpers/lazy-resource';
+import { Device } from '../../../../fleet/domain/model/device.model';
+import { FleetFacade } from '../../../../fleet/application/services/fleet.facade';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface DeliveryOrder {
   address: string;
@@ -67,13 +71,15 @@ interface TripForm {
 export class TripCreatePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private originPointsStore = inject(OriginPointsStore);
-
+  private fleetStore = inject(FleetFacade);
   // -------------------------------------------------------
   // SIGNALS
   // -------------------------------------------------------
 
   /** List of OriginPoint entities from the store */
   originPoints = computed<OriginPoint[]>(() => this.originPointsStore.store.data());
+  vehicles = computed(() => this.fleetStore.vehiclesSig());
+  devices = computed<Device[]>(() => this.fleetStore.devicesSig());
 
   /** Delivery orders stored in signal */
   deliveryOrders = signal<DeliveryOrder[]>([]);
@@ -92,12 +98,22 @@ export class TripCreatePageComponent implements OnInit {
   tripForm = this.fb.nonNullable.group({
     driver: ['Juan Pablo'],
     codriver: [''],
-    plate: ['BMD-123'],
-    device: ['Device-001'],
-    departureAt: ['08/10/2025 08:00:00'],
-
     // Store OriginPoint ENTITY, not a string
     originPoint: [null as OriginPoint | null, Validators.required],
+    vehicleId: [null as null | number, Validators.required],
+  });
+  vehicleIdSig = toSignal(this.tripForm.controls.vehicleId.valueChanges, {
+    initialValue: this.tripForm.controls.vehicleId.value,
+  });
+
+  device = computed(() => {
+    const vehicleId = this.vehicleIdSig();
+    if (!vehicleId) return null;
+
+    const vehicle = this.vehicles().find((v) => v.id === vehicleId);
+    if (!vehicle) return null;
+
+    return this.devices().find((d) => vehicle.deviceImeis.includes(d.imei)) ?? null;
   });
 
   // -------------------------------------------------------
@@ -127,6 +143,8 @@ export class TripCreatePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.originPointsStore.loadOriginPoints();
+    this.fleetStore.loadDevices();
+    this.fleetStore.loadVehicles();
   }
 
   // Runs in injection context
