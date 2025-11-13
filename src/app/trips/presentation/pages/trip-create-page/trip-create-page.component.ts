@@ -1,11 +1,25 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+  computed,
+  signal,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { OriginPointsStore } from '../../../application/origin-points.store';
+import { MatSelectModule } from '@angular/material/select';
+import { OriginPoint } from '../../../domain/model/origin-point.entity';
 
-interface DeliveryOrder{
+interface DeliveryOrder {
   address: string;
   enableTemperature: boolean;
   minTemperature?: number | null;
@@ -41,72 +55,124 @@ interface TripForm {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
+    MatIconModule,
+    MatSlideToggleModule,
+    MatSelectModule,
   ],
   templateUrl: './trip-create-page.component.html',
   styleUrls: ['./trip-create-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class TripCreatePageComponent implements OnInit {
-  tripForm!: FormGroup;
+  private fb = inject(FormBuilder);
+  private originPointsStore = inject(OriginPointsStore);
 
-  deliveryOrders: DeliveryOrder[] = [];
+  // -------------------------------------------------------
+  // SIGNALS
+  // -------------------------------------------------------
 
-  isOrderModalOpen = false;
-  orderForm!: FormGroup;
-  isSaving = false;
-  editingIndex: number | null = null;
+  /** List of OriginPoint entities from the store */
+  originPoints = computed<OriginPoint[]>(() => this.originPointsStore.store.data());
 
-  toastMessage = '';
-  showToast = false;
+  /** Delivery orders stored in signal */
+  deliveryOrders = signal<DeliveryOrder[]>([]);
 
-  constructor(private fb: FormBuilder) {}
+  isOrderModalOpen = signal(false);
+  isSaving = signal(false);
+  editingIndex = signal<number | null>(null);
+
+  toastMessage = signal('');
+  showToast = signal(false);
+
+  // -------------------------------------------------------
+  // TRIP FORM (STRONGLY TYPED)
+  // -------------------------------------------------------
+
+  tripForm = this.fb.nonNullable.group({
+    driver: ['Juan Pablo'],
+    codriver: [''],
+    plate: ['BMD-123'],
+    device: ['Device-001'],
+    departureAt: ['08/10/2025 08:00:00'],
+
+    // Store OriginPoint ENTITY, not a string
+    originPoint: [null as OriginPoint | null, Validators.required],
+  });
+
+  // -------------------------------------------------------
+  // ORDER FORM (REFACTORED)
+  // -------------------------------------------------------
+
+  orderForm = this.fb.group({
+    address: ['', [Validators.required, Validators.minLength(3)]],
+
+    enableTemperature: [true],
+    minTemperature: [{ value: null as null | number, disabled: false }],
+    maxTemperature: [{ value: null as null | number, disabled: false }],
+
+    enableHumidity: [false],
+    minHumidity: [{ value: null as null | number, disabled: true }],
+    maxHumidity: [{ value: null as null | number, disabled: true }],
+
+    enableVibration: [true],
+    maxVibration: [{ value: 1.5, disabled: false }],
+
+    notes: ['Take it easy!!!'],
+  });
+
+  // -------------------------------------------------------
+  // INIT
+  // -------------------------------------------------------
 
   ngOnInit(): void {
-    this.tripForm = this.fb.group({
-      driver: ['Juan Pablo'],
-      codriver: [''],
-      plate: ['BMD-123'],
-      device: ['Device-001'],
-      departureAt: ['08/10/2025 08:00:00'],
-      originPoint: ['Warehouse 1'],
-    });
-
-    this.orderForm = this.fb.group({
-      address: ['', [Validators.required, Validators.minLength(3)]],
-
-      enableTemperature: [true],
-      minTemperature: [24],
-      maxTemperature: [8,],
-
-      enableHumidity: [false],
-      minHumidity: [{ value: null, disabled: true }],
-
-      enableVibration: [true],
-      maxVibration: [1.5],
-
-      notes: ['Take it easy!!!'],
-    });
-
-    this.orderForm.get('enableTemperature')?.valueChanges.subscribe((on) => {
-      const min = this.orderForm.get('minTemperature');
-      const max = this.orderForm.get('maxTemperature');
-      on ? (min?.enable(), max?.enable()) : (min?.disable(), max?.disable());
-    });
-
-    this.orderForm.get('enableHumidity')?.valueChanges.subscribe((on) => {
-      const minH = this.orderForm.get('minHumidity');
-      on ? minH?.enable() : minH?.disable();
-    });
-
-    this.orderForm.get('enableVibration')?.valueChanges.subscribe((on) => {
-      const maxV = this.orderForm.get('maxVibration');
-      on ? maxV?.enable() : maxV?.disable();
-    });
+    this.originPointsStore.loadOriginPoints();
   }
 
-  openAddOrder(): void {
-    this.editingIndex = null;
+  // Runs in injection context
+  readonly tempToggleEffect = effect(() => {
+    const enabled = this.orderForm.value.enableTemperature;
+    const min = this.orderForm.controls.minTemperature;
+    const max = this.orderForm.controls.maxTemperature;
+    enabled ? (min.enable(), max.enable()) : (min.disable(), max.disable());
+  });
+
+  readonly humidityToggleEffect = effect(() => {
+    const enabled = this.orderForm.value.enableHumidity;
+    const field = this.orderForm.controls.minHumidity;
+    enabled ? field.enable() : field.disable();
+  });
+
+  readonly vibrationToggleEffect = effect(() => {
+    const enabled = this.orderForm.value.enableVibration;
+    const field = this.orderForm.controls.maxVibration;
+    enabled ? field.enable() : field.disable();
+  });
+
+  // Avoid ExpressionChangedAfterItHasBeenCheckedError
+  readonly defaultOriginEffect = effect(() => {
+    const points = this.originPoints();
+    if (points.length === 0) return;
+
+    Promise.resolve().then(() => {
+      if (!this.tripForm.value.originPoint) {
+        this.tripForm.patchValue({ originPoint: points[0] });
+      }
+    });
+  });
+
+  // -------------------------------------------------------
+  // MAT-SELECT: ENTITY COMPARATOR
+  // -------------------------------------------------------
+
+  compareOriginPoints = (a: OriginPoint, b: OriginPoint) => a && b && a.id === b.id;
+
+  // -------------------------------------------------------
+  // MODAL LOGIC
+  // -------------------------------------------------------
+
+  openAddOrder() {
+    this.editingIndex.set(null);
     this.orderForm.reset({
       address: '',
       enableTemperature: true,
@@ -121,12 +187,13 @@ export class TripCreatePageComponent implements OnInit {
 
       notes: '',
     });
-    this.isOrderModalOpen = true;
+    this.isOrderModalOpen.set(true);
   }
 
-  openEditOrder(index: number): void {
-    const o = this.deliveryOrders[index];
-    this.editingIndex = index;
+  openEditOrder(index: number) {
+    const o = this.deliveryOrders()[index];
+    this.editingIndex.set(index);
+
     this.orderForm.reset({
       address: o.address,
       enableTemperature: o.enableTemperature,
@@ -141,67 +208,77 @@ export class TripCreatePageComponent implements OnInit {
 
       notes: o.notes ?? '',
     });
-    this.isOrderModalOpen = true;
+
+    this.isOrderModalOpen.set(true);
   }
 
-  closeOrderModal(): void {
-    if (this.isSaving) return;
-    this.isOrderModalOpen = false;
-    this.editingIndex = null;
+  closeOrderModal() {
+    if (!this.isSaving()) this.isOrderModalOpen.set(false);
+    this.editingIndex.set(null);
   }
 
-  saveOrder(): void {
+  // -------------------------------------------------------
+  // SAVE ORDER
+  // -------------------------------------------------------
+
+  saveOrder() {
     if (this.orderForm.invalid) {
       this.orderForm.markAllAsTouched();
       return;
     }
 
-    this.isSaving = true;
+    this.isSaving.set(true);
     this.orderForm.disable();
 
     setTimeout(() => {
-      const formValue = this.orderForm.getRawValue();
+      const value = this.orderForm.getRawValue();
 
       const newOrder: DeliveryOrder = {
-        address: formValue.address,
-        enableTemperature: formValue.enableTemperature,
-        minTemperature: formValue.minTemperature,
-        maxTemperature: formValue.maxTemperature,
-
-        enableHumidity: formValue.enableHumidity,
-        minHumidity: formValue.minHumidity,
-
-        enableVibration: formValue.enableVibration,
-        maxVibration: formValue.maxVibration,
-
-        notes: formValue.notes,
+        address: value.address!,
+        enableTemperature: value.enableTemperature!,
+        minTemperature: value.minTemperature ?? undefined,
+        maxTemperature: value.maxTemperature ?? undefined,
+        enableHumidity: value.enableHumidity!,
+        minHumidity: value.minHumidity ?? undefined,
+        enableVibration: value.enableVibration!,
+        maxVibration: value.maxVibration ?? undefined,
+        notes: value.notes ?? undefined,
         lat: -12.08 + Math.random() * 0.1,
         lng: -77.05 + Math.random() * 0.1,
       };
 
-      if (this.editingIndex === null) {
-        this.deliveryOrders.push(newOrder);
+      const idx = this.editingIndex();
+
+      if (idx === null) {
+        this.deliveryOrders.update((list) => [...list, newOrder]);
       } else {
-        this.deliveryOrders[this.editingIndex] = newOrder;
+        this.deliveryOrders.update((list) => {
+          const copy = [...list];
+          copy[idx] = newOrder;
+          return copy;
+        });
       }
 
-      this.isSaving = false;
-      this.isOrderModalOpen = false;
+      this.isSaving.set(false);
       this.orderForm.enable();
-      this.editingIndex = null;
-
+      this.editingIndex.set(null);
+      this.isOrderModalOpen.set(false);
       this.showToastMsg('Order saved');
     }, 1200);
   }
 
-  deleteOrder(i: number): void {
-    this.deliveryOrders.splice(i, 1);
+  deleteOrder(i: number) {
+    this.deliveryOrders.update((list) => list.filter((_, x) => x !== i));
     this.showToastMsg('Order removed');
   }
 
+  // -------------------------------------------------------
+  // TOAST
+  // -------------------------------------------------------
+
   private showToastMsg(msg: string) {
-    this.toastMessage = msg;
-    this.showToast = true;
-    setTimeout(() => (this.showToast = false), 1800);
+    this.toastMessage.set(msg);
+    this.showToast.set(true);
+    setTimeout(() => this.showToast.set(false), 1800);
   }
 }

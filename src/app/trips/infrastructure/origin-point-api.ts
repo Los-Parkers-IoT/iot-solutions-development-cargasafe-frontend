@@ -9,7 +9,7 @@ import { OriginPointResource } from './origin-point-response';
 @Injectable({ providedIn: 'root' })
 export class OriginPointApi {
   private baseUrl = environment.baseUrl;
-  private originPointsEndpoint = `/origin_points`;
+  private originPointsEndpoint = `/origin-points`;
   private http = inject(HttpClient);
 
   getOriginPoints(): Observable<OriginPoint[]> {
