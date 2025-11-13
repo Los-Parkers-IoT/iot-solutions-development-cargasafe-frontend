@@ -10,10 +10,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Trip } from '../../../domain/model/trip.entity';
 import { RouterModule } from '@angular/router';
-import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
+import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { TripTotalSummary } from '../../components/trip-total-summary/trip-total-summary';
 
 @Component({
   selector: 'app-trip-list-page',
@@ -32,6 +33,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    TripTotalSummary,
   ],
   templateUrl: './trip-list-page.html',
   styleUrl: './trip-list-page.css',
@@ -252,8 +254,6 @@ export class TripListPage implements OnInit {
       this.toastMessage = `Trip #${this.selectedTripId ?? ''} updated to ${this.nextStatusLabel}`;
       this.showToast = true;
       setTimeout(() => (this.showToast = false), 1800);
-
     }, 900);
   }
-
 }

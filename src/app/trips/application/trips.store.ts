@@ -1,14 +1,17 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, resource, signal } from '@angular/core';
 import { Trip } from '../domain/model/trip.entity';
 import { TripsApi } from '../infrastructure/trips-api';
+import { TotalTripSummary } from './dto/trip-summary.dto';
+import { finalize, firstValueFrom, tap } from 'rxjs';
+import { createAsyncState } from '../../shared/helpers/lazy-resource';
 
 @Injectable({ providedIn: 'root' })
 export class TripsStore {
   private tripsSignal = signal<Trip[]>([]);
-
   private tripsApi = inject(TripsApi);
-
   readonly trips = computed(() => this.tripsSignal());
+
+  readonly totalTripsSummary = createAsyncState<TotalTripSummary>();
 
   loadTrips() {
     this.tripsSignal.set([
@@ -28,10 +31,26 @@ export class TripsStore {
         totalDurationMin: 420,
       }),
     ]);
+  }
 
-    // this.tripsApi.getTrips().subscribe((trips) => {
-    //   console.log('Trips loaded:', trips);
-    //   this.tripsSignal.set(trips);
-    // });
+  loadTotalTripsSummary() {
+    this.totalTripsSummary.setLoading(true);
+
+    this.tripsApi
+      .getTotalTripsSummary()
+      .pipe(
+        tap({
+          next: (summary) => {
+            this.totalTripsSummary.setData(summary);
+          },
+          error: () => {
+            this.totalTripsSummary.setError('Failed to load total trips summary');
+          },
+        }),
+        finalize(() => {
+          this.totalTripsSummary.setLoading(false);
+        })
+      )
+      .subscribe();
   }
 }

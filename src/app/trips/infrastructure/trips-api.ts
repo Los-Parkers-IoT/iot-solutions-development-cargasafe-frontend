@@ -5,6 +5,7 @@ import { Trip } from '../domain/model/trip.entity';
 import { HttpClient } from '@angular/common/http';
 import { TripAssembler } from './trip-assembler';
 import { TripResource } from './trip-response';
+import { TotalTripSummary } from '../application/dto/trip-summary.dto';
 
 @Injectable({ providedIn: 'root' })
 export class TripsApi {
@@ -12,12 +13,11 @@ export class TripsApi {
   private tripsEndpoint = environment.tripsEndpointPath;
   private http = inject(HttpClient);
 
-
   getTrips(): Observable<Trip[]> {
     return this.http
       .get<TripResource[] | { content: TripResource[] }>(`${this.baseUrl}${this.tripsEndpoint}`)
       .pipe(
-        map((response) => Array.isArray(response) ? response : (response?.content ?? [])),
+        map((response) => (Array.isArray(response) ? response : response?.content ?? [])),
         map((items) => items.map(TripAssembler.toEntityFromResource))
       );
   }
@@ -28,4 +28,24 @@ export class TripsApi {
       .pipe(map((resource) => TripAssembler.toEntityFromResource(resource)));
   }
 
+  getTotalTripsSummary(): Observable<TotalTripSummary> {
+    console.log('TripsApi: getTotalTripsSummary called');
+
+    return new Observable<TotalTripSummary>((subscriber) => {
+      const fake: TotalTripSummary = {
+        totalTrips: {
+          today: 5,
+          yesterday: 8,
+          last7Days: 45,
+          lastYear: 520,
+        },
+      };
+
+      // simulate async response
+      setTimeout(() => {
+        subscriber.next(fake);
+        subscriber.complete();
+      }, 300);
+    });
+  }
 }

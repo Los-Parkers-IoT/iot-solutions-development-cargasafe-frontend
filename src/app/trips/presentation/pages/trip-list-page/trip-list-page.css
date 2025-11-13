@@ -11,51 +11,6 @@
   margin: 0;
 }
 
-.trips-summary {
-  display: flex;
-  flex-direction: column;
-  gap: 0rem;
-}
-
-.summary-group {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  border-top: 1px solid var(--color-grey-4);
-  border-bottom: 1px solid var(--color-grey-4);
-  padding: 1rem 1.5rem;
-}
-
-.summary-group:last-child {
-  border-top: none;
-}
-
-.summary-group h3 {
-  font-size: 1rem;
-  margin: 0;
-  color: var(--color-grey-2);
-  max-width: 12.5rem;
-  width: 100%;
-}
-
-.summary-values {
-  display: flex;
-  gap: 1rem;
-  font-size: 0.9rem;
-  color: var(--color-grey-2);
-}
-
-.summary-value {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.summary-value-field {
-  font-weight: 700;
-  text-wrap: nowrap;
-}
-
 .trips-filters {
   display: flex;
   align-items: center;
@@ -153,14 +108,13 @@ td.actions {
   gap: 0.5rem;
 }
 
-
 .m-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(18,23,34,.45);
+  background: rgba(18, 23, 34, 0.45);
   opacity: 0;
   pointer-events: none;
-  transition: opacity .2s ease;
+  transition: opacity 0.2s ease;
   z-index: 1000;
 }
 
@@ -170,12 +124,18 @@ td.actions {
 }
 
 .m-box {
-  position: fixed; left: 50%; top: 50%;
+  position: fixed;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, calc(-50% + 10px));
-  width: 520px; max-width: calc(100% - 32px);
-  background: #fff; border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(0,0,0,.18);
-  opacity: 0; pointer-events: none; transition: all .22s ease;
+  width: 520px;
+  max-width: calc(100% - 32px);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.22s ease;
   z-index: 1001;
 }
 
@@ -255,7 +215,8 @@ td.actions {
   gap: 10px;
 }
 
-.btn-cancel, .btn-confirm {
+.btn-cancel,
+.btn-confirm {
   border: none;
   height: 36px;
   padding: 0 14px;
@@ -285,16 +246,20 @@ td.actions {
 .spinner {
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255,255,255,.5);
+  border: 2px solid rgba(255, 255, 255, 0.5);
   border-top-color: #fff;
   border-radius: 50%;
   margin-right: 8px;
   display: inline-block;
-  animation: spin .8s linear infinite;
+  animation: spin 0.8s linear infinite;
   vertical-align: -3px;
 }
 
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 .m-toast {
   position: fixed;
@@ -307,9 +272,9 @@ td.actions {
   border-radius: 10px;
   opacity: 0;
   pointer-events: none;
-  transition: all .25s ease;
+  transition: all 0.25s ease;
   z-index: 1100;
-  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
 }
 
 .m-toast.show {
