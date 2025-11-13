@@ -29,7 +29,8 @@
           <div class="card-entries">
             <p>
               <strong>Driver:</strong><br />
-              {{ trip().driverId }}
+              <!-- {{ trip().driverId }} -->
+              Juan Jose
             </p>
             <!-- <p>
               <strong>Codriver:</strong><br />
@@ -38,24 +39,19 @@
           </div>
         </div>
 
-        <!-- <div class="card">
-          <h3>Shipping estimation</h3>
-          <div class="card-entries"></div>
-        </div>
-
         <div class="card">
-          <h3>Actual delivery</h3>
+          <h3>Origin Point</h3>
           <div class="card-entries">
             <p>
-              <strong>Total Distance:</strong><br />
-              Not available
+              <strong>Name:</strong><br />
+              {{ trip().originPoint?.name }}
             </p>
             <p>
-              <strong>Total Duration:</strong><br />
-              Not available
+              <strong>Address:</strong><br />
+              {{ trip().originPoint?.address }}
             </p>
           </div>
-        </div> -->
+        </div>
       </section>
 
       <section class="trip-map">
