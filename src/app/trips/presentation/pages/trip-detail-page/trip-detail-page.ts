@@ -16,7 +16,7 @@ import { DeliveryOrdersApi } from '../../../infrastructure/delivery-order-api';
 import { Trip } from '../../../domain/model/trip.entity';
 import { TripParameter } from '../../../domain/model/trip-parameter.entity';
 import { DeliveryOrder } from '../../../domain/model/delivery-order.entity';
-import {AlertsApi} from '../../../../alerts/infrastructure/alerts-api';
+import { AlertsApi } from '../../../../alerts/infrastructure/alerts-api';
 import { Alert } from '../../../../alerts/domain/models/alert.model';
 import { OriginPointApi as OriginPointsApi } from '../../../infrastructure/origin-point-api';
 import { OriginPoint } from '../../../domain/model/origin-point.entity';
@@ -112,7 +112,7 @@ export class TripDetailPage implements OnInit {
     forkJoin({
       trip: this.tripsApi.getTripById(this.tripId),
       params: this.tripParametersApi.getTripParametersByTripId(this.tripId),
-      orders: this.deliveryOrdersApi.getDeliveryOrdersByTripId(this.tripId),
+      orders: this.deliveryOrdersApi.getAll(),
       alerts: this.alertsApi.getAlerts(),
       origin: this.originPointsApi.getOriginPointByTripId(this.tripId),
     }).subscribe({

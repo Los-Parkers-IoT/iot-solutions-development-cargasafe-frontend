@@ -9,7 +9,7 @@ import { TripsStore } from '../../../application/trips.store';
 })
 export class TripTotalSummary implements OnInit {
   readonly store = inject(TripsStore);
-  readonly summaryState = computed(() => this.store.totalTripsSummary);
+  readonly summaryState = computed(() => this.store.totalTripsSummaryState);
 
   ngOnInit(): void {
     this.store.loadTotalTripsSummary();

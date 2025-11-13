@@ -49,7 +49,7 @@ export class TripListPage implements OnInit {
   createdOrder: 'desc' | 'asc' = 'desc';
 
   readonly store = inject(TripsStore);
-  trips = computed(() => this.store.trips());
+  trips = computed(() => this.store.tripsState.data);
 
   displayedColumns: string[] = [
     'id',
@@ -66,7 +66,7 @@ export class TripListPage implements OnInit {
 
   constructor() {
     effect(() => {
-      const data = this.store.trips();
+      const data = this.store.tripsState.data();
       this.dataSource.data = this.sortByCreated([...data], this.createdOrder);
     });
 

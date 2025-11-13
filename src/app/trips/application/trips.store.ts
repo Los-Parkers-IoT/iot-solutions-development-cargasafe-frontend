@@ -7,44 +7,47 @@ import { createAsyncState } from '../../shared/helpers/lazy-resource';
 
 @Injectable({ providedIn: 'root' })
 export class TripsStore {
-  private tripsSignal = signal<Trip[]>([]);
   private tripsApi = inject(TripsApi);
-  readonly trips = computed(() => this.tripsSignal());
-
-  readonly totalTripsSummary = createAsyncState<TotalTripSummary>();
+  readonly tripsState = createAsyncState<Trip[]>([]);
+  readonly totalTripsSummaryState = createAsyncState<TotalTripSummary | null>(null);
 
   loadTrips() {
-    this.tripsSignal.set([
-      new Trip({
-        id: 1,
-        driverId: 101,
-        vehicleId: 55,
-        createdAt: new Date('2025-01-01T08:00:00Z'),
-        updatedAt: new Date('2025-01-01T09:00:00Z'),
-        merchantId: 200,
-        originPointId: 10,
-        completedAt: new Date('2025-01-01T10:00:00Z'),
-        startedAt: new Date('2025-01-01T08:30:00Z'),
-      }),
-    ]);
+    this.tripsState.setLoading(true);
+    this.tripsApi
+      .getTrips()
+      .pipe(
+        tap({
+          next: (trips) => {
+            this.tripsState.setData(trips);
+            console.log('TripsStore: loaded trips', trips);
+          },
+          error: () => {
+            this.tripsState.setError('Failed to load trips');
+          },
+        }),
+        finalize(() => {
+          this.tripsState.setLoading(false);
+        })
+      )
+      .subscribe();
   }
 
   loadTotalTripsSummary() {
-    this.totalTripsSummary.setLoading(true);
+    this.totalTripsSummaryState.setLoading(true);
 
     this.tripsApi
       .getTotalTripsSummary()
       .pipe(
         tap({
           next: (summary) => {
-            this.totalTripsSummary.setData(summary);
+            this.totalTripsSummaryState.setData(summary);
           },
           error: () => {
-            this.totalTripsSummary.setError('Failed to load total trips summary');
+            this.totalTripsSummaryState.setError('Failed to load total trips summary');
           },
         }),
         finalize(() => {
-          this.totalTripsSummary.setLoading(false);
+          this.totalTripsSummaryState.setLoading(false);
         })
       )
       .subscribe();

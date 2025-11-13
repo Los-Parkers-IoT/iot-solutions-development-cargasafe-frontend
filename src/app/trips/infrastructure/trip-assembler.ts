@@ -1,4 +1,6 @@
 import { Trip } from '../domain/model/trip.entity';
+import { DeliveryOrderAssembler } from './delivery-order-assembler';
+import { OriginPointAssembler } from './origin-point-assembler';
 import { TripResource, TripsResponse } from './trip-response';
 
 export class TripAssembler {
@@ -7,19 +9,18 @@ export class TripAssembler {
   }
 
   static toEntityFromResource(resource: TripResource): Trip {
-    const createdAt = resource.createdAt ? new Date(resource.createdAt) : new Date();
-    const updatedAt = resource.updatedAt ? new Date(resource.updatedAt) : new Date();
-
     const trip = new Trip({
       id: Number.isFinite(resource.id as any) ? (resource.id as any as number) : 0,
       driverId: resource.driverId,
       vehicleId: resource.vehicleId,
-      createdAt,
-      updatedAt,
+      createdAt: new Date(resource.createdAt),
+      updatedAt: new Date(resource.updatedAt),
       completedAt: resource.completedAt ? new Date(resource.completedAt) : null,
       startedAt: resource.startedAt ? new Date(resource.startedAt) : null,
       merchantId: resource.merchantId,
-      originPointId: resource.originPointId,
+      originPointId: resource.originPoint.id,
+      originPoint: OriginPointAssembler.toEntityFromResource(resource.originPoint),
+      deliveryOrders: resource.deliveryOrders.map(DeliveryOrderAssembler.toEntityFromResource),
     });
 
     return trip;

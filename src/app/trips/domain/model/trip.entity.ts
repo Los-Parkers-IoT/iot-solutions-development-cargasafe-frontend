@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { DeliveryOrder } from './delivery-order.entity';
 import { OriginPoint } from './origin-point.entity';
 
 export class Trip implements BaseEntity {
@@ -12,6 +13,7 @@ export class Trip implements BaseEntity {
   private _startedAt: Date | null;
   private _completedAt: Date | null;
   private _originPoint: OriginPoint | null;
+  private _deliveryOrders: DeliveryOrder[];
 
   constructor(trip: {
     id: number;
@@ -20,6 +22,7 @@ export class Trip implements BaseEntity {
     merchantId: number;
     originPointId: number;
     originPoint?: OriginPoint | null;
+    deliveryOrders?: DeliveryOrder[];
     startedAt: Date | null;
     completedAt: Date | null;
     createdAt: Date;
@@ -38,6 +41,7 @@ export class Trip implements BaseEntity {
 
     this._createdAt = trip.createdAt;
     this._updatedAt = trip.updatedAt;
+    this._deliveryOrders = trip.deliveryOrders ?? [];
   }
 
   get startedAt(): Date | null {
@@ -93,5 +97,12 @@ export class Trip implements BaseEntity {
   }
   get originPoint(): OriginPoint | null {
     return this._originPoint;
+  }
+
+  get deliveryOrders(): DeliveryOrder[] {
+    return this._deliveryOrders;
+  }
+  set deliveryOrders(value: DeliveryOrder[]) {
+    this._deliveryOrders = value;
   }
 }

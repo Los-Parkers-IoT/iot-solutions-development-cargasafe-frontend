@@ -6,8 +6,8 @@ import { signal } from '@angular/core';
  *
  * @template T The type of the data being loaded.
  */
-export function createAsyncState<T>(initial: T | null = null) {
-  const data = signal<T | null>(initial);
+export function createAsyncState<T>(initial: T) {
+  const data = signal<T>(initial);
   const loading = signal<boolean>(false);
   const error = signal<string | null>(null);
 

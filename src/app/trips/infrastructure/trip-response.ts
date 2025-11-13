@@ -1,3 +1,6 @@
+import { DeliveryOrderResource } from './delivery-order-response';
+import { OriginPointResource } from './origin-point-response';
+
 export interface TripResource {
   id: number;
   statusId: number;
@@ -5,7 +8,8 @@ export interface TripResource {
   vehicleId: number;
   departureAt: string | null;
   merchantId: number;
-  originPointId: number;
+  originPoint: OriginPointResource;
+  deliveryOrders: DeliveryOrderResource[];
   startedAt: string | null;
   completedAt: string | null;
   status: 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';

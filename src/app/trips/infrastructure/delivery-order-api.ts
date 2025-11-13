@@ -9,17 +9,12 @@ import { DeliveryOrderResource } from './delivery-order-response';
 @Injectable({ providedIn: 'root' })
 export class DeliveryOrdersApi {
   private baseUrl = environment.baseUrl;
-  private deliveryOrdersEndpoint = `/delivery_orders`;
+  private deliveryOrdersEndpoint = environment.deliveryOrdersEndpointPath;
   private http = inject(HttpClient);
 
-  // Fetch all delivery orders for a trip (if tripId provided) or all delivery orders
-  getDeliveryOrdersByTripId(tripId?: number): Observable<DeliveryOrder[]> {
-    const url = tripId
-      ? `${this.baseUrl}${this.deliveryOrdersEndpoint}?tripId=${tripId}`
-      : `${this.baseUrl}${this.deliveryOrdersEndpoint}`;
-
+  getAll(): Observable<DeliveryOrder[]> {
     return this.http
-      .get<DeliveryOrderResource[]>(url)
+      .get<DeliveryOrderResource[]>(this.deliveryOrdersEndpoint)
       .pipe(map((resources) => DeliveryOrderAssembler.toEntitiesFromResources(resources)));
   }
 }

@@ -15,10 +15,10 @@
   <div>
     <header class="trip-header">
       <h1>Trip #{{ tripId }}</h1>
-      <span class="status-badge">{{ trip()?.statusId }}</span>
+      <!-- <span class="status-badge">{{ trip()?.statusId }}</span> -->
       <div class="trip-dates">
         <p>Created at {{ trip()?.createdAt | date : 'short' }}</p>
-        <p>Departure at {{ trip()?.departureAt | date : 'short' }}</p>
+        <!-- <p>Departure at {{ trip()?.departureAt | date : 'short' }}</p> -->
       </div>
     </header>
 
@@ -33,23 +33,14 @@
             </p>
             <p>
               <strong>Codriver:</strong><br />
-              {{ trip()?.coDriverId || 'Not assigned' }}
+              {{ 'Not assigned' }}
             </p>
           </div>
         </div>
 
         <div class="card">
           <h3>Shipping estimation</h3>
-          <div class="card-entries">
-            <p>
-              <strong>Total Distance:</strong><br />
-              {{ trip()?.totalDistanceKm }} km
-            </p>
-            <p>
-              <strong>Total Duration:</strong><br />
-              {{ trip()?.totalDurationMin }} min
-            </p>
-          </div>
+          <div class="card-entries"></div>
         </div>
 
         <div class="card">
