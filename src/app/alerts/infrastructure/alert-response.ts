@@ -24,6 +24,7 @@ export interface AlertResource {
   description: string;
   incidents?: IncidentResource[];
   notifications?: NotificationResource[];
+  deliveryOrderId?: number
 }
 
 export interface AlertResponse {

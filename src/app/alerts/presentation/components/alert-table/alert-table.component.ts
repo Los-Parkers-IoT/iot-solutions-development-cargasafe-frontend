@@ -45,6 +45,7 @@ export class AlertTableComponent implements OnInit, OnChanges, AfterViewInit {
   displayedColumns: string[] = [
     'id',
     'type',
+    'deliveryOrderId',
     'status',
     'createdAt',
     'closedAt',

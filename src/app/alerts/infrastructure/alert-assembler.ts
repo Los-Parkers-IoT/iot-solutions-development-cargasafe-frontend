@@ -18,7 +18,8 @@ export class AlertAssembler {
       new Date(resource.createdAt),
       resource.closedAt ? new Date(resource.closedAt) : null,
       resource.incidents?.map(this.toIncidentFromResource) || [],
-      resource.notifications?.map(this.toNotificationFromResource) || []
+      resource.notifications?.map(this.toNotificationFromResource) || [],
+      resource.deliveryOrderId ?? undefined
     );
   }
 
@@ -65,7 +66,8 @@ export class AlertAssembler {
         notificationChannel: n.notificationChannel,
         message: n.message,
         sentAt: n.sentAt.toISOString()
-      }))
+      })),
+      deliveryOrderId: alert.deliveryOrderId
     };
   }
 }
