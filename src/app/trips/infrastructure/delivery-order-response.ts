@@ -1,18 +1,18 @@
 export interface DeliveryOrderResource {
   id: number;
+  tripId: number;
   clientEmail: string;
+  sequenceOrder: number;
   address: string;
   latitude: number;
   longitude: number;
-  sequenceOrder: number;
-  arrivalAt: string;
-  notes: string;
-  deliveryOrderStatusId: number;
-  realArrivalAt: string | null;
-  maxHumidity: number;
-  minHumidity: number;
-  maxTemperature: number;
-  minTemperature: number;
-  maxVibration: number;
-  tripId: number;
+  maxHumidity: number | null;
+  minHumidity: number | null;
+  maxTemperature: number | null;
+  minTemperature: number | null;
+  maxVibration: number | null;
+  arrivalAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
 }

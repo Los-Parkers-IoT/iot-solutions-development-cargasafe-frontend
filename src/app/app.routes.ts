@@ -6,15 +6,13 @@ import { TripDetailComponent } from './dashboard/presentation/components/trip-de
 import { LoginPageComponent } from './iam/presentation/pages/login-page/login-page';
 import { PasswordRecoveryPageComponent } from './iam/presentation/pages/password-recovery-page/password-recovery-page';
 import { RegisterPageComponent } from './iam/presentation/pages/register-page/register-page';
-import { VehicleManagementComponent } from './fleet/presentation/pages/vehicle-management/vehicle-management';
-import { DeviceManagementComponent } from './fleet/presentation/pages/device-management/device-management';
-import { VehicleDetailPageComponent } from './fleet/presentation/pages/vehicle-detail-page/vehicle-detail-page';
-import { DeviceDetailPageComponent } from './fleet/presentation/pages/device-detail-page/device-detail-page';
 import { SubscriptionsPage } from './subscription/presentation/pages/subscriptions/subscriptions.page';
 
 const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
 const alertRoutes = () => import('./alerts/presentation/alert.routes').then((m) => m.routes);
+const fleetRoutes = () => import('./fleet/fleet.routes').then((m) => m.routes);
 
+// app.routes.ts (root)
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'password-recovery', component: PasswordRecoveryPageComponent },
@@ -46,24 +44,16 @@ export const routes: Routes = [
       },
       {
         path: 'fleet',
-        children: [
-          { path: 'vehicles', component: VehicleManagementComponent },
-          { path: 'devices', component: DeviceManagementComponent },
-
-          { path: 'vehicles/:id', component: VehicleDetailPageComponent },
-          { path: 'devices/:id', component: DeviceDetailPageComponent },
-
-          { path: '', pathMatch: 'full', redirectTo: 'vehicles' },
-        ],
+        loadChildren: fleetRoutes,
       },
 
       {
         path: 'subscriptions/change-card',
         loadComponent: () =>
-          import('./subscription/presentation/pages/change-card/change-card.page')
-            .then(m => m.ChangeCardPage),
+          import('./subscription/presentation/pages/change-card/change-card.page').then(
+            (m) => m.ChangeCardPage
+          ),
       },
-
 
       { path: 'subscriptions', component: SubscriptionsPage },
 

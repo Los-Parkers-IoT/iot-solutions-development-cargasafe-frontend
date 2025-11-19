@@ -1,24 +1,24 @@
 <div class="trip-container">
-  @if (loading()) {
+  @if (tripState().loading()) {
   <div class="loading-overlay">
     <div class="loading-center">
       <mat-spinner diameter="48"></mat-spinner>
       <p>Loading trip...</p>
     </div>
   </div>
-  } @else if (error()) {
+  } @else if (tripState().error()) {
   <div class="error-banner">
-    <p>{{ error() }}</p>
-    <button mat-raised-button color="primary" (click)="retry()">Retry</button>
+    <p>{{ tripState().error() }}</p>
+    <!-- <button mat-raised-button color="primary" (click)="retry()">Retry</button> -->
   </div>
-  } @else if (trip()) {
+  } @else if (tripState().data()) {
   <div>
     <header class="trip-header">
-      <h1>Trip #{{ tripId }}</h1>
-      <span class="status-badge">{{ trip()?.statusId }}</span>
+      <h1>Trip #{{ trip().id }}</h1>
+      <!-- <span class="status-badge">{{ trip()?.statusId }}</span> -->
       <div class="trip-dates">
-        <p>Created at {{ trip()?.createdAt | date : 'short' }}</p>
-        <p>Departure at {{ trip()?.departureAt | date : 'short' }}</p>
+        <p>Created at {{ trip().createdAt | date : 'short' }}</p>
+        <!-- <p>Departure at {{ trip()?.departureAt | date : 'short' }}</p> -->
       </div>
     </header>
 
@@ -29,39 +29,26 @@
           <div class="card-entries">
             <p>
               <strong>Driver:</strong><br />
-              {{ trip()?.driverId }}
+              <!-- {{ trip().driverId }} -->
+              Juan Jose
             </p>
-            <p>
+            <!-- <p>
               <strong>Codriver:</strong><br />
-              {{ trip()?.coDriverId || 'Not assigned' }}
-            </p>
+              {{ 'Not assigned' }}
+            </p> -->
           </div>
         </div>
 
         <div class="card">
-          <h3>Shipping estimation</h3>
+          <h3>Origin Point</h3>
           <div class="card-entries">
             <p>
-              <strong>Total Distance:</strong><br />
-              {{ trip()?.totalDistanceKm }} km
+              <strong>Name:</strong><br />
+              {{ trip().originPoint?.name }}
             </p>
             <p>
-              <strong>Total Duration:</strong><br />
-              {{ trip()?.totalDurationMin }} min
-            </p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Actual delivery</h3>
-          <div class="card-entries">
-            <p>
-              <strong>Total Distance:</strong><br />
-              Not available
-            </p>
-            <p>
-              <strong>Total Duration:</strong><br />
-              Not available
+              <strong>Address:</strong><br />
+              {{ trip().originPoint?.address }}
             </p>
           </div>
         </div>
@@ -69,18 +56,21 @@
 
       <section class="trip-map">
         <google-map class="trip-map-cmp" [center]="center" [zoom]="zoom">
-          @for (marker of markers; track marker) {
+          @for (marker of orderMarkers(); track marker) {
           <map-marker [position]="marker"></map-marker>
           }
-          <map-polyline [path]="polylinePath" [options]="polylineOptions"></map-polyline>
+          <map-marker
+            [position]="originMarker()"
+            icon="http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+          ></map-marker>
         </google-map>
       </section>
     </div>
 
     <section class="orders-section">
       <h3>Delivery orders</h3>
-      @if (deliveryOrders().length > 0) {
-      <table mat-table [dataSource]="deliveryOrders()" class="mat-elevation-z1">
+      @if (trip().deliveryOrders.length > 0) {
+      <table mat-table [dataSource]="trip().deliveryOrders" class="mat-elevation-z1">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef>ID</th>
           <td mat-cell *matCellDef="let order">{{ order.id }}</td>
@@ -92,7 +82,7 @@
         </ng-container>
 
         <ng-container matColumnDef="clientEmail">
-          <th mat-header-cell *matHeaderCellDef>Client</th>
+          <th mat-header-cell *matHeaderCellDef>Client Email</th>
           <td mat-cell *matCellDef="let order">{{ order.clientEmail }}</td>
         </ng-container>
 
@@ -103,24 +93,55 @@
 
         <ng-container matColumnDef="arrivalAt">
           <th mat-header-cell *matHeaderCellDef>Arrival at</th>
-          <td mat-cell *matCellDef="let order">{{ order.arrivalAt | date : 'short' }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="realArrivalAt">
-          <th mat-header-cell *matHeaderCellDef>Real Arrival at</th>
           <td mat-cell *matCellDef="let order">
-            {{ order.realArrivalAt ? (order.realArrivalAt | date : 'short') : '-' }}
+            {{ order.arrivalAt ? (order.arrivalAt | date : 'short') : '-' }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="deliveryOrderStatusId">
-          <th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let order">{{ order.deliveryOrderStatusId }}</td>
+        <ng-container matColumnDef="temperatureThreshold">
+          <th mat-header-cell *matHeaderCellDef>Temperature</th>
+          <td mat-cell *matCellDef="let order">
+            @if (order.maxTemperature && order.minTemperature) {
+            <div>
+              <span>Min: {{ order?.minTemperature }}°</span>
+              <span> | </span>
+              <span>Max: {{ order.maxTemperature }}°</span>
+            </div>
+            } @else {
+            <span>Not configured</span>
+            }
+          </td>
         </ng-container>
 
-        <ng-container matColumnDef="incidents">
-          <th mat-header-cell *matHeaderCellDef>Total Incidents</th>
-          <td mat-cell *matCellDef="let order">{{ getIncidentsNumberByOrderId(order.id) }}</td>
+        <ng-container matColumnDef="humidityThreshold">
+          <th mat-header-cell *matHeaderCellDef>Temperature</th>
+          <td mat-cell *matCellDef="let order">
+            @if (order.maxHumidity && order.minHumidity) {
+            <div>
+              <span>Min: {{ order.minHumidity }}</span>
+              <span> | </span>
+              <span>Max: {{ order.maxHumidity }}</span>
+            </div>
+            } @else {
+            <span>Not configured</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let order">{{ order.status }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let order">
+            @if (order.isPending()) {
+            <button mat-icon-button color="primary" (click)="markOrderAsDelivered(order.id)">
+              <mat-icon>task_alt</mat-icon>
+            </button>
+            }
+          </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

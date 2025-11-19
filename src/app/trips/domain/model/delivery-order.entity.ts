@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { DeliveryOrderStatus } from './delivery-order-status.vo';
 import { Trip } from './trip.entity';
 
 export class DeliveryOrder implements BaseEntity {
@@ -8,17 +9,16 @@ export class DeliveryOrder implements BaseEntity {
   private _latitude: number;
   private _longitude: number;
   private _sequenceOrder: number;
-  private _arrivalAt: Date;
+  private _arrivalAt: Date | null;
   private _notes: string;
-  private _deliveryOrderStatusId: number;
-  private _realArrivalAt: Date | null;
-  private _maxHumidity: number;
-  private _minHumidity: number;
-  private _maxTemperature: number;
-  private _minTemperature: number;
-  private _maxVibration: number;
+  private _maxHumidity: number | null;
+  private _minHumidity: number | null;
+  private _maxTemperature: number | null;
+  private _minTemperature: number | null;
+  private _maxVibration: number | null;
   private _tripId: number;
   private _trip: Trip | null;
+  private _status: DeliveryOrderStatus;
 
   constructor(deliveryOrder: {
     id: number;
@@ -27,17 +27,16 @@ export class DeliveryOrder implements BaseEntity {
     latitude: number;
     longitude: number;
     sequenceOrder: number;
-    arrivalAt: Date;
+    arrivalAt: Date | null;
     notes: string;
-    deliveryOrderStatusId: number;
-    realArrivalAt: Date | null;
-    maxHumidity: number;
-    minHumidity: number;
-    maxTemperature: number;
-    minTemperature: number;
-    maxVibration: number;
+    maxHumidity: number | null;
+    minHumidity: number | null;
+    maxTemperature: number | null;
+    minTemperature: number | null;
+    maxVibration: number | null;
     tripId: number;
     trip: Trip | null;
+    status: DeliveryOrderStatus;
   }) {
     this._id = deliveryOrder.id;
     this._clientEmail = deliveryOrder.clientEmail;
@@ -47,8 +46,6 @@ export class DeliveryOrder implements BaseEntity {
     this._sequenceOrder = deliveryOrder.sequenceOrder;
     this._arrivalAt = deliveryOrder.arrivalAt;
     this._notes = deliveryOrder.notes;
-    this._deliveryOrderStatusId = deliveryOrder.deliveryOrderStatusId;
-    this._realArrivalAt = deliveryOrder.realArrivalAt;
     this._maxHumidity = deliveryOrder.maxHumidity;
     this._minHumidity = deliveryOrder.minHumidity;
     this._maxTemperature = deliveryOrder.maxTemperature;
@@ -56,6 +53,42 @@ export class DeliveryOrder implements BaseEntity {
     this._maxVibration = deliveryOrder.maxVibration;
     this._tripId = deliveryOrder.tripId;
     this._trip = deliveryOrder.trip;
+    this._status = deliveryOrder.status;
+  }
+
+  static createEmpty(): DeliveryOrder {
+    return new DeliveryOrder({
+      id: 0,
+      clientEmail: '',
+      address: '',
+      latitude: 0,
+      longitude: 0,
+      sequenceOrder: 0,
+      arrivalAt: null,
+      notes: '',
+      maxHumidity: null,
+      minHumidity: null,
+      maxTemperature: null,
+      minTemperature: null,
+
+      maxVibration: null,
+      tripId: 0,
+      trip: null,
+      status: DeliveryOrderStatus.PENDING,
+    });
+  }
+
+  isPending(): boolean {
+    return this._status === DeliveryOrderStatus.PENDING;
+  }
+  isDelivered(): boolean {
+    return this._status === DeliveryOrderStatus.DELIVERED;
+  }
+  isCancelled(): boolean {
+    return this._status === DeliveryOrderStatus.CANCELLED;
+  }
+  markAsDelivered() {
+    this._status = DeliveryOrderStatus.DELIVERED;
   }
 
   get id(): number {
@@ -76,31 +109,25 @@ export class DeliveryOrder implements BaseEntity {
   get sequenceOrder(): number {
     return this._sequenceOrder;
   }
-  get arrivalAt(): Date {
+  get arrivalAt(): Date | null {
     return this._arrivalAt;
   }
   get notes(): string {
     return this._notes;
   }
-  get deliveryOrderStatusId(): number {
-    return this._deliveryOrderStatusId;
-  }
-  get realArrivalAt(): Date | null {
-    return this._realArrivalAt;
-  }
-  get maxHumidity(): number {
+  get maxHumidity(): number | null {
     return this._maxHumidity;
   }
-  get minHumidity(): number {
+  get minHumidity(): number | null {
     return this._minHumidity;
   }
-  get maxTemperature(): number {
+  get maxTemperature(): number | null {
     return this._maxTemperature;
   }
-  get minTemperature(): number {
+  get minTemperature(): number | null {
     return this._minTemperature;
   }
-  get maxVibration(): number {
+  get maxVibration(): number | null {
     return this._maxVibration;
   }
   get tripId(): number {
@@ -108,6 +135,9 @@ export class DeliveryOrder implements BaseEntity {
   }
   get trip(): Trip | null {
     return this._trip;
+  }
+  get status(): DeliveryOrderStatus {
+    return this._status;
   }
 
   set trip(value: Trip | null) {
@@ -137,12 +167,6 @@ export class DeliveryOrder implements BaseEntity {
   set notes(value: string) {
     this._notes = value;
   }
-  set deliveryOrderStatusId(value: number) {
-    this._deliveryOrderStatusId = value;
-  }
-  set realArrivalAt(value: Date | null) {
-    this._realArrivalAt = value;
-  }
   set maxHumidity(value: number) {
     this._maxHumidity = value;
   }
@@ -160,5 +184,8 @@ export class DeliveryOrder implements BaseEntity {
   }
   set tripId(value: number) {
     this._tripId = value;
+  }
+  set status(value: DeliveryOrderStatus) {
+    this._status = value;
   }
 }

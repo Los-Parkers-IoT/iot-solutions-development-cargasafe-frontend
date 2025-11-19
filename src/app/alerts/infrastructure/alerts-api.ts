@@ -1,48 +1,39 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Alert } from '../domain/models/alert.model';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AlertResource, AlertResponse } from './alert-response';
+import { Alert } from '../domain/models/alert.model';
+import { AlertResource } from './alert-response';
 import { AlertAssembler } from './alert-assembler';
 
 @Injectable({ providedIn: 'root' })
-export class AlertsService {
-  private alertsSubject = new BehaviorSubject<Alert[]>([]);
-  private alertsUrl = `${environment.baseUrl}${environment.alertsEndpointPath}`;
+export class AlertsApi {
+  private http = inject(HttpClient);
+  private baseUrl = environment.baseUrl;
+  private alertsEndpoint = environment.alertsEndpointPath;
 
-  constructor(private http: HttpClient) {
-    this.loadAlerts();
-  }
-
-  private loadAlerts(): void {
-    this.http.get<AlertResource[]>(this.alertsUrl).subscribe({
-      next: (resources) => {
-        const entities = resources.map((r) => AlertAssembler.toEntityFromResource(r));
-        this.alertsSubject.next(entities);
-      },
-      error: (err) => console.error('Error loading alerts:', err),
-    });
-  }
-
+  /** Get all alerts */
   getAlerts(): Observable<Alert[]> {
     return this.http
-      .get<AlertResource[]>(this.alertsUrl)
-      .pipe(map((resources) => resources.map((r) => AlertAssembler.toEntityFromResource(r))));
+      .get<AlertResource[]>(`${this.baseUrl}${this.alertsEndpoint}`)
+      .pipe(map(res => res.map(r => AlertAssembler.toEntityFromResource(r))));
   }
 
-  markAsResolved(id: number) {
-    const alert = this.alertsSubject.value.find((a) => a.id === id);
-    if (!alert) return;
-
-    alert.status = 'Closed';
-    alert.closedAt = new Date();
-
-    const updatedAlert = AlertAssembler.toResourceFromEntity(alert);
-
-    this.http.patch(`${this.alertsUrl}/${id}`, updatedAlert).subscribe({
-      next: () => this.loadAlerts(),
-      error: (err) => console.error('Error updating alert:', err),
-    });
+  /** Acknowledge an alert */
+  acknowledgeAlert(id: number): Observable<Alert> {
+    console.log('Calling API to acknowledge alert:', id);
+    const url = `${this.baseUrl}${this.alertsEndpoint}/${id}/acknowledge`;
+    return this.http.patch<AlertResource>(url, {}).pipe(
+      map(r => AlertAssembler.toEntityFromResource(r))
+    );
   }
+
+  /** Close an alert */
+  closeAlert(id: number): Observable<Alert> {
+    const url = `${this.baseUrl}${this.alertsEndpoint}/${id}/close`;
+    return this.http
+      .patch<AlertResource>(url, {})
+      .pipe(map(r => AlertAssembler.toEntityFromResource(r)));
+  }
+
 }

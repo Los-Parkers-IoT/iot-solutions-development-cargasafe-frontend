@@ -1,150 +1,15 @@
 <section class="trips-page">
-  <!-- HEADER -->
   <header class="trips-header">
     <div style="display: flex; flex-direction: row; justify-content: space-between">
       <h1>Trips</h1>
       <div class="actions">
-        <button mat-flat-button color="primary">+ Create</button>
-        <button mat-stroked-button color="accent">Export</button>
+        <button mat-flat-button color="primary" routerLink="/trips/create">+ Create</button>
+        <!-- <button mat-stroked-button color="accent">Export</button> -->
       </div>
     </div>
   </header>
 
-  <!-- SUMMARY CARDS -->
-  <section class="trips-summary">
-    <div class="summary-group">
-      <h3>Total trips</h3>
-      <div class="summary-values">
-        <div class="summary-value">
-          <span class="summary-value-field">Today</span> <span>2</span>
-        </div>
-        <div class="summary-value">
-          <span class="summary-value-field">Yesterday</span> <span>1</span>
-        </div>
-        <div class="summary-value">
-          <span class="summary-value-field">Last 7 Days</span> <span>5</span>
-        </div>
-        <div class="summary-value">
-          <span class="summary-value-field">Last year</span> <span>9</span>
-        </div>
-      </div>
-    </div>
+  <app-trip-total-summary></app-trip-total-summary>
 
-    <div class="summary-group">
-      <h3>Total incidents</h3>
-      <div class="summary-values">
-        <div class="summary-value">
-          <span class="summary-value-field">Today</span> <span>2</span>
-        </div>
-        <div class="summary-value">
-          <span class="summary-value-field">Yesterday</span> <span>1</span>
-        </div>
-        <div class="summary-value">
-          <span class="summary-value-field">Last 7 Days</span> <span>5</span>
-        </div>
-        <div class="summary-value">
-          <span class="summary-value-field">Last year</span> <span>9</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FILTERS -->
-  <section class="trips-filters">
-    <mat-form-field subscriptSizing="dynamic" appearance="outline" class="search-field">
-      <mat-label>Search</mat-label>
-      <input matInput placeholder="Search by trip ID, route, driver..." type="text" />
-    </mat-form-field>
-
-    <div class="filters-actions">
-      <div class="filter-group">
-        <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
-          <mat-label>Status</mat-label>
-          <mat-select>
-            <mat-option value="0">Completado</mat-option>
-            <mat-option value="1">Cancelado</mat-option>
-            <mat-option value="2">En curso</mat-option>
-            <mat-option value="3">Programado</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
-          <mat-label>Created At</mat-label>
-          <mat-select>
-            <mat-option value="recent">Recent</mat-option>
-            <mat-option value="oldest">Oldest</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-  </section>
-
-  <!-- TABLE -->
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
-      <!-- ID -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let trip">{{ trip.id }}</td>
-      </ng-container>
-
-      <!-- DRIVER -->
-      <ng-container matColumnDef="driver">
-        <th mat-header-cell *matHeaderCellDef>Driver</th>
-        <td mat-cell *matCellDef="let trip">{{ trip.driverId }}</td>
-      </ng-container>
-
-      <!-- CODRIVER -->
-      <ng-container matColumnDef="codriver">
-        <th mat-header-cell *matHeaderCellDef>Codriver</th>
-        <td mat-cell *matCellDef="let trip">{{ trip.coDriverId || 'Not assigned' }}</td>
-      </ng-container>
-
-      <!-- DELIVERIES -->
-      <ng-container matColumnDef="deliveries">
-        <th mat-header-cell *matHeaderCellDef>N° Deliveries</th>
-        <td mat-cell *matCellDef="let trip">
-          {{ trip.totalDistanceKm ? (trip.totalDistanceKm | number : '1.0-0') : '-' }}
-        </td>
-      </ng-container>
-
-      <!-- STATUS -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef>Status</th>
-        <td mat-cell *matCellDef="let trip">{{ trip.statusId }}</td>
-      </ng-container>
-
-      <!-- CREATED -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef>Created at</th>
-        <td mat-cell *matCellDef="let trip">{{ trip.createdAt | date : 'short' }}</td>
-      </ng-container>
-
-      <!-- DEPARTURE -->
-      <ng-container matColumnDef="departure">
-        <th mat-header-cell *matHeaderCellDef>Departure at</th>
-        <td mat-cell *matCellDef="let trip">
-          {{ (trip.departureAt | date : 'short') || 'Not completed' }}
-        </td>
-      </ng-container>
-
-      <!-- ACTIONS -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let trip">
-          <button mat-stroked-button color="primary" [routerLink]="trip.id">See more</button>
-          <button *ngIf="trip.statusId !== 'Completado'" mat-stroked-button color="warn">
-            Modify
-          </button>
-        </td>
-      </ng-container>
-
-      <!-- HEADER & ROWS -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-
-    <!-- PAGINATOR -->
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
+  <app-trip-table-list></app-trip-table-list>
 </section>

@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, map } from 'rxjs';
-import { Alert } from '../../../domain/models/alert.model';
-import { AlertsService } from '../../../infrastructure/alerts-api';
+import { AlertStore } from '../../../application/alert.store';
 import { AlertTableComponent } from '../../components/alert-table/alert-table.component';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-alerts-page',
@@ -13,22 +11,33 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: './alerts-page.component.html',
   styleUrls: ['./alerts-page.component.css'],
 })
-export class AlertsPageComponent implements OnInit {
-  alerts$!: Observable<Alert[]>;
-  activeCount$!: Observable<number>;
-  resolvedCount$!: Observable<number>;
+export class AlertsPageComponent {
+  private alertStore = inject(AlertStore);
 
-  constructor(private alertsService: AlertsService) {}
+  alerts = computed(() => this.alertStore.alerts());
 
-  ngOnInit() {
-    this.alerts$ = this.alertsService.getAlerts();
+  activeCount = computed(() =>
+    this.alertStore.alerts().filter(a => a.alertStatus === 'OPEN').length
+  );
 
-    this.activeCount$ = this.alerts$.pipe(
-      map((alerts) => alerts.filter((a) => a.status === 'Active').length)
-    );
+  resolvedCount = computed(() =>
+    this.alertStore.alerts().filter(a => a.alertStatus === 'CLOSED').length
+  );
 
-    this.resolvedCount$ = this.alerts$.pipe(
-      map((alerts) => alerts.filter((a) => a.status === 'Closed').length)
-    );
+  onCloseAlert(id: number) {
+    this.alertStore.closeAlert(id).subscribe({
+      next: (updatedAlert) => {
+        console.log('Alert closed:', updatedAlert);
+      },
+      error: (err) => console.error('Error closing alert', err),
+    });
+  }
+
+  onAcknowledgeAlert(id: number) {
+    this.alertStore.acknowledgeAlert(id).subscribe({
+      next: updatedAlert => {
+      },
+      error: err => console.error('Error acknowledging alert:', err)
+    });
   }
 }

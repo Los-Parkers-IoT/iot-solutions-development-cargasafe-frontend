@@ -1,14 +1,15 @@
 <div class="alerts-container">
   <h1>Alerts</h1>
 
+  <!-- Summary -->
   <div class="summary">
     <div class="card danger">
       <div class="icon">
         <mat-icon color="warn">warning</mat-icon>
       </div>
       <div class="text">
-        <h2>{{ (activeCount$ | async) || 0 }}</h2>
-        <p>Alerts today</p>
+        <h2>{{ activeCount() }}</h2>
+        <p>Active Alerts</p>
       </div>
     </div>
 
@@ -17,11 +18,16 @@
         <mat-icon color="primary">check_circle</mat-icon>
       </div>
       <div class="text">
-        <h2>{{ (resolvedCount$ | async) || 0 }}</h2>
-        <p>Resolved</p>
+        <h2>{{ resolvedCount() }}</h2>
+        <p>Closed</p>
       </div>
     </div>
   </div>
 
-  <app-alert-table [alerts]="alerts$ | async"></app-alert-table>
+  <!-- Tabla de alertas -->
+  <app-alert-table
+    [alerts]="alerts()"
+    (closeAlert)="onCloseAlert($event)"
+    (acknowledgeAlert)="onAcknowledgeAlert($event)"
+  ></app-alert-table>
 </div>
