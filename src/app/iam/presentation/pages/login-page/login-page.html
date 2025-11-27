@@ -25,25 +25,23 @@
       <form class="login-form" (ngSubmit)="onSubmit()">
 
         <mat-form-field appearance="outline" class="full-width-input">
-          <mat-label>Email address</mat-label>
+          <mat-label>Email</mat-label>
           <input
             matInput
             type="email"
             id="email"
-            [(ngModel)]="email"
-            name="email"
-            required
-            email
-            #emailInput="ngModel"
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+            [(ngModel)]="username"
+          name="username"
+          required
+          #emailInput="ngModel">
           <mat-error *ngIf="emailInput.invalid && emailInput.touched">
-            <span *ngIf="emailInput.errors?.['required']">Email is required</span>
-            <span *ngIf="emailInput.errors?.['email'] || emailInput.errors?.['pattern']">Please enter a valid email address</span>
+            Email is required
           </mat-error>
         </mat-form-field>
 
 
-        <mat-form-field appearance="fill" class="w-full">
+
+        <mat-form-field appearance="outline" class="full-width-input">
           <mat-label>Password</mat-label>
           <input
             matInput
@@ -59,7 +57,7 @@
             type="button"
             (click)="togglePasswordVisibility()"
             [attr.aria-pressed]="showPassword"
-            aria-label="Mostrar u ocultar contraseña"
+            aria-label="Show or hide password"
           >
             <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
@@ -85,9 +83,9 @@
           type="button"
           (click)="onSubmit()"
           [disabled]="isLoading"
-          class="w-full"
+          class="btn-signin-mat"
         >
-          {{ isLoading ? 'Signing in…' : 'Sign in' }}
+          {{ isLoading ? 'Signing in…' : 'Sign In' }}
         </button>
 
 

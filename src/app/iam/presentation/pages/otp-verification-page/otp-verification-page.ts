@@ -37,7 +37,7 @@ export class OtpVerificationComponent {
   }
 
   onVerifyCode(): void {
-    // ✅ CORRECCIÓN CLAVE DE NAVEGACIÓN: Retrasamos la verificación para que Angular actualice el modelo.
+
     setTimeout(() => {
       const code = this.otpCode.join('');
 
@@ -45,10 +45,9 @@ export class OtpVerificationComponent {
         console.log('OTP Code submitted (Navigating to New Password):', code);
         this.router.navigate(['/password-recovery/new-password']);
       } else {
-        // En tu imagen se ve que el código está incompleto o desordenado.
         this.showNotification('Por favor, ingrese el código de 6 dígitos completo.');
       }
-    }, 50); // 50ms son suficientes para un ciclo de detección de cambios.
+    }, 50);
   }
 
   onResendCode(event: Event): void {
@@ -102,18 +101,15 @@ export class OtpVerificationComponent {
       return;
     }
 
-    // Solo permitir números
     const pattern = /[0-9]/;
     if (!pattern.test(event.key)) {
       event.preventDefault();
       return;
     }
 
-    // Si ya hay un valor, reemplazarlo
     event.preventDefault();
     this.otpCode[index] = event.key;
 
-    // Mover al siguiente input
     if (index < this.otpCode.length - 1) {
       setTimeout(() => {
         const nextInput = document.querySelector(`#otp-${index + 1}`) as HTMLInputElement;
@@ -136,7 +132,6 @@ export class OtpVerificationComponent {
       }
     });
 
-    // Enfocar el siguiente campo vacío o el último
     const nextIndex = Math.min(startIndex + digits.length, this.otpCode.length - 1);
     setTimeout(() => {
       const nextInput = document.querySelector(`#otp-${nextIndex}`) as HTMLInputElement;

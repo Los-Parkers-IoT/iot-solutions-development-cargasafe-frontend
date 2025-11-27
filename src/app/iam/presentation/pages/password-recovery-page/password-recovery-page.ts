@@ -23,31 +23,28 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   styleUrls: ['./password-recovery-page.css']
 })
 export class PasswordRecoveryPageComponent {
-  email: string = '';
+  username: string = '';
 
   constructor(private router: Router, private snackBar: MatSnackBar) {}
 
   onSendRecovery(form: NgForm): void {
-    // Marcar todos los campos como tocados para mostrar errores
     Object.keys(form.controls).forEach(key => {
       form.controls[key].markAsTouched();
     });
 
-    // Validar que el formulario sea válido
     if (form.invalid) {
       this.showNotification('Please enter a valid email address');
       return;
     }
 
-    // Validación adicional con regex
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    if (!emailRegex.test(this.email)) {
+    if (!emailRegex.test(this.username)) {
       this.showNotification('Please enter a valid email address');
       return;
     }
 
-    console.log('Password recovery request for:', this.email);
-    this.showNotification(`Instructions sent to ${this.email}`);
+    console.log('Password recovery request for:', this.username);
+    this.showNotification(`Instructions sent to ${this.username}`);
 
     this.router.navigate(['/password-recovery/otp-verify']);
   }

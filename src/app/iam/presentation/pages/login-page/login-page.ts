@@ -31,36 +31,47 @@ export class LoginPageComponent {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
-  email = '';
   username = '';
   password = '';
   rememberMe = false;
   showPassword = false;
   isLoading = false;
 
+
   isFormValid(): boolean {
-    return !!this.email && !!this.password;
+    return !!this.username && !!this.password;
   }
+
 
   onSubmit(): void {
     if (!this.isFormValid() || this.isLoading) return;
 
     this.isLoading = true;
-    console.log('[Login] submit', {email: this.email}); //solo para prueba
+    console.log('[Login] submit', { username: this.username });
+
     this.auth
-      .signIn({ username: this.email, password: this.password })
+      .signIn({ username: this.username, password: this.password })
       .subscribe({
         next: (tokens) => {
           this.auth.saveTokens(tokens);
-          this.snackBar.open('Login successful!', undefined, { duration: 1500, horizontalPosition: 'right', verticalPosition: 'top' });
+          this.snackBar.open('Login successful!', undefined, {
+            duration: 1500,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
           this.router.navigate(['/dashboard']);
         },
         error: () => {
-          this.snackBar.open('Invalid credentials', undefined, { duration: 2000, horizontalPosition: 'right', verticalPosition: 'top' });
+          this.snackBar.open('Invalid credentials', undefined, {
+            duration: 2000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+          });
         },
       })
       .add(() => (this.isLoading = false));
   }
+
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
