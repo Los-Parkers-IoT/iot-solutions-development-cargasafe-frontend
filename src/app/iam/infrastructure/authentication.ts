@@ -33,7 +33,7 @@ export class Authentication {
   }
 
 
-  signIn(body: SignInRequest) {
+  signIn(body: { email: string; password: string }) {
     return this.http.post<TokenPair>(`${this.base}/sign-in`, body);
   }
   signUp(body: any) {

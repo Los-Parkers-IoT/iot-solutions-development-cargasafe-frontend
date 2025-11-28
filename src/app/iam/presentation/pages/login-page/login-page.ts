@@ -31,7 +31,7 @@ export class LoginPageComponent {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
 
-  username = '';
+  email = '';
   password = '';
   rememberMe = false;
   showPassword = false;
@@ -39,7 +39,7 @@ export class LoginPageComponent {
 
 
   isFormValid(): boolean {
-    return !!this.username && !!this.password;
+    return !!this.email && !!this.password;
   }
 
 
@@ -47,10 +47,10 @@ export class LoginPageComponent {
     if (!this.isFormValid() || this.isLoading) return;
 
     this.isLoading = true;
-    console.log('[Login] submit', { username: this.username });
+    console.log('[Login] submit', { email: this.email });
 
     this.auth
-      .signIn({ username: this.username, password: this.password })
+      .signIn({ email: this.email, password: this.password })
       .subscribe({
         next: (tokens) => {
           this.auth.saveTokens(tokens);

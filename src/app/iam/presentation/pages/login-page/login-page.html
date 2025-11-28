@@ -24,23 +24,23 @@
 
       <form class="login-form" (ngSubmit)="onSubmit()">
 
+        <!-- EMAIL -->
         <mat-form-field appearance="outline" class="full-width-input">
           <mat-label>Email</mat-label>
           <input
             matInput
             type="email"
             id="email"
-            [(ngModel)]="username"
-          name="username"
-          required
-          #emailInput="ngModel">
+            [(ngModel)]="email"
+            name="email"
+            required
+            #emailInput="ngModel">
           <mat-error *ngIf="emailInput.invalid && emailInput.touched">
             Email is required
           </mat-error>
         </mat-form-field>
 
-
-
+        <!-- PASSWORD -->
         <mat-form-field appearance="outline" class="full-width-input">
           <mat-label>Password</mat-label>
           <input
@@ -87,7 +87,6 @@
         >
           {{ isLoading ? 'Signing in…' : 'Sign In' }}
         </button>
-
 
         <p class="signup-text">
           Don't have an account?

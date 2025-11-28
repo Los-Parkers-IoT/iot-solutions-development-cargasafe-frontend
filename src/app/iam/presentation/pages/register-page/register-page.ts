@@ -39,7 +39,7 @@ export class RegisterPageComponent {
   firstName: string = '';
   lastName: string = '';
 
-  username: string = '';
+  email: string = '';
   password: string = '';
   confirmPassword: string = '';
 
@@ -53,13 +53,13 @@ export class RegisterPageComponent {
       return;
     }
 
-    if (!this.firstName || !this.lastName || !this.username || !this.password || !this.confirmPassword) {
+    if (!this.firstName || !this.lastName || !this.email || !this.password || !this.confirmPassword) {
       this.showNotification('Please fill in all required fields');
       return;
     }
 
     const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
-    if (!emailRegex.test(this.username)) {
+    if (!emailRegex.test(this.email)) {
       this.showNotification('Please enter a valid email address');
       return;
     }
@@ -87,7 +87,7 @@ export class RegisterPageComponent {
     }
 
     const body = {
-      username: this.username,
+      username: this.email,
       password: this.password,
       fistName: this.firstName,
       lastName: this.lastName
@@ -106,7 +106,7 @@ export class RegisterPageComponent {
     console.log('Registration attempt:', {
       segment: this.segment,
       firstName: this.firstName,
-      username: this.username,
+      username: this.email,
       companyData: this.segment === 'Shipping Company'
         ? { legalName: this.legalName, taxId: this.rucId }
         : 'N/A'

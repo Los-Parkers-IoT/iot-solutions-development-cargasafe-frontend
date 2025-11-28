@@ -8,12 +8,19 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) {
+  body {
+    overflow: auto;
+  }
+}
+
 .login-container {
   display: flex;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
 }
+
 
 .left-panel {
   flex: 0 0 35%;
@@ -32,6 +39,14 @@ body {
   gap: 14px;
   margin-left: 90px;
   margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .logo-container {
+    margin-left: 0;
+    flex-direction: column;
+    margin-bottom: 50px;
+  }
 }
 
 .logo-icon {
@@ -55,6 +70,15 @@ body {
   margin-left: 50px;
 }
 
+@media (max-width: 768px) {
+  .content {
+    justify-content: flex-start;
+    flex: initial;
+    margin-left: 0;
+    margin-top: 0;
+  }
+}
+
 .title {
   font-size: 45px;
   font-weight: 700;
@@ -69,6 +93,7 @@ body {
   opacity: 0.95;
 }
 
+
 .right-panel {
   flex: 1;
   background: white;
@@ -76,9 +101,30 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   padding: 80px 80px 50px 80px;
-  overflow: hidden;
+  overflow-y: auto;
   margin-right: 200px;
 }
+
+@media (max-width: 1200px) {
+  .right-panel {
+    margin-right: 100px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .right-panel {
+    padding: 60px 60px 40px 60px;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-panel {
+    flex: 1;
+    padding: 40px;
+  }
+}
+
 
 .form-container {
   width: 100%;
@@ -86,6 +132,14 @@ body {
   margin: 0 auto;
   padding: 0;
 }
+
+@media (max-width: 768px) {
+  .form-container {
+    max-width: 100%;
+    margin: 0;
+  }
+}
+
 
 .back-to-login {
   font-size: 17px;
@@ -104,7 +158,6 @@ body {
   margin-right: 5px;
 }
 
-/* Ajuste para el título que es más corto */
 .welcome-title-small {
   font-size: 50px;
   font-weight: 700;
@@ -124,7 +177,6 @@ body {
   flex-direction: column;
 }
 
-/* Estilos Específicos para OTP */
 .otp-input-group {
   display: flex;
   justify-content: space-between;
@@ -133,10 +185,63 @@ body {
 }
 
 .otp-input-field {
-  width: 15%; /* Para que quepan 6 con espacio entre ellos */
+  width: 15%;
 }
 
-/* Sobrescritura de estilos de Material para hacer los inputs cuadrados y centrados */
+
+@media (max-width: 1024px) {
+  .login-container {
+    height: auto;
+  }
+
+  .left-panel {
+    flex: 0 0 40%;
+    padding: 40px 45px;
+  }
+
+  .title {
+    font-size: 34px;
+  }
+
+  .description {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .left-panel {
+    flex: 0 0 auto;
+    min-height: 280px;
+    padding: 35px 40px;
+    justify-content: flex-start;
+  }
+
+  .welcome-title-small {
+    font-size: 38px;
+  }
+
+  .title {
+    font-size: 30px;
+  }
+
+  .otp-input-field {
+    width: 14%;
+  }
+
+  ::ng-deep .otp-input-field .mat-form-field-flex {
+    height: 50px !important;
+  }
+
+  ::ng-deep .otp-input-field input.mat-input-element {
+    font-size: 20px !important;
+    height: 50px !important;
+  }
+}
+
 ::ng-deep .otp-input-field .mat-form-field-wrapper {
   padding-bottom: 0 !important;
 }
@@ -159,12 +264,10 @@ body {
   box-sizing: border-box !important;
 }
 
-/* Estilos de Material para forzar color */
 ::ng-deep .mat-form-field-outline-thick {
   color: #FF9333 !important;
 }
 
-/* Estilos para el botón de Material */
 .btn-signin-mat {
   width: 100% !important;
   height: 60px !important;
@@ -206,63 +309,4 @@ body {
 
 .signup-link:hover {
   color: #e67a1a;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .left-panel {
-    flex: 0 0 40%;
-    padding: 40px 45px;
-  }
-
-  .right-panel {
-    padding: 60px 60px 40px 60px;
-    margin-right: 0;
-  }
-
-  .title {
-    font-size: 34px;
-  }
-
-  .description {
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 768px) {
-  .login-container {
-    flex-direction: column;
-  }
-
-  .left-panel {
-    flex: 0 0 auto;
-    min-height: 280px;
-    padding: 35px 40px;
-    justify-content: flex-start;
-  }
-
-  .logo-container {
-    margin-bottom: 50px;
-  }
-
-  .content {
-    justify-content: flex-start;
-    flex: initial;
-    margin-left: 0;
-    margin-top: 0;
-  }
-
-  .title {
-    font-size: 30px;
-  }
-
-  .right-panel {
-    flex: 1;
-    padding: 40px;
-  }
-
-  .form-container {
-    max-width: 100%;
-    margin: 0;
-  }
 }

@@ -8,11 +8,17 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) {
+  body {
+    overflow: auto;
+  }
+}
+
 .login-container {
   display: flex;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .left-panel {
@@ -227,13 +233,16 @@ body {
 }
 
 @media (max-width: 1024px) {
+  .login-container { height: auto; }
+
   .left-panel {
     flex: 0 0 40%;
     padding: 40px 45px;
   }
 
   .right-panel {
-    padding: 60px 60px 40px 60px;
+    padding: 60px;
+
   }
 
   .form-row {
@@ -267,6 +276,7 @@ body {
   }
 
   .logo-container {
+    flex-direction: column;
     margin-bottom: 50px;
   }
 
@@ -282,6 +292,7 @@ body {
   .right-panel {
     flex: 1;
     padding: 40px;
+    width: 100%;
   }
 
   .form-container {
