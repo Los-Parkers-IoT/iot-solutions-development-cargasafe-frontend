@@ -11,6 +11,7 @@ import { SubscriptionsPage } from './subscription/presentation/pages/subscriptio
 const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
 const alertRoutes = () => import('./alerts/presentation/alert.routes').then((m) => m.routes);
 const fleetRoutes = () => import('./fleet/fleet.routes').then((m) => m.routes);
+const profileRoutes = () => import('./profile/presentation/profile.routes').then((m) => m.routes);
 
 // app.routes.ts (root)
 export const routes: Routes = [
@@ -46,7 +47,10 @@ export const routes: Routes = [
         path: 'fleet',
         loadChildren: fleetRoutes,
       },
-
+      {
+        path: 'profile',
+        loadChildren: profileRoutes,
+      },
       {
         path: 'subscriptions/change-card',
         loadComponent: () =>

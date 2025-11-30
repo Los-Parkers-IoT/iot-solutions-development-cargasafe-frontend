@@ -17,6 +17,32 @@
   --color-grey-3: #828282;
   --color-grey-4: #bdbdbd;
   --color-grey-5: #e0e0e0;
+
+  /* ------------------------------------------------------------- */
+  /* --- MAPPING CUSTOM COLORS TO M3 SYSTEM TOKENS (v21) --- */
+  /* ------------------------------------------------------------- */
+
+  /* Primary Role (Your Orange) */
+  --mat-sys-primary: var(--color-primary);
+  --mat-sys-on-primary: #ffffff; /* Text on primary */
+
+  /* Secondary Role (Your Dark Blue) */
+  --mat-sys-secondary: var(--color-secondary);
+  --mat-sys-on-secondary: #ffffff; /* Text on secondary */
+
+  /* Tertiary Role (Often used for less prominent accents/buttons) */
+  --mat-sys-tertiary: var(--color-secondary);
+  --mat-sys-on-tertiary: #ffffff;
+
+  /* Error Role (Your Red) */
+  --mat-sys-error: var(--color-severity-error);
+  --mat-sys-on-error: #ffffff;
+
+  /* Surface and Background */
+  --mat-sys-surface: #ffffff; /* White background */
+  --mat-sys-on-surface: var(--color-grey-2); /* Base text color */
+
+  --mat-sys-outline: var(--color-grey-4);
 }
 
 html,
@@ -67,4 +93,12 @@ mat-icon {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* optional: adds "…" if text is too long */
+}
+
+.full-width {
+  width: 100%;
+}
+
+.relative {
+  position: relative;
 }

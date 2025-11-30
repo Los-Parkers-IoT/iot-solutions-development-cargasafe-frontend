@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { OriginPointApi } from '../infrastructure/origin-point-api';
-import { createAsyncState } from '../../shared/helpers/lazy-resource';
+import { createAsyncState } from '../../shared/helpers/async-state';
 import { OriginPoint } from '../domain/model/origin-point.entity';
 import { finalize, tap } from 'rxjs';
 
