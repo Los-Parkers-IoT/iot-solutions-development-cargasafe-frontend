@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { Profile } from '../../../domain/model/profile.entity';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-profile-info',
@@ -19,6 +21,8 @@ import { Profile } from '../../../domain/model/profile.entity';
     MatIconModule,
     MatSelectModule,
     MatOptionModule,
+    MatDatepickerModule,
+    MatProgressSpinner,
   ],
   templateUrl: './profile-info.html',
   styleUrl: './profile-info.css',
@@ -28,6 +32,11 @@ export class ProfileInfo implements OnInit {
   profileStore = inject(ProfileStore);
   profile$ = computed(() => this.profileStore.profileState);
   private fb = inject(FormBuilder);
+  documentTypesOptions = [
+    { value: 'DNI', label: 'DNI' },
+    { value: 'PAS', label: 'Passport' },
+    { value: 'CEX', label: 'CEX' },
+  ];
 
   form = this.fb.group({
     firstName: ['', Validators.required],
@@ -49,8 +58,7 @@ export class ProfileInfo implements OnInit {
   }
 
   ngOnInit(): void {
-    this.profileStore.loadProfileByUserId(1).then(() => {
-      console.log('Profile loaded', this.profile$().data());
+    this.profileStore.loadProfileByUserId(1).subscribe(() => {
       this.syncProfileToForm();
     });
   }
@@ -75,7 +83,7 @@ export class ProfileInfo implements OnInit {
       firstName: profile.firstName,
       lastName: profile.lastName,
       phoneNumber: profile.phoneNumber,
-      birthDate: profile.birthDate?.toISOString().substring(0, 10) || null,
+      birthDate: profile.birthDate?.toISOString().split('T')[0] ?? '',
       document: profile.document,
       documentType: profile.documentType,
     });
@@ -106,7 +114,8 @@ export class ProfileInfo implements OnInit {
       userId: this.profile$().data()?.userId ?? 0,
     });
 
-    this.profileStore.updateProfile(updatedProfile);
-    this.isEditMode.set(false);
+    this.profileStore.updateProfile(updatedProfile).subscribe(() => {
+      this.isEditMode.set(false);
+    });
   }
 }

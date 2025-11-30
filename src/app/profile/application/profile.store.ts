@@ -1,36 +1,38 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { createAsyncState } from '../../shared/helpers/async-state';
 import { Profile } from '../domain/model/profile.entity';
-import { timeout } from '../../shared/helpers/promises';
+import { ProfileApi } from '../infrastructure/profile-api';
+import { finalize, tap, delay } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ProfileStore {
   readonly profileState = createAsyncState<Profile | null>(null);
+  readonly profileApi = inject(ProfileApi);
 
-  async loadProfileByUserId(userId: number) {
-    this.profileState.setLoading(true);
-
-    try {
-      await timeout(1000);
-      const mockProfile = new Profile({
-        id: 1,
-        firstName: 'John',
-        lastName: 'Doe',
-        documentType: 'DNI',
-        document: '72012428',
-        userId: userId,
-        phoneNumber: null,
-        birthDate: new Date('1990-01-01'),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-      this.profileState.setData(mockProfile);
-    } finally {
-      this.profileState.setLoading(false);
-    }
+  loadProfileByUserId(userId: number) {
+    return this.profileApi.getProfileByUserId(userId).pipe(
+      // todo: remove delay before release
+      delay(1000), // Simulate network delay
+      tap({
+        subscribe: () => {
+          this.profileState.setLoading(true);
+          console.log('Loading profile...');
+        },
+        next: (profile) => {
+          this.profileState.setData(profile);
+        },
+        error: () => {
+          this.profileState.setError('Failed to load profile');
+        },
+      }),
+      finalize(() => {
+        console.log('Profile load attempt finished');
+        this.profileState.setLoading(false);
+      })
+    );
   }
 
   updateProfile(profile: Profile) {
-    this.profileState.setData(profile);
+    return this.profileApi.updateProfile(profile);
   }
 }
