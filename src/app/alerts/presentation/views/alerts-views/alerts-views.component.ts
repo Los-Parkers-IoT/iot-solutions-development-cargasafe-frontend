@@ -8,10 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-alerts-page',
   standalone: true,
   imports: [CommonModule, AlertTableComponent, MatIconModule],
-  templateUrl: './alerts-page.component.html',
-  styleUrls: ['./alerts-page.component.css'],
+  templateUrl: './alerts-views.component.html',
+  styleUrls: ['./alerts-views.component.css'],
 })
-export class AlertsPageComponent {
+export class AlertsViewsComponent {
   private alertStore = inject(AlertStore);
 
   alerts = computed(() => this.alertStore.alerts());
