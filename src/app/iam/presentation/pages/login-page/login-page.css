@@ -8,11 +8,16 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) {
+  body { overflow: auto; }
+}
+
+
 .login-container {
   display: flex;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .left-panel {
@@ -47,6 +52,7 @@ body {
   letter-spacing: -0.5px;
 }
 
+
 .content {
   flex: 1;
   display: flex;
@@ -76,7 +82,8 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   padding: 80px 80px 50px 80px;
-  overflow: hidden;
+  overflow: visible;
+  overflow-y: auto;
   margin-right: 200px;
 }
 
@@ -105,33 +112,51 @@ body {
   flex-direction: column;
 }
 
-.form-group {
+.full-width-input {
+  width: 100%;
   margin-bottom: 20px;
 }
 
-.form-group label {
-  display: block;
-  font-size: 19px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
+:host ::ng-deep .mat-form-field-appearance-outline .mat-focused .mat-form-field-outline-thick {
+  color: #FF9333 !important;
+}
+:host ::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
 }
 
-.form-control {
-  width: 100%;
-  padding: 13px 15px;
-  font-size: 15px;
-  border: 1px solid #d0d0d0;
-  border-radius: 5px;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
-  background: white;
+.btn-signin-mat {
+  width: 100% !important;
+  height: 60px !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  background-color: #FF9333 !important;
+  border-radius: 5px !important;
+  transition: transform 0.2s, box-shadow 0.3s !important;
+  margin-bottom: 22px !important;
+  box-shadow: none !important;
 }
 
-.form-control:focus {
-  outline: none;
-  border-color: #FF9333;
+.btn-signin-mat:hover {
+  background-color: #e67a1a !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(255, 147, 51, 0.4) !important;
 }
+
+.btn-signin-mat:active {
+  transform: translateY(0) !important;
+}
+
+:host ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  background-color: #FF9333 !important;
+}
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+
 
 .form-options {
   display: flex;
@@ -139,28 +164,6 @@ body {
   align-items: center;
   margin-bottom: 28px;
   margin-top: 4px;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-}
-
-.remember-me input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
-  margin: 0;
-
-}
-
-.remember-me label {
-  font-size: 17px;
-  color: #1a1a1a;
-  cursor: pointer;
-  margin: 0;
-  font-weight: 400;
 }
 
 .forgot-password {
@@ -174,31 +177,6 @@ body {
 
 .forgot-password:hover {
   color: #e67a1a;
-}
-
-.btn-signin {
-  width: 100%;
-  height: 180%;
-  padding: 15px;
-  font-size: 28px;
-  font-weight: 600;
-  color: white;
-  background: #FF9333;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.3s;
-  margin-bottom: 22px;
-}
-
-.btn-signin:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 147, 51, 0.4);
-  background: #e67a1a;
-}
-
-.btn-signin:active {
-  transform: translateY(0);
 }
 
 .signup-text {
@@ -227,7 +205,7 @@ body {
   }
 
   .right-panel {
-    padding: 60px 60px 40px 60px;
+    padding: 60px;
   }
 
   .title {
@@ -242,6 +220,7 @@ body {
 @media (max-width: 768px) {
   .login-container {
     flex-direction: column;
+    height: auto;
   }
 
   .left-panel {
@@ -249,9 +228,11 @@ body {
     min-height: 280px;
     padding: 35px 40px;
     justify-content: flex-start;
+    width: 100%;
   }
 
   .logo-container {
+    flex-direction: column;
     margin-bottom: 50px;
   }
 
@@ -267,6 +248,7 @@ body {
   .right-panel {
     flex: 1;
     padding: 40px;
+    width: 100%;
   }
 
   .form-container {
@@ -274,3 +256,11 @@ body {
     margin: 0;
   }
 }
+
+
+
+
+
+
+
+

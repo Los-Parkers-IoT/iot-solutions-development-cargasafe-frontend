@@ -8,11 +8,17 @@ body {
   overflow: hidden;
 }
 
+@media (max-width: 1024px) {
+  body {
+    overflow: auto;
+  }
+}
+
 .login-container {
   display: flex;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 .left-panel {
@@ -137,18 +143,10 @@ body {
   margin-bottom: 8px;
 }
 
-.form-group {
+.full-width-input {
+  width: 100%;
   margin-bottom: 20px;
 }
-
-.form-group label {
-  display: block;
-  font-size: 19px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
 
 .form-row {
   display: flex;
@@ -156,97 +154,60 @@ body {
   margin-bottom: 20px;
 }
 
-.form-row .form-group {
-  flex: 1;
-  margin-bottom: 0;
-}
-.form-row .half-width {
+.form-row-field {
   flex: 1;
 }
 
-.form-control {
-  width: 100%;
-  padding: 13px 15px;
-  font-size: 15px;
-  border: 1px solid #d0d0d0;
-  border-radius: 5px;
-  transition: border-color 0.3s;
-  box-sizing: border-box;
-  background: white;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #FF9333;
-}
-
-.radio-group {
+.radio-group-mat {
   display: flex;
   gap: 30px;
 }
 
-.radio-label {
-  display: flex;
-  align-items: center;
+.radio-label-mat {
   font-size: 17px;
   font-weight: 400;
   color: #1a1a1a;
-  cursor: pointer;
 }
 
-.radio-label input[type="radio"] {
-  margin-right: 10px;
-  width: 18px;
-  height: 18px;
-  accent-color: #FF9333;
+::ng-deep .mat-radio-button.mat-accent .mat-radio-outer-circle,
+::ng-deep .mat-radio-button.mat-accent .mat-radio-inner-circle {
+  border-color: #FF9333 !important;
 }
 
+::ng-deep .mat-radio-button.mat-accent .mat-radio-checked .mat-radio-inner-circle {
+  background-color: #FF9333 !important;
+}
 
-.terms-acceptance {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
+.terms-acceptance-mat {
   margin-bottom: 30px;
 }
 
-.terms-acceptance input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  margin-right: 10px;
-  cursor: pointer;
-  accent-color: #FF9333;
-}
-
-.terms-acceptance label {
+.terms-checkbox {
   font-size: 14px;
-  color: #666;
-  font-weight: 400;
 }
 
-
-.btn-signin {
-  width: 100%;
-  height: 180%;
-  padding: 15px;
-  font-size: 28px;
-  font-weight: 600;
-  color: white;
-  background: #FF9333;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.btn-signin-mat {
+  width: 100% !important;
+  height: 60px !important;
+  padding: 15px 0 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: white !important;
+  background-color: #FF9333 !important;
+  border-radius: 5px !important;
   transition: transform 0.2s, box-shadow 0.3s;
   margin-bottom: 22px;
+  line-height: normal !important;
 }
 
-.btn-signin:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 147, 51, 0.4);
-  background: #e67a1a;
+.btn-signin-mat:hover {
+  background-color: #e67a1a !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(255, 147, 51, 0.4) !important;
 }
 
-.btn-signin:active {
-  transform: translateY(0);
+.btn-signin-mat:active {
+  transform: translateY(0) !important;
 }
 
 .signup-link {
@@ -260,8 +221,11 @@ body {
   color: #e67a1a;
 }
 
+::ng-deep .mat-form-field-outline-thick {
+  color: #FF9333 !important;
+}
 
-
+/* Responsive */
 @media (max-width: 1200px) {
   .right-panel {
     padding-right: 180px;
@@ -269,18 +233,25 @@ body {
 }
 
 @media (max-width: 1024px) {
+  .login-container { height: auto; }
+
   .left-panel {
     flex: 0 0 40%;
     padding: 40px 45px;
   }
 
   .right-panel {
-    padding: 60px 60px 40px 60px;
+    padding: 60px;
+
   }
 
   .form-row {
     flex-direction: column;
     gap: 0;
+  }
+
+  .form-row-field {
+    width: 100%;
   }
 
   .title {
@@ -305,6 +276,7 @@ body {
   }
 
   .logo-container {
+    flex-direction: column;
     margin-bottom: 50px;
   }
 
@@ -320,6 +292,7 @@ body {
   .right-panel {
     flex: 1;
     padding: 40px;
+    width: 100%;
   }
 
   .form-container {
@@ -327,3 +300,5 @@ body {
     margin: 0;
   }
 }
+
+
