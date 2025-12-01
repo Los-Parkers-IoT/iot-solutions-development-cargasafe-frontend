@@ -3,17 +3,16 @@
 <mat-card *ngIf="(vehicle$ | async) === null" class="error">
   Vehicle not found.
   <div class="mt-2">
-    <button mat-stroked-button (click)="back()">
-      <mat-icon>arrow_back</mat-icon> Back
-    </button>
+    <button mat-stroked-button (click)="back()"><mat-icon>arrow_back</mat-icon> Back</button>
   </div>
 </mat-card>
 
 <!-- OK -->
-<ng-container *ngIf="(vehicle$ | async) as v">
+<ng-container *ngIf="vehicle$ | async as v">
   <!-- Page header -->
   <div class="vd-header">
-    <h1 class="vd-title">Vehicle {{ v.plate }}</h1> <!-- en vez de Vehicles -->
+    <h1 class="vd-title">Vehicle {{ v.plate }}</h1>
+    <!-- en vez de Vehicles -->
   </div>
 
   <div class="vd-grid">
@@ -23,15 +22,25 @@
         <div class="vd-card-title">Technical Card</div>
 
         <div class="vd-tech">
-          <div class="kv"><div class="k">Type:</div>   <div class="v">{{ v.type }}</div></div>
-          <div class="kv"><div class="k">Status:</div> <div class="v">{{ v.status }}</div></div>
+          <div class="kv">
+            <div class="k">Type:</div>
+            <div class="v">{{ v.type }}</div>
+          </div>
+          <div class="kv">
+            <div class="k">Status:</div>
+            <div class="v">{{ v.status }}</div>
+          </div>
 
           <div class="kv">
             <div class="k">IoT Devices:</div>
             <div class="v">
               <ng-container *ngIf="(v.deviceImeis?.length ?? 0) > 0; else noIoT">
                 <mat-chip-set>
-                  <mat-chip *ngFor="let imei of v.deviceImeis; trackBy: trackByValue" appearance="outlined" selected>
+                  <mat-chip
+                    *ngFor="let imei of v.deviceImeis; trackBy: trackByValue"
+                    appearance="outlined"
+                    selected
+                  >
                     {{ imei }}
                   </mat-chip>
                 </mat-chip-set>
@@ -40,11 +49,16 @@
             </div>
           </div>
 
-          <div class="kv"><div class="k">Capabilities:</div>
+          <div class="kv">
+            <div class="k">Capabilities:</div>
             <div class="v">
               <ng-container *ngIf="(v.capabilities?.length ?? 0) > 0; else noCaps">
                 <mat-chip-set>
-                  <mat-chip *ngFor="let c of v.capabilities; trackBy: trackByValue" appearance="outlined" selected>
+                  <mat-chip
+                    *ngFor="let c of v.capabilities; trackBy: trackByValue"
+                    appearance="outlined"
+                    selected
+                  >
                     {{ c }}
                   </mat-chip>
                 </mat-chip-set>
@@ -53,7 +67,10 @@
             </div>
           </div>
 
-          <div class="kv"><div class="k">Odometer:</div> <div class="v">{{ v.odometerKm ?? 0 | number }} km</div></div>
+          <div class="kv">
+            <div class="k">Odometer:</div>
+            <div class="v">{{ v.odometerKm ?? 0 | number }} km</div>
+          </div>
         </div>
       </mat-card>
 
@@ -68,20 +85,32 @@
       <mat-card class="vd-card">
         <div class="vd-actions-col">
           <div class="vd-actions-group row-span-2">
-            <button mat-raised-button color="primary" (click)="setAvailable(v)">Set in service</button>
-            <button mat-raised-button color="warn" (click)="setOutOfService(v)">Set out of Service</button>
+            <button mat-raised-button color="primary" (click)="setAvailable(v)">
+              Set in service
+            </button>
+            <button mat-raised-button color="warn" (click)="setOutOfService(v)">
+              Set out of Service
+            </button>
           </div>
 
           <div class="vd-actions-group row-span-2">
-            <button mat-raised-button  color="primary" (click)="openAssignDialog(v)">Assign IoT Device</button>
-            <button mat-raised-button  color="warn"
-                    (click)="openUnassignDialog(v)"
-                    [disabled]="(v.deviceImeis?.length ?? 0) === 0">
+            <button mat-raised-button color="primary" (click)="openAssignDialog(v)">
+              Assign IoT Device
+            </button>
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="openUnassignDialog(v)"
+              [disabled]="(v.deviceImeis?.length ?? 0) === 0"
+            >
               Unassign device
             </button>
-            <button mat-raised-button  color="warn"
-                    (click)="unassignAll(v)"
-                    [disabled]="(v.deviceImeis?.length ?? 0) === 0">
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="unassignAll(v)"
+              [disabled]="(v.deviceImeis?.length ?? 0) === 0"
+            >
               Unassign all
             </button>
           </div>
@@ -92,8 +121,6 @@
 
   <!-- Footer actions -->
   <div class="vd-footer">
-    <button mat-stroked-button (click)="back()">
-      <mat-icon>arrow_back</mat-icon> Back
-    </button>
+    <button mat-stroked-button (click)="back()"><mat-icon>arrow_back</mat-icon> Back</button>
   </div>
 </ng-container>
