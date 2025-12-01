@@ -7,8 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Authentication} from '../../../infrastructure/authentication';
-import { MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../application/auth.service.';
 
 @Component({
   selector: 'app-login-page',
@@ -27,9 +27,9 @@ import { MatIconModule} from '@angular/material/icon';
   styleUrls: ['./login-page.css'],
 })
 export class LoginPageComponent {
-  private auth = inject(Authentication);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
+  private authService = inject(AuthService);
 
   email = '';
   password = '';
@@ -37,23 +37,19 @@ export class LoginPageComponent {
   showPassword = false;
   isLoading = false;
 
-
   isFormValid(): boolean {
     return !!this.email && !!this.password;
   }
-
 
   onSubmit(): void {
     if (!this.isFormValid() || this.isLoading) return;
 
     this.isLoading = true;
-    console.log('[Login] submit', { email: this.email });
 
-    this.auth
-      .signIn({ email: this.email, password: this.password })
+    this.authService
+      .signIn(this.email, this.password)
       .subscribe({
-        next: (tokens) => {
-          this.auth.saveTokens(tokens);
+        next: () => {
           this.snackBar.open('Login successful!', undefined, {
             duration: 1500,
             horizontalPosition: 'right',
@@ -72,7 +68,6 @@ export class LoginPageComponent {
       .add(() => (this.isLoading = false));
   }
 
-
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
@@ -87,4 +82,3 @@ export class LoginPageComponent {
     this.router.navigate(['/register']);
   }
 }
-

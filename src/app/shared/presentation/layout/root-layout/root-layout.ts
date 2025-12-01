@@ -1,9 +1,10 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule, NavigationEnd, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { UserStore } from '../../../../iam/application/user.store';
 
 @Component({
   selector: 'app-root-layout',
@@ -14,6 +15,7 @@ import { Subscription } from 'rxjs';
 export class RootLayout implements OnDestroy {
   // Use Angular signals for reactivity and simpler template binding
   sidebarOpen = signal(false);
+  userStore = inject(UserStore);
   private routerSub?: Subscription;
 
   constructor(private router: Router) {
@@ -23,6 +25,8 @@ export class RootLayout implements OnDestroy {
         this.sidebarOpen.set(false);
       }
     });
+
+    console.log('RootLayout initialized', this.userStore.loadUser());
   }
 
   toggleSidebar(open?: boolean) {
