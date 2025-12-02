@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import {MatSort, MatSortModule, Sort} from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -13,9 +13,8 @@ import { MatOptionModule } from '@angular/material/core';
 
 import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model';
 import { Router } from '@angular/router';
-import {VehicleCreateAndEditComponent} from '../../components/vehicle-create-and-edit/vehicle-create-and-edit';
-import {FleetFacade} from '../../../application/services/fleet.facade';
-
+import { VehicleCreateAndEditComponent } from '../../components/vehicle-create-and-edit/vehicle-create-and-edit';
+import { FleetStore } from '../../../application/fleet.store'; // 👈
 
 @Component({
   selector: 'app-vehicle-management',
@@ -27,37 +26,30 @@ import {FleetFacade} from '../../../application/services/fleet.facade';
     MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule,
   ],
   templateUrl: './vehicle-management.html',
-  styleUrls: ['./vehicle-management.css']
+  styleUrls: ['./vehicle-management.css'],
 })
 export class VehicleManagementComponent implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
-  facade = inject(FleetFacade);
+  private store = inject(FleetStore); // 👈
 
   constructor(private router: Router) {}
 
-  // tabla
-  columns: string[] = ['id', 'plate', 'type', 'capabilities', 'status', 'deviceImeis', 'actions']; // rename
+  columns: string[] = ['id', 'plate', 'type', 'capabilities', 'status', 'deviceImeis', 'actions'];
   dataSource = new MatTableDataSource<Vehicle>([]);
 
-  // métricas
   totalCount = 0;
   availableCount = 0;
   inServiceCount = 0;
 
-  // filtros
   searchTerm = '';
   statusFilter = '';
   capabilityFilter = '';
   capabilityOptions: string[] = [];
 
-
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-
-
     this.dataSource.filterPredicate = (row, filterStr) => {
       const f = JSON.parse(filterStr) as { q: string; status: string; cap: string };
       const toL = (s: string | null | undefined) => (s ?? '').toLowerCase();
@@ -76,34 +68,32 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       return matchesQ && matchesStatus && matchesCap;
     };
 
+    this.store.vehicles$.subscribe(rows => {
+      this.dataSource.data = rows;
 
-    this.facade.vehicles$.subscribe(rows => {
-      this.dataSource.data = rows;      // métricas
       this.totalCount     = rows.length;
       this.availableCount = rows.filter(r => r.status === 'IN_SERVICE').length;
       this.inServiceCount = rows.filter(r => r.status === 'IN_SERVICE').length;
-      // capabilities únicas
+
       const set = new Set<string>();
       rows.forEach(r => (r.capabilities ?? []).forEach(c => set.add(c)));
       this.capabilityOptions = Array.from(set).sort();
+
       this.applyFilters();
     });
-    this.facade.loadVehicles();
+    this.store.loadVehicles();
   }
-
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // ordenar numéricamente por id y alfabéticamente el resto
     this.dataSource.sortingDataAccessor = (item: Vehicle, prop: string) => {
       if (prop === 'id') return item.id ?? 0;
       const v = (item as any)[prop];
       return typeof v === 'string' ? v : String(v ?? '');
     };
 
-    // estado inicial: ID asc (defer para evitar ExpressionChanged)
     Promise.resolve().then(() => {
       this.sort.active = 'id';
       this.sort.direction = 'asc';
@@ -111,44 +101,40 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // navegación
   onView(r: Vehicle) {
     this.router.navigate(['/fleet/vehicles', r.id]);
   }
 
-  // crear (dialog)
   openCreateDialog() {
     const ref = this.dialog.open(VehicleCreateAndEditComponent, {
-      width: '920px', maxWidth: '95vw',
-      data: { editMode: false, data: { ...defaultVehicle } }
+      width: '920px',
+      maxWidth: '95vw',
+      data: { editMode: false, data: { ...defaultVehicle } },
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action==='add' && res.payload) this.facade.createVehicle(res.payload);
+      if (res?.action === 'add' && res.payload) this.store.createVehicle(res.payload);
     });
   }
 
-  // editar (dialog)
   onEdit(v: Vehicle): void {
     const model = { ...v, capabilities: Array.isArray(v.capabilities) ? [...v.capabilities] : [] };
     const ref = this.dialog.open(VehicleCreateAndEditComponent, {
-      width: '920px', maxWidth: '95vw',
-      data: { editMode: true, data: model }
+      width: '920px',
+      maxWidth: '95vw',
+      data: { editMode: true, data: model },
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action==='update' && res.payload) this.facade.updateVehicle(res.payload);
+      if (res?.action === 'update' && res.payload) this.store.updateVehicle(res.payload);
     });
   }
 
-
-  // eliminar
   onDelete(v: Vehicle): void {
-    if (v.id) this.facade.deleteVehicle(v.id);
+    if (v.id) this.store.deleteVehicle(v.id);
   }
 
-  // búsqueda + filtros (handlers)
-  applySearch(value: string)      { this.searchTerm = value; this.applyFilters(); }
-  applyStatus(value: string)      { this.statusFilter = value; this.applyFilters(); }
-  applyCapability(value: string)  { this.capabilityFilter = value; this.applyFilters(); }
+  applySearch(value: string)     { this.searchTerm = value; this.applyFilters(); }
+  applyStatus(value: string)     { this.statusFilter = value; this.applyFilters(); }
+  applyCapability(value: string) { this.capabilityFilter = value; this.applyFilters(); }
 
   private applyFilters(): void {
     this.dataSource.filter = JSON.stringify({
@@ -157,27 +143,4 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       cap: this.capabilityFilter,
     });
   }
-
-
-
-
-  /*// carga y métricas
-  private fetch(): void {
-    this.service.getAll().subscribe(rows => {
-      this.dataSource.data = rows;
-
-      // métricas
-      this.totalCount     = rows.length;
-      this.availableCount = rows.filter(r => r.status === 'Available').length;
-      this.inServiceCount = rows.filter(r => r.status === 'In Service').length;
-
-      // opciones únicas de capability
-      const set = new Set<string>();
-      rows.forEach(r => (r.capabilities ?? []).forEach(c => set.add(c)));
-      this.capabilityOptions = Array.from(set).sort();
-
-      // re-aplicar filtros vigentes
-      this.applyFilters();
-    });
-  }*/
 }

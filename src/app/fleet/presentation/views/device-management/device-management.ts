@@ -12,10 +12,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { Router } from '@angular/router';
-import {Device} from '../../../domain/model/device.model';
-import {DeviceCreateAndEditComponent} from '../../components/device-create-and-edit/device-create-and-edit.component';
-import {FleetFacade} from '../../../application/services/fleet.facade';
 
+import { Device } from '../../../domain/model/device.model';
+import { DeviceCreateAndEditComponent } from '../../components/device-create-and-edit/device-create-and-edit.component';
+import { FleetStore } from '../../../application/fleet.store'; // 👈
 
 @Component({
   selector: 'app-device-management',
@@ -25,24 +25,22 @@ import {FleetFacade} from '../../../application/services/fleet.facade';
     MatTableModule, MatPaginatorModule, MatSortModule,
     MatTooltipModule, MatIconModule, MatButtonModule,
     MatDialogModule,
-    //  para búsqueda y filtro
     MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule,
   ],
   templateUrl: './device-management.html',
-  styleUrls: ['./device-management.css']
+  styleUrls: ['./device-management.css'],
 })
 export class DeviceManagementComponent implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
-  facade = inject(FleetFacade);
+  private store = inject(FleetStore); // 👈
 
   constructor(private router: Router) {}
 
   columns: string[] = ['id', 'imei', 'online', 'vehiclePlate', 'actions'];
   dataSource = new MatTableDataSource<Device>([]);
 
-  // 🔎 filtros
   searchTerm = '';
-  stateFilter = ''; // '', 'Online', 'Offline', 'Not synced'
+  stateFilter = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -56,7 +54,7 @@ export class DeviceManagementComponent implements OnInit, AfterViewInit {
       const matchesQ =
         !q ||
         toL(row.imei).includes(q) ||
-        toL(row.vehiclePlate ?? '').includes(q);                 // ✅ null-safe
+        toL(row.vehiclePlate ?? '').includes(q);
 
       const currentState = row.online ? 'Online' : 'Offline';
       const matchesState = !f.state || currentState === f.state;
@@ -64,30 +62,27 @@ export class DeviceManagementComponent implements OnInit, AfterViewInit {
       return matchesQ && matchesState;
     };
 
-    // ✅ suscríbete al estado del facade
-    this.facade.devices$.subscribe(rows => {
+    this.store.devices$.subscribe(rows => {
       this.dataSource.data = rows;
       this.applyFilters();
     });
-    this.facade.loadDevices();                                   // ✅ dispara carga
+    this.store.loadDevices();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // ⬇️ Accesor de orden para tipos correctos
     this.dataSource.sortingDataAccessor = (item: Device, prop: string) => {
       switch (prop) {
-        case 'id':           return item.id ?? 0;               // numérico real
+        case 'id':           return item.id ?? 0;
         case 'imei':         return (item.imei ?? '').toString();
-        case 'online':       return item.online ? 1 : 0;        // booleans
-        case 'vehiclePlate': return item.vehiclePlate ?? '\uffff'; // nulls al final
+        case 'online':       return item.online ? 1 : 0;
+        case 'vehiclePlate': return item.vehiclePlate ?? '\uffff';
         default:             return (item as any)[prop] ?? '';
       }
     };
 
-    // ⬇️ Estado inicial: ID asc (o 'desc' si quieres “más nuevo arriba”)
     Promise.resolve().then(() => {
       this.sort.active = 'id';
       this.sort.direction = 'asc';
@@ -95,48 +90,36 @@ export class DeviceManagementComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // NAV
   onView(r: Device) { void this.router.navigate(['/fleet/devices', r.id]); }
 
-  // CREATE
   openCreateDialog(): void {
     const ref = this.dialog.open(DeviceCreateAndEditComponent, {
-      width: '920px', maxWidth: '95vw',
-      data: { editMode: false, data: { imei:'', firmware:'v1.0.0', online:false, vehiclePlate: null } }
+      width: '920px',
+      maxWidth: '95vw',
+      data: { editMode: false, data: { imei: '', firmware: 'v1.0.0', online: false, vehiclePlate: null } },
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action === 'add' && res.payload) this.facade.createDevice(res.payload); // ✅ sin subscribe extra
+      if (res?.action === 'add' && res.payload) this.store.createDevice(res.payload);
     });
   }
 
-
-  // EDIT
   onEdit(row: Device): void {
     const ref = this.dialog.open(DeviceCreateAndEditComponent, {
-      width: '920px', maxWidth: '95vw',
-      data: { editMode: true, data: { ...row } }
+      width: '920px',
+      maxWidth: '95vw',
+      data: { editMode: true, data: { ...row } },
     });
     ref.afterClosed().subscribe(res => {
-      if (res?.action === 'update' && res.payload) this.facade.updateDevice(res.payload); // ✅
+      if (res?.action === 'update' && res.payload) this.store.updateDevice(res.payload);
     });
   }
 
-
-  // DELETE
   onDelete(row: Device): void {
-    if (row.id) this.facade.deleteDevice(row.id); // ✅
+    if (row.id) this.store.deleteDevice(row.id);
   }
 
-  /*private fetch(): void {
-    this.service.getAll().subscribe(rows => {
-      this.dataSource.data = rows;
-      this.applyFilters(); // re-evalúa si ya había texto o estado
-    });
-  }*/
-
-  // handlers de la UI
-  applySearch(value: string)   { this.searchTerm = value; this.applyFilters(); }
-  applyState(value: string)    { this.stateFilter = value; this.applyFilters(); }
+  applySearch(value: string) { this.searchTerm = value; this.applyFilters(); }
+  applyState(value: string)  { this.stateFilter = value; this.applyFilters(); }
 
   private applyFilters(): void {
     this.dataSource.filter = JSON.stringify({
