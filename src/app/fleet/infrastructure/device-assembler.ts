@@ -1,5 +1,5 @@
-import { CreateDeviceDto, DeviceDto, UpdateDeviceDto } from '../dto/device.dto';
-import {Device} from '../../domain/model/device.model';
+import { CreateDeviceDto, DeviceResponse, UpdateDeviceDto } from './device-response';
+import {Device} from '../domain/model/device.model';
 
 const toNum = (v: unknown): number | undefined => {
   const n = Number(v);
@@ -7,7 +7,7 @@ const toNum = (v: unknown): number | undefined => {
 };
 
 // Backend -> Frontend
-export const toDevice = (dto: DeviceDto): Device => ({
+export const toDevice = (dto: DeviceResponse): Device => ({
   id: toNum(dto.id),
   imei: String(dto.imei ?? '').trim(),
   firmware: String(dto.firmware ?? 'v1.0.0'),
