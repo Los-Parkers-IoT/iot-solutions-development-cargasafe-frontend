@@ -1,12 +1,12 @@
 // src/app/fleet/application/fleet.store.ts
 import { inject, Injectable } from '@angular/core';
 import {BehaviorSubject, finalize, tap} from 'rxjs';
-import { createAsyncState } from '../../shared/helpers/lazy-resource';
 
 import { Device } from '../domain/model/device.model';
 import { Vehicle } from '../domain/model/vehicle.model';
 import { DevicesApi } from '../infrastructure/devices-api';
 import { VehiclesApi } from '../infrastructure/vehicles-api';
+import {createAsyncState} from '../../shared/helpers/async-state';
 
 @Injectable({ providedIn: 'root' })
 export class FleetStore {
