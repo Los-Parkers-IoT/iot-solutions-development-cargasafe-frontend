@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 
 import { Device } from '../../../domain/model/device.model';
 import { DeviceCreateAndEditComponent } from '../../components/device-create-and-edit/device-create-and-edit.component';
-import { FleetStore } from '../../../application/fleet.store'; // 👈
+import { FleetStore } from '../../../application/fleet.store';
 
 @Component({
   selector: 'app-device-management',
@@ -32,7 +32,7 @@ import { FleetStore } from '../../../application/fleet.store'; // 👈
 })
 export class DeviceManagementComponent implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
-  private store = inject(FleetStore); // 👈
+  private store = inject(FleetStore);
 
   constructor(private router: Router) {}
 

@@ -19,13 +19,19 @@ export class FleetStore {
   readonly vehiclesState = createAsyncState<Vehicle[]>([]);
   readonly vehicleState  = createAsyncState<Vehicle | null>(null);
 
+
+  // 👇 streams para la UI (reemplazo del Facade)
   // 👇 streams para la UI (reemplazo del Facade)
   private readonly devicesSubject  = new BehaviorSubject<Device[]>([]);
   private readonly vehiclesSubject = new BehaviorSubject<Vehicle[]>([]);
 
+  // Observables que usan tus componentes (device/vehicle-management)
   readonly devices$  = this.devicesSubject.asObservable();
   readonly vehicles$ = this.vehiclesSubject.asObservable();
 
+  // Signals que usan otros BC (ej. trips)
+  readonly devicesSig  = this.devicesState.data;
+  readonly vehiclesSig = this.vehiclesState.data;
   // =====================================================
   //                     DEVICES
   // =====================================================
