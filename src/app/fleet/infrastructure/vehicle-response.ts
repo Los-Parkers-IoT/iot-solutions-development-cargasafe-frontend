@@ -1,4 +1,4 @@
-export interface VehicleDto {
+export interface VehicleResponse {
   id: number;
   plate: string;
   type: string;

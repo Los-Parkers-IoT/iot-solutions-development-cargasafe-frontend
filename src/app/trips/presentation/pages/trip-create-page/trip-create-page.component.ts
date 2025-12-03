@@ -20,13 +20,13 @@ import { OriginPointsStore } from '../../../application/origin-points.store';
 import { MatSelectModule } from '@angular/material/select';
 import { OriginPoint } from '../../../domain/model/origin-point.entity';
 import { Device } from '../../../../fleet/domain/model/device.model';
-import { FleetFacade } from '../../../../fleet/application/services/fleet.facade';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { AddressInputDirective } from '../../../../shared/presentation/directives/address-input.directive';
 import { Trip } from '../../../domain/model/trip.entity';
 import { DeliveryOrder } from '../../../domain/model/delivery-order.entity';
 import { TripsStore } from '../../../application/trips.store';
 import { Router } from '@angular/router';
+import {FleetStore} from '../../../../fleet/application/fleet.store';
 
 interface DeliveryOrderViewModel {
   address: string;
@@ -81,7 +81,7 @@ export class TripCreatePageComponent implements OnInit {
   private fb = inject(FormBuilder);
   private tripsStore = inject(TripsStore);
   private originPointsStore = inject(OriginPointsStore);
-  private fleetStore = inject(FleetFacade);
+  private fleetStore = inject(FleetStore);
   private router = inject(Router);
   // -------------------------------------------------------
   // SIGNALS

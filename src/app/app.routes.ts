@@ -10,7 +10,7 @@ import { SubscriptionsPage } from './subscription/presentation/pages/subscriptio
 
 const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
 const alertRoutes = () => import('./alerts/presentation/alert.routes').then((m) => m.routes);
-const fleetRoutes = () => import('./fleet/fleet.routes').then((m) => m.routes);
+const fleetRoutes = () => import('./fleet/presentation/fleet.routes').then((m) => m.routes);
 const profileRoutes = () => import('./profile/presentation/profile.routes').then((m) => m.routes);
 
 // app.routes.ts (root)

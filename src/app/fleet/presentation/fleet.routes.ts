@@ -7,28 +7,28 @@ export const routes: Routes = [
       {
         path: 'vehicles',
         loadComponent: () =>
-          import('./presentation/views/vehicle-management/vehicle-management').then(
+          import('./views/vehicle-management/vehicle-management').then(
             (m) => m.VehicleManagementComponent
           ),
       },
       {
         path: 'vehicles/:id',
         loadComponent: () =>
-          import('./presentation/views/vehicle-detail-page/vehicle-detail-page').then(
+          import('./views/vehicle-detail-page/vehicle-detail-page').then(
             (m) => m.VehicleDetailPageComponent
           ),
       },
       {
         path: 'devices',
         loadComponent: () =>
-          import('./presentation/views/device-management/device-management').then(
+          import('./views/device-management/device-management').then(
             (m) => m.DeviceManagementComponent
           ),
       },
       {
         path: 'devices/:id',
         loadComponent: () =>
-          import('./presentation/views/device-detail-page/device-detail-page').then(
+          import('./views/device-detail-page/device-detail-page').then(
             (m) => m.DeviceDetailPageComponent
           ),
       },

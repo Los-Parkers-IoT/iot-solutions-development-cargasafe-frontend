@@ -1,13 +1,12 @@
-import {Component, Inject, OnInit, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {FleetFacade} from '../../../application/services/fleet.facade';
-import {Device} from '../../../domain/model/device.model';
-
+import { Component, Inject, OnInit, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { Device } from '../../../domain/model/device.model';
+import { FleetStore } from '../../../application/fleet.store'; // 👈 nuevo import
 
 type DialogResult = { imei: string } | undefined;
 
@@ -19,19 +18,19 @@ type DialogResult = { imei: string } | undefined;
   styleUrl: './assign-device-dialog.css'
 })
 export class AssignDeviceDialogComponent implements OnInit {
-  private facade = inject(FleetFacade);
+  private store = inject(FleetStore); // 👈 antes FleetFacade
   private ref = inject(MatDialogRef<AssignDeviceDialogComponent, DialogResult>);
+
   constructor(@Inject(MAT_DIALOG_DATA) public data: { vehicleId: number }) {}
 
   devices: Device[] = [];
   selectedImei = '';
 
   ngOnInit(): void {
-    this.facade.devices$.subscribe(list => {
-      // solo dispositivos SIN asignación
+    this.store.devices$.subscribe(list => {
       this.devices = (list ?? []).filter(d => !d.vehiclePlate);
     });
-    this.facade.loadDevices();
+    this.store.loadDevices();
   }
 
   close() { this.ref.close(); }

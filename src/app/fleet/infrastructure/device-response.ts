@@ -1,5 +1,5 @@
 // --- Respuestas (backend -> frontend)
-export interface DeviceDto {
+export interface DeviceResponse {
   id: number;                 // Long -> number
   imei: string;
   firmware: string;

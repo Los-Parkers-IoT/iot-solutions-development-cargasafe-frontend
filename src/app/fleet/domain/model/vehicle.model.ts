@@ -1,24 +1,21 @@
-export type VehicleType =
-  | 'TRUCK' | 'VAN' | 'CAR' | 'MOTORCYCLE';
-
-export type VehicleStatus =
-  | 'IN_SERVICE' | 'OUT_OF_SERVICE' | 'MAINTENANCE' | 'RETIRED';
+import { VehicleType } from './vehicle-type.vo';
+import { VehicleStatus } from './vehicle-status.vo';
 
 export interface Vehicle {
   id?: number;
   plate: string;
-  type: VehicleType | string;       // canonical: UPPER_CASE
-  capabilities: string[];           // canonical: UPPER_CASE
-  status: VehicleStatus | string;   // canonical: UPPER_CASE
+  type: VehicleType;          // ahora VO
+  capabilities: string[];     // puede seguir siendo string[]
+  status: VehicleStatus;      // ahora VO
   odometerKm: number;
   deviceImeis: string[];
 }
 
 export const defaultVehicle: Vehicle = {
   plate: '',
-  type: 'TRUCK',
+  type: VehicleType.TRUCK,
   capabilities: [],
-  status: 'IN_SERVICE',
+  status: VehicleStatus.IN_SERVICE,
   odometerKm: 0,
-  deviceImeis: []
+  deviceImeis: [],
 };
