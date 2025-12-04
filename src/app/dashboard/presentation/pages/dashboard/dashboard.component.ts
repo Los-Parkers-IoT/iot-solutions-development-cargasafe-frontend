@@ -1,10 +1,11 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
 import { Trip, IncidentsByMonthData, Alert, AlertType } from '../../../domain/model';
 import { DashboardStore } from '../../../application/dto/dashboard.store';
 import { IncidentsChartComponent } from '../../components/incidents-chart/incidents-chart.component';
+import { PdfExportService } from '../../../application/pdf-export.service';
 
 interface TripWithIncidents extends Trip {
   incidentCount: number;
@@ -22,11 +23,13 @@ interface TripWithIncidents extends Trip {
 export class DashboardComponent implements OnInit {
   private dashboardStore = inject(DashboardStore);
   private router = inject(Router);
+  private pdfExportService = inject(PdfExportService);
 
   trips = this.dashboardStore.tripsState.data;
   alerts = this.dashboardStore.alertsState.data;
   incidentsData = this.dashboardStore.incidentsState.data;
   loading = this.dashboardStore.tripsState.loading;
+  exporting = signal(false);
 
   // ngx-charts data
   chartData: any[] = [];
@@ -312,6 +315,24 @@ export class DashboardComponent implements OnInit {
         return 'Movement';
       default:
         return type;
+    }
+  }
+
+  async exportToPdf(): Promise<void> {
+    this.exporting.set(true);
+    
+    try {
+      await this.pdfExportService.exportDashboardToPdf(
+        this.trips(),
+        this.alerts(),
+        this.incidentsData()
+      );
+      console.log('✅ PDF exported successfully');
+    } catch (error) {
+      console.error('❌ Error exporting PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    } finally {
+      this.exporting.set(false);
     }
   }
 }
