@@ -1,17 +1,25 @@
 // src/app/fleet/application/fleet.store.ts
 import { inject, Injectable } from '@angular/core';
-import {BehaviorSubject, finalize, tap} from 'rxjs';
+import { BehaviorSubject, finalize, tap } from 'rxjs';
 
 import { Device } from '../domain/model/device.model';
 import { Vehicle } from '../domain/model/vehicle.model';
 import { DevicesApi } from '../infrastructure/devices-api';
 import { VehiclesApi } from '../infrastructure/vehicles-api';
-import {createAsyncState} from '../../shared/helpers/async-state';
+import { createAsyncState } from '../../shared/helpers/async-state';
+import { NotificationService } from '../../shared/presentation/services/notification.service';
+import { mapFleetError } from './fleet-error.mapper';
+import { ErrorDialogService } from '../../shared/presentation/services/error-dialog.service';
+
+type ErrorContext = 'device' | 'vehicle';
+type ErrorTarget = 'list' | 'detail';
 
 @Injectable({ providedIn: 'root' })
 export class FleetStore {
   private devicesApi = inject(DevicesApi);
   private vehiclesApi = inject(VehiclesApi);
+  private notificationService = inject(NotificationService);
+  private errorDialog = inject(ErrorDialogService);
 
   // estados "tipo TripsStore"
   readonly devicesState  = createAsyncState<Device[]>([]);
@@ -19,9 +27,7 @@ export class FleetStore {
   readonly vehiclesState = createAsyncState<Vehicle[]>([]);
   readonly vehicleState  = createAsyncState<Vehicle | null>(null);
 
-
-  // 👇 streams para la UI (reemplazo del Facade)
-  // 👇 streams para la UI (reemplazo del Facade)
+  // streams para la UI (reemplazo del Facade)
   private readonly devicesSubject  = new BehaviorSubject<Device[]>([]);
   private readonly vehiclesSubject = new BehaviorSubject<Vehicle[]>([]);
 
@@ -32,6 +38,47 @@ export class FleetStore {
   // Signals que usan otros BC (ej. trips)
   readonly devicesSig  = this.devicesState.data;
   readonly vehiclesSig = this.vehiclesState.data;
+
+  // =====================================================
+  //                HELPER DE ERRORES
+  // =====================================================
+
+  private handleError(error: unknown, context: ErrorContext, target: ErrorTarget = 'list'): void {
+    // mensaje “humano” desde el mapper
+    const message = mapFleetError(error, context);
+
+    // status HTTP (si es HttpErrorResponse)
+    let status: number | undefined;
+    if (error && typeof error === 'object' && 'status' in error) {
+      const maybeStatus = (error as { status?: number }).status;
+      if (typeof maybeStatus === 'number') status = maybeStatus;
+    }
+
+    // título según contexto
+    const title =
+      context === 'device'
+        ? 'IoT Device Management Error'
+        : 'Fleet Vehicle Management Error';
+
+    // 🟥 Popup modal para errores (en vez de snackbar)
+    this.errorDialog.showError({ title, message, status });
+
+    // guardamos el mensaje legible en el estado
+    if (context === 'device') {
+      if (target === 'detail') {
+        this.deviceState.setError(message);
+      } else {
+        this.devicesState.setError(message);
+      }
+    } else {
+      if (target === 'detail') {
+        this.vehicleState.setError(message);
+      } else {
+        this.vehiclesState.setError(message);
+      }
+    }
+  }
+
   // =====================================================
   //                     DEVICES
   // =====================================================
@@ -45,9 +92,9 @@ export class FleetStore {
         tap({
           next: (devices) => {
             this.devicesState.setData(devices);
-            this.devicesSubject.next(devices);   // 👈 importante
+            this.devicesSubject.next(devices);
           },
-          error: () => this.devicesState.setError('Failed to load devices'),
+          error: (err) => this.handleError(err, 'device', 'list'),
         }),
         finalize(() => this.devicesState.setLoading(false))
       );
@@ -64,7 +111,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (device) => this.deviceState.setData(device),
-          error: () => this.deviceState.setError('Failed to load device'),
+          error: (err) => this.handleError(err, 'device', 'detail'),
         }),
         finalize(() => this.deviceState.setLoading(false))
       );
@@ -76,8 +123,11 @@ export class FleetStore {
   createDevice(device: Device) {
     const request$ = this.devicesApi.create(device).pipe(
       tap({
-        next: () => this.loadDevices(),
-        error: () => this.devicesState.setError('Failed to create device'),
+        next: () => {
+          this.notificationService.showSuccess('Dispositivo creado correctamente.');
+          this.loadDevices();
+        },
+        error: (err) => this.handleError(err, 'device', 'list'),
       })
     );
 
@@ -88,8 +138,11 @@ export class FleetStore {
   updateDevice(device: Device) {
     const request$ = this.devicesApi.update(device).pipe(
       tap({
-        next: () => this.loadDevices(),
-        error: () => this.devicesState.setError('Failed to update device'),
+        next: () => {
+          this.notificationService.showSuccess('Dispositivo actualizado correctamente.');
+          this.loadDevices();
+        },
+        error: (err) => this.handleError(err, 'device', 'list'),
       })
     );
 
@@ -100,8 +153,11 @@ export class FleetStore {
   deleteDevice(id: number) {
     const request$ = this.devicesApi.delete(id).pipe(
       tap({
-        next: () => this.loadDevices(),
-        error: () => this.devicesState.setError('Failed to delete device'),
+        next: () => {
+          this.notificationService.showSuccess('Dispositivo eliminado correctamente.');
+          this.loadDevices();
+        },
+        error: (err) => this.handleError(err, 'device', 'list'),
       })
     );
 
@@ -112,8 +168,12 @@ export class FleetStore {
   updateDeviceOnline(id: number, online: boolean) {
     const request$ = this.devicesApi.updateOnline(id, online).pipe(
       tap({
-        next: () => this.loadDevices(),
-        error: () => this.devicesState.setError('Failed to update device online flag'),
+        next: () => {
+          const statusText = online ? 'en línea' : 'fuera de línea';
+          this.notificationService.showSuccess(`El dispositivo ahora está ${statusText}.`);
+          this.loadDevices();
+        },
+        error: (err) => this.handleError(err, 'device', 'list'),
       })
     );
 
@@ -124,8 +184,11 @@ export class FleetStore {
   updateDeviceFirmware(id: number, firmware: string) {
     const request$ = this.devicesApi.updateFirmware(id, firmware).pipe(
       tap({
-        next: () => this.loadDevices(),
-        error: () => this.devicesState.setError('Failed to update device firmware'),
+        next: () => {
+          this.notificationService.showSuccess('Firmware del dispositivo actualizado correctamente.');
+          this.loadDevices();
+        },
+        error: (err) => this.handleError(err, 'device', 'list'),
       })
     );
 
@@ -141,7 +204,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (devices) => this.devicesState.setData(devices),
-          error: () => this.devicesState.setError('Failed to filter devices by online status'),
+          error: (err) => this.handleError(err, 'device', 'list'),
         }),
         finalize(() => this.devicesState.setLoading(false))
       )
@@ -156,7 +219,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (device) => this.deviceState.setData(device),
-          error: () => this.deviceState.setError('Failed to find device by IMEI'),
+          error: (err) => this.handleError(err, 'device', 'detail'),
         }),
         finalize(() => this.deviceState.setLoading(false))
       );
@@ -178,9 +241,9 @@ export class FleetStore {
         tap({
           next: (vehicles) => {
             this.vehiclesState.setData(vehicles);
-            this.vehiclesSubject.next(vehicles); // 👈
+            this.vehiclesSubject.next(vehicles);
           },
-          error: () => this.vehiclesState.setError('Failed to load vehicles'),
+          error: (err) => this.handleError(err, 'vehicle', 'list'),
         }),
         finalize(() => this.vehiclesState.setLoading(false))
       );
@@ -197,7 +260,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (vehicle) => this.vehicleState.setData(vehicle),
-          error: () => this.vehicleState.setError('Failed to load vehicle'),
+          error: (err) => this.handleError(err, 'vehicle', 'detail'),
         }),
         finalize(() => this.vehicleState.setLoading(false))
       );
@@ -209,8 +272,11 @@ export class FleetStore {
   createVehicle(vehicle: Vehicle) {
     const request$ = this.vehiclesApi.create(vehicle).pipe(
       tap({
-        next: () => this.loadVehicles(),
-        error: () => this.vehiclesState.setError('Failed to create vehicle'),
+        next: () => {
+          this.notificationService.showSuccess('Vehículo creado correctamente.');
+          this.loadVehicles();
+        },
+        error: (err) => this.handleError(err, 'vehicle', 'list'),
       })
     );
 
@@ -221,8 +287,11 @@ export class FleetStore {
   updateVehicle(vehicle: Vehicle) {
     const request$ = this.vehiclesApi.update(vehicle).pipe(
       tap({
-        next: () => this.loadVehicles(),
-        error: () => this.vehiclesState.setError('Failed to update vehicle'),
+        next: () => {
+          this.notificationService.showSuccess('Vehículo actualizado correctamente.');
+          this.loadVehicles();
+        },
+        error: (err) => this.handleError(err, 'vehicle', 'list'),
       })
     );
 
@@ -233,8 +302,11 @@ export class FleetStore {
   deleteVehicle(id: number) {
     const request$ = this.vehiclesApi.delete(id).pipe(
       tap({
-        next: () => this.loadVehicles(),
-        error: () => this.vehiclesState.setError('Failed to delete vehicle'),
+        next: () => {
+          this.notificationService.showSuccess('Vehículo eliminado correctamente.');
+          this.loadVehicles();
+        },
+        error: (err) => this.handleError(err, 'vehicle', 'list'),
       })
     );
 
@@ -245,8 +317,11 @@ export class FleetStore {
   assignDeviceToVehicle(vehicleId: number, imei: string) {
     const request$ = this.vehiclesApi.assignDevice(vehicleId, imei).pipe(
       tap({
-        next: () => this.loadVehicles(),
-        error: () => this.vehiclesState.setError('Failed to assign device to vehicle'),
+        next: () => {
+          this.notificationService.showSuccess('Dispositivo asignado al vehículo correctamente.');
+          this.loadVehicles();
+        },
+        error: (err) => this.handleError(err, 'vehicle', 'list'),
       })
     );
 
@@ -257,8 +332,11 @@ export class FleetStore {
   unassignDeviceFromVehicle(vehicleId: number, imei: string) {
     const request$ = this.vehiclesApi.unassignDevice(vehicleId, imei).pipe(
       tap({
-        next: () => this.loadVehicles(),
-        error: () => this.vehiclesState.setError('Failed to unassign device from vehicle'),
+        next: () => {
+          this.notificationService.showSuccess('Dispositivo desasignado del vehículo correctamente.');
+          this.loadVehicles();
+        },
+        error: (err) => this.handleError(err, 'vehicle', 'list'),
       })
     );
 
@@ -269,8 +347,11 @@ export class FleetStore {
   updateVehicleStatus(id: number, status: Vehicle['status']) {
     const request$ = this.vehiclesApi.updateStatus(id, status).pipe(
       tap({
-        next: () => this.loadVehicles(),
-        error: () => this.vehiclesState.setError('Failed to update vehicle status'),
+        next: () => {
+          this.notificationService.showSuccess('Estado del vehículo actualizado correctamente.');
+          this.loadVehicles();
+        },
+        error: (err) => this.handleError(err, 'vehicle', 'list'),
       })
     );
 
@@ -286,7 +367,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (vehicles) => this.vehiclesState.setData(vehicles),
-          error: () => this.vehiclesState.setError('Failed to filter vehicles by type'),
+          error: (err) => this.handleError(err, 'vehicle', 'list'),
         }),
         finalize(() => this.vehiclesState.setLoading(false))
       )
@@ -301,7 +382,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (vehicles) => this.vehiclesState.setData(vehicles),
-          error: () => this.vehiclesState.setError('Failed to filter vehicles by status'),
+          error: (err) => this.handleError(err, 'vehicle', 'list'),
         }),
         finalize(() => this.vehiclesState.setLoading(false))
       )
@@ -316,7 +397,7 @@ export class FleetStore {
       .pipe(
         tap({
           next: (vehicle) => this.vehicleState.setData(vehicle),
-          error: () => this.vehicleState.setError('Failed to find vehicle by plate'),
+          error: (err) => this.handleError(err, 'vehicle', 'detail'),
         }),
         finalize(() => this.vehicleState.setLoading(false))
       );
