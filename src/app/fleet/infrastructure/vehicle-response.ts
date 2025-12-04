@@ -5,7 +5,7 @@ export interface VehicleResponse {
   capabilities: string[] | null;
   status: string;
   odometerKm: number;
-  deviceImeis: string[] | null;    // <-- lista
+  deviceImeis: string[] | null;
 }
 
 export interface CreateVehicleDto {
@@ -14,11 +14,11 @@ export interface CreateVehicleDto {
   capabilities: string[];
   status: string;
   odometerKm: number;
-  deviceImeis: string[];           // enviar [] si vacío
+  deviceImeis: string[];
 }
 
 
-export interface UpdateVehicleDto extends CreateVehicleDto {} // id en la URL
+export interface UpdateVehicleDto extends CreateVehicleDto {}
 
 export interface UpdateVehicleStatusDto {
   status: string;

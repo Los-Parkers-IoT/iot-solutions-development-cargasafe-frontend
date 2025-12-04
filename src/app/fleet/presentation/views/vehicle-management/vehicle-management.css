@@ -22,16 +22,15 @@
   margin: 12px 0 16px;
 }
 
-/* Botón con ícono alineado */
 button[mat-raised-button] mat-icon {
   margin-right: 6px;
 }
 
 
-/* KPI cards */
+
 .vm-cards {
   display: grid;
-  grid-template-columns: repeat(4, 280px); /* antes 2 */
+  grid-template-columns: repeat(4, 280px);
   gap: 16px;
   margin-bottom: 16px;
 }
@@ -46,7 +45,7 @@ button[mat-raised-button] mat-icon {
 .vm-card-number { font-size: 36px; font-weight: 800; line-height: 1.1; margin-top: 6px; }
 .vm-card-sub    { font-size: 12px; color: #7a7a7a; }
 
-/* Toolbar búsqueda + filtros */
+
 .vm-toolbar {
   display: grid;
   grid-template-columns: 1fr 220px 220px;

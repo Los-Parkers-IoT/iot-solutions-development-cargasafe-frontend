@@ -1,4 +1,3 @@
-// src/app/fleet/presentation/views/vehicle-detail-page/vehicle-detail-page.ts
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';

@@ -6,7 +6,7 @@ const toNum = (v: unknown): number | undefined => {
   return Number.isFinite(n) ? n : undefined;
 };
 
-// Backend -> Frontend
+
 export const toDevice = (dto: DeviceResponse): Device => ({
   id: toNum(dto.id),
   imei: String(dto.imei ?? '').trim(),
@@ -15,7 +15,7 @@ export const toDevice = (dto: DeviceResponse): Device => ({
   vehiclePlate: dto.vehiclePlate ?? null
 });
 
-// Frontend -> Backend
+
 export const fromDeviceCreate = (m: Device): CreateDeviceDto => ({
   imei: m.imei,
   firmware: m.firmware,

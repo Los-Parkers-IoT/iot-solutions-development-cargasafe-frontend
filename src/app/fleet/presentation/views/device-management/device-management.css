@@ -3,31 +3,31 @@
 .actions-cell {
   display: flex;
   gap: 6px;
-  justify-content: flex-end; /* o center según prefieras */
+  justify-content: flex-end;
 }
 
-/* header: título a la izquierda y botón arriba a la derecha */
+
 .dm-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; /*  empuja el botón a la derecha */
+  justify-content: space-between;
   gap: 16px;
   margin: 8px 0 16px;
 }
 
 .dm-title {
   margin: 0;
-  font-size: 28px;   /* o 32px para igualar vehicles */
+  font-size: 28px;
   font-weight: 800;
 }
 
-/* ícono alineado dentro del botón */
+
 .dm-header button[mat-raised-button] mat-icon {
   margin-right: 6px;
 }
 
 
-/* responsive */
+
 @media (max-width: 640px) {
   .dm-header {
     flex-wrap: wrap;
@@ -36,7 +36,6 @@
 }
 
 
-/* Toolbar búsqueda + filtro, igual estilo que vehicles */
 .dm-toolbar {
   display: grid;
   grid-template-columns: 1fr 220px;

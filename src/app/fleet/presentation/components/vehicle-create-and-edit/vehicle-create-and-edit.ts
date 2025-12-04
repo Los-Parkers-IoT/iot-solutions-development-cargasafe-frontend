@@ -1,4 +1,3 @@
-// src/app/fleet/presentation/components/vehicle-create-and-edit/vehicle-create-and-edit.ts
 import { Component, EventEmitter, Inject, Input, Output, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +7,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule, MatChipSelectionChange } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model'; // 👈 solo estos
+import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model';
 
 export type VehicleDialogData = { editMode: boolean; data: Vehicle };
 
@@ -34,7 +33,7 @@ export class VehicleCreateAndEditComponent {
   @Output() addRequested = new EventEmitter<Vehicle>();
   @Output() updateRequested = new EventEmitter<Vehicle>();
 
-  imeisText = ''; // texto editable
+  imeisText = '';
 
   constructor(
     @Optional()
@@ -51,7 +50,6 @@ export class VehicleCreateAndEditComponent {
     this.imeisText = (this.data.deviceImeis ?? []).join(', ');
   }
 
-  // listas públicas
   vehicleTypes: string[] = ['TRUCK', 'VAN', 'CAR', 'MOTORCYCLE'];
   statuses: string[] = ['IN_SERVICE', 'OUT_OF_SERVICE', 'MAINTENANCE', 'RETIRED'];
   caps: string[] = ['REFRIGERATED', 'BOX', 'GPS_ONLY', 'HEAVY_LOAD', 'FRAGILE_CARGO'];

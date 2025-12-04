@@ -1,4 +1,3 @@
-// src/app/fleet/application/fleet.store.ts
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, finalize, tap } from 'rxjs';
 
@@ -21,30 +20,28 @@ export class FleetStore {
   private notificationService = inject(NotificationService);
   private errorDialog = inject(ErrorDialogService);
 
-  // estados "tipo TripsStore"
+
   readonly devicesState  = createAsyncState<Device[]>([]);
   readonly deviceState   = createAsyncState<Device | null>(null);
   readonly vehiclesState = createAsyncState<Vehicle[]>([]);
   readonly vehicleState  = createAsyncState<Vehicle | null>(null);
 
-  // streams para la UI (reemplazo del Facade)
+
   private readonly devicesSubject  = new BehaviorSubject<Device[]>([]);
   private readonly vehiclesSubject = new BehaviorSubject<Vehicle[]>([]);
 
-  // Observables que usan tus componentes (device/vehicle-management)
+
   readonly devices$  = this.devicesSubject.asObservable();
   readonly vehicles$ = this.vehiclesSubject.asObservable();
 
-  // Signals que usan otros BC (ej. trips)
+
   readonly devicesSig  = this.devicesState.data;
   readonly vehiclesSig = this.vehiclesState.data;
 
-  // =====================================================
-  //                HELPER DE ERRORES
-  // =====================================================
+
 
   private handleError(error: unknown, context: ErrorContext, target: ErrorTarget = 'list'): void {
-    // mensaje “humano” desde el mapper
+    // message from mapper
     const message = mapFleetError(error, context);
 
     // status HTTP (si es HttpErrorResponse)
@@ -54,16 +51,16 @@ export class FleetStore {
       if (typeof maybeStatus === 'number') status = maybeStatus;
     }
 
-    // título según contexto
+
     const title =
       context === 'device'
         ? 'IoT Device Management Error'
         : 'Fleet Vehicle Management Error';
 
-    // 🟥 Popup modal para errores (en vez de snackbar)
+
     this.errorDialog.showError({ title, message, status });
 
-    // guardamos el mensaje legible en el estado
+
     if (context === 'device') {
       if (target === 'detail') {
         this.deviceState.setError(message);
@@ -79,9 +76,6 @@ export class FleetStore {
     }
   }
 
-  // =====================================================
-  //                     DEVICES
-  // =====================================================
 
   loadDevices() {
     this.devicesState.setLoading(true);
@@ -228,9 +222,6 @@ export class FleetStore {
     return request$;
   }
 
-  // =====================================================
-  //                     VEHICLES
-  // =====================================================
 
   loadVehicles() {
     this.vehiclesState.setLoading(true);

@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Vehicle } from '../../../domain/model/vehicle.model';
-import { FleetStore } from '../../../application/fleet.store'; // 👈
+import { FleetStore } from '../../../application/fleet.store';
 
 @Component({
   selector: 'app-assign-vehicle-dialog',
@@ -15,7 +15,7 @@ import { FleetStore } from '../../../application/fleet.store'; // 👈
   styleUrl: './assign-vehicle-dialog.css',
 })
 export class AssignVehicleDialogComponent {
-  private store = inject(FleetStore); // 👈
+  private store = inject(FleetStore);
   private ref = inject(MatDialogRef<AssignVehicleDialogComponent, number>);
 
   vehicles: Vehicle[] = [];

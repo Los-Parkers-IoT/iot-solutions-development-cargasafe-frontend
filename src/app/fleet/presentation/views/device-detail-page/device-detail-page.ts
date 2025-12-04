@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { FirmwareDialogComponent } from '../../components/update-firmware-dialog/update-firmware-dialog';
 import { AssignVehicleDialogComponent } from '../../components/assign-vehicle-dialog/assign-vehicle-dialog';
-import { FleetStore } from '../../../application/fleet.store'; // 👈
+import { FleetStore } from '../../../application/fleet.store';
 
 @Component({
   selector: 'app-device-detail-page',
@@ -26,7 +26,7 @@ import { FleetStore } from '../../../application/fleet.store'; // 👈
 export class DeviceDetailPageComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private store = inject(FleetStore); // 👈
+  private store = inject(FleetStore);
   private snack = inject(MatSnackBar, { optional: true });
   private dialog = inject(MatDialog);
 
@@ -34,7 +34,7 @@ export class DeviceDetailPageComponent {
 
   device$ = this.route.paramMap.pipe(
     map(pm => Number(pm.get('id'))),
-    switchMap(id => this.refresh$.pipe(switchMap(() => this.store.loadDeviceById(id)))), // 👈 usa store
+    switchMap(id => this.refresh$.pipe(switchMap(() => this.store.loadDeviceById(id)))),
     catchError(() => of(null))
   );
 
