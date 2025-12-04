@@ -1,11 +1,15 @@
 import { Routes } from '@angular/router';
 
 const listPage = () =>
-  import('../presentation/pages/trip-list-page/trip-list-page').then((m) => m.TripListPage);
+  import('./views/trip-list-view/trip-list-view.component').then((m) => m.TripListViewComponent);
 const detailPage = () =>
-  import('../presentation/pages/trip-detail-page/trip-detail-page').then((m) => m.TripDetailPage);
+  import('./views/trip-detail-view/trip-detail-view.component').then(
+    (m) => m.TripDetailViewComponent
+  );
 const createPage = () =>
-  import('../presentation/pages/trip-create-page/trip-create-page.component').then((m) => m.TripCreatePageComponent);
+  import('./views/trip-create-view/trip-create-view.component').then(
+    (m) => m.TripCreateViewComponent
+  );
 
 export const routes: Routes = [
   {
@@ -20,5 +24,4 @@ export const routes: Routes = [
     path: ':id',
     loadComponent: detailPage,
   },
-
 ];

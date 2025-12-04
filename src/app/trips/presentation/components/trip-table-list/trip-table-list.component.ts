@@ -31,10 +31,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatIconModule,
   ],
-  templateUrl: './trip-table-list.html',
-  styleUrl: './trip-table-list.css',
+  templateUrl: './trip-table-list.component.html',
+  styleUrl: './trip-table-list.component.css',
 })
-export class TripTableList implements OnInit {
+export class TripTableListComponent implements OnInit {
   fromDate: Date | null = null;
   toDate: Date | null = null;
   searchTerm: string = '';

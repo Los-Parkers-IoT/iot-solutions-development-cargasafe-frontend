@@ -26,7 +26,7 @@ import { Trip } from '../../../domain/model/trip.entity';
 import { DeliveryOrder } from '../../../domain/model/delivery-order.entity';
 import { TripsStore } from '../../../application/trips.store';
 import { Router } from '@angular/router';
-import {FleetStore} from '../../../../fleet/application/fleet.store';
+import { FleetStore } from '../../../../fleet/application/fleet.store';
 
 interface DeliveryOrderViewModel {
   address: string;
@@ -58,7 +58,7 @@ interface TripForm {
 }
 
 @Component({
-  selector: 'app-trip-create-page',
+  selector: 'app-trip-create-view',
   standalone: true,
   imports: [
     CommonModule,
@@ -73,11 +73,11 @@ interface TripForm {
     MatIconModule,
     AddressInputDirective,
   ],
-  templateUrl: './trip-create-page.component.html',
-  styleUrls: ['./trip-create-page.component.css'],
+  templateUrl: './trip-create-view.component.html',
+  styleUrls: ['./trip-create-view.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TripCreatePageComponent implements OnInit {
+export class TripCreateViewComponent implements OnInit {
   private fb = inject(FormBuilder);
   private tripsStore = inject(TripsStore);
   private originPointsStore = inject(OriginPointsStore);

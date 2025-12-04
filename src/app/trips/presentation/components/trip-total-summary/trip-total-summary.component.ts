@@ -4,10 +4,10 @@ import { TripsStore } from '../../../application/trips.store';
 @Component({
   selector: 'app-trip-total-summary',
   imports: [],
-  templateUrl: './trip-total-summary.html',
-  styleUrl: './trip-total-summary.css',
+  templateUrl: './trip-total-summary.component.html',
+  styleUrl: './trip-total-summary.component.css',
 })
-export class TripTotalSummary implements OnInit {
+export class TripTotalSummaryComponent implements OnInit {
   readonly store = inject(TripsStore);
   readonly summaryState = computed(() => this.store.totalTripsSummaryState);
 

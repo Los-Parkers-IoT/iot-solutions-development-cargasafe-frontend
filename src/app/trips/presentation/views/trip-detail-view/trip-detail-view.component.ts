@@ -14,7 +14,7 @@ import { Alert } from '../../../../alerts/domain/models/alert.model';
 import { TripsStore } from '../../../application/trips.store';
 
 @Component({
-  selector: 'app-trip-detail-page',
+  selector: 'app-trip-detail-view',
   standalone: true,
   imports: [
     CommonModule,
@@ -28,10 +28,10 @@ import { TripsStore } from '../../../application/trips.store';
     MatButtonModule,
     MatIconModule,
   ],
-  templateUrl: './trip-detail-page.html',
-  styleUrls: ['./trip-detail-page.css'],
+  templateUrl: './trip-detail-view.component.html',
+  styleUrls: ['./trip-detail-view.component.css'],
 })
-export class TripDetailPage implements OnInit {
+export class TripDetailViewComponent implements OnInit {
   // ------------------------
   // 🧩 Dependencies
   // ------------------------
