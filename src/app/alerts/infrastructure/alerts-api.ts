@@ -22,7 +22,7 @@ export class AlertsApi {
   /** Acknowledge an alert */
   acknowledgeAlert(id: number): Observable<Alert> {
     console.log('Calling API to acknowledge alert:', id);
-    const url = `${this.baseUrl}${this.alertsEndpoint}/${id}/acknowledge`;
+    const url = `${this.baseUrl}${this.alertsEndpoint}/${id}/acknowledgment`;
     return this.http.patch<AlertResource>(url, {}).pipe(
       map(r => AlertAssembler.toEntityFromResource(r))
     );
@@ -30,7 +30,7 @@ export class AlertsApi {
 
   /** Close an alert */
   closeAlert(id: number): Observable<Alert> {
-    const url = `${this.baseUrl}${this.alertsEndpoint}/${id}/close`;
+    const url = `${this.baseUrl}${this.alertsEndpoint}/${id}/closure`;
     return this.http
       .patch<AlertResource>(url, {})
       .pipe(map(r => AlertAssembler.toEntityFromResource(r)));

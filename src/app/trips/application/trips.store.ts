@@ -3,7 +3,7 @@ import { Trip } from '../domain/model/trip.entity';
 import { TripsApi } from '../infrastructure/trips-api';
 import { TotalTripSummary } from './dto/trip-summary.dto';
 import { finalize, firstValueFrom, tap } from 'rxjs';
-import { createAsyncState } from '../../shared/helpers/lazy-resource';
+import { createAsyncState } from '../../shared/helpers/async-state';
 import { DeliveryOrderStatus } from '../domain/model/delivery-order-status.vo';
 import { DeliveryOrdersApi } from '../infrastructure/delivery-order-api';
 

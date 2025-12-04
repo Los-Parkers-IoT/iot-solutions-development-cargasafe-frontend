@@ -30,83 +30,80 @@
 
         <div class="form-section">
           <label class="section-title">Choose your segment</label>
-          <div class="radio-group">
-            <label class="radio-label">
-              <input type="radio" name="segment" value="Client" [(ngModel)]="segment">
-              Client
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="segment" value="Shipping Company" [(ngModel)]="segment">
-              Shipping Company
-            </label>
-          </div>
+          <mat-radio-group [(ngModel)]="segment" name="segment" class="radio-group-mat">
+            <mat-radio-button value="Client" class="radio-label-mat">Client</mat-radio-button>
+            <mat-radio-button value="Shipping Company" class="radio-label-mat">Shipping Company</mat-radio-button>
+          </mat-radio-group>
         </div>
 
         <div class="form-section" *ngIf="segment === 'Shipping Company'">
           <label class="section-title">Company Data</label>
-          <div class="form-group">
-            <label for="companyEmail">Company contact email</label>
-            <input type="email" id="companyEmail" class="form-control" [(ngModel)]="companyContactEmail" name="companyContactEmail" required>
-          </div>
+
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>Company contact email</mat-label>
+            <input matInput type="email" id="companyEmail" [(ngModel)]="companyContactEmail" name="companyContactEmail" required>
+          </mat-form-field>
 
           <div class="form-row">
-            <div class="form-group half-width">
-              <label for="legalName">Legal Name</label>
-              <input type="text" id="legalName" class="form-control" [(ngModel)]="legalName" name="legalName" required>
-            </div>
-            <div class="form-group half-width">
-              <label for="taxId">Tax ID</label>
-              <input type="text" id="taxId" class="form-control" [(ngModel)]="taxId" name="taxId" required>
-            </div>
+            <mat-form-field appearance="outline" class="form-row-field">
+              <mat-label>Legal Name</mat-label>
+              <input matInput type="text" id="legalName" [(ngModel)]="legalName" name="legalName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-row-field">
+              <mat-label>RUC ID</mat-label>
+              <input matInput type="text" id="rucId" [(ngModel)]="rucId" name="rucId" required>
+            </mat-form-field>
           </div>
 
-          <div class="form-group">
-            <label for="fiscalAddress">Fiscal Address</label>
-            <input type="text" id="fiscalAddress" class="form-control" [(ngModel)]="fiscalAddress" name="fiscalAddress" required>
-          </div>
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>Fiscal Address</mat-label>
+            <input matInput type="text" id="fiscalAddress" [(ngModel)]="fiscalAddress" name="fiscalAddress" required>
+          </mat-form-field>
         </div>
 
         <div class="form-section">
           <label class="section-title">Profile data</label>
           <div class="form-row">
-            <div class="form-group half-width">
-              <label for="firstName">First Name</label>
-              <input type="text" id="firstName" class="form-control" [(ngModel)]="firstName" name="firstName" required>
-            </div>
-            <div class="form-group half-width">
-              <label for="lastName">Last Name</label>
-              <input type="text" id="lastName" class="form-control" [(ngModel)]="lastName" name="lastName" required>
-            </div>
+            <mat-form-field appearance="outline" class="form-row-field">
+              <mat-label>First Name</mat-label>
+              <input matInput type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-row-field">
+              <mat-label>Last Name</mat-label>
+              <input matInput type="text" id="lastName" [(ngModel)]="lastName" name="lastName" required>
+            </mat-form-field>
           </div>
         </div>
 
         <div class="form-section">
           <label class="section-title">Account data</label>
-          <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" id="email" class="form-control" [(ngModel)]="email" name="email" required>
-          </div>
+          <mat-form-field appearance="outline" class="full-width-input">
+            <mat-label>Email address</mat-label>
+            <input matInput type="email" id="email" [(ngModel)]="email" name="email" required>
+          </mat-form-field>
+
           <div class="form-row">
-            <div class="form-group half-width">
-              <label for="password">Password</label>
-              <input type="password" id="password" class="form-control" [(ngModel)]="password" name="password" required>
-            </div>
-            <div class="form-group half-width">
-              <label for="confirmPassword">Confirm password</label>
-              <input type="password" id="confirmPassword" class="form-control" [(ngModel)]="confirmPassword" name="confirmPassword" required>
-            </div>
+            <mat-form-field appearance="outline" class="form-row-field">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" id="password" [(ngModel)]="password" name="password" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="form-row-field">
+              <mat-label>Confirm password</mat-label>
+              <input matInput type="password" id="confirmPassword" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+            </mat-form-field>
           </div>
         </div>
 
-        <div class="terms-acceptance">
-          <input type="checkbox" id="terms" [(ngModel)]="termsAccepted" name="terms" required>
-          <label for="terms">
+        <div class="terms-acceptance-mat">
+          <mat-checkbox id="terms" [(ngModel)]="termsAccepted" name="terms" required class="terms-checkbox">
             By accepting, you agree to the application's <a href="#" class="signup-link">terms and conditions</a>.
-          </label>
+          </mat-checkbox>
         </div>
 
-        <button type="submit" class="btn-signin">Sign Up</button>
+        <button mat-raised-button color="primary" type="submit" class="btn-signin-mat">Sign Up</button>
       </form>
     </div>
   </div>
 </div>
+
+

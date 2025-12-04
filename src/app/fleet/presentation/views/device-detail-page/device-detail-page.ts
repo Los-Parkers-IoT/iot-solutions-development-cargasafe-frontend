@@ -8,12 +8,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { Device } from '../../../domain/model/device.model';
 import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {FleetFacade} from '../../../application/services/fleet.facade';
-import {MatDialog} from '@angular/material/dialog';
-import {FirmwareDialogComponent} from '../../components/update-firmware-dialog/update-firmware-dialog';
-import {AssignVehicleDialogComponent} from '../../components/assign-vehicle-dialog/assign-vehicle-dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
+import { FirmwareDialogComponent } from '../../components/update-firmware-dialog/update-firmware-dialog';
+import { AssignVehicleDialogComponent } from '../../components/assign-vehicle-dialog/assign-vehicle-dialog';
+import { FleetStore } from '../../../application/fleet.store'; // 👈
 
 @Component({
   selector: 'app-device-detail-page',
@@ -26,7 +26,7 @@ import {AssignVehicleDialogComponent} from '../../components/assign-vehicle-dial
 export class DeviceDetailPageComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private facade = inject(FleetFacade);
+  private store = inject(FleetStore); // 👈
   private snack = inject(MatSnackBar, { optional: true });
   private dialog = inject(MatDialog);
 
@@ -34,7 +34,7 @@ export class DeviceDetailPageComponent {
 
   device$ = this.route.paramMap.pipe(
     map(pm => Number(pm.get('id'))),
-    switchMap(id => this.refresh$.pipe(switchMap(() => this.facade.loadDeviceById(id)))),
+    switchMap(id => this.refresh$.pipe(switchMap(() => this.store.loadDeviceById(id)))), // 👈 usa store
     catchError(() => of(null))
   );
 
@@ -43,19 +43,16 @@ export class DeviceDetailPageComponent {
     if (d?.id) this.router.navigate(['/fleet/devices'], { queryParams: { edit: d.id } });
   }
 
-  // Botón "Test Ping"
   testPing(d: Device) {
-    // Placeholder de llamado; por ahora solo feedback
     this.snack?.open(`Ping sent to ${d.imei}`, 'OK', { duration: 1800 });
   }
 
-  // Botón "Unlink" — set vehiclePlate = null y update
   unlink(d: Device) {
     if (!d?.imei || !d?.vehiclePlate) return;
-    this.facade.findVehicleByPlate(d.vehiclePlate).subscribe(v => {
+    this.store.findVehicleByPlate(d.vehiclePlate).subscribe(v => {
       if (!v?.id) return;
-      this.facade.unassignDeviceFromVehicle(v.id!, d.imei); // POST desde detail
-      this.snack?.open('Device unassigned', 'OK', {duration: 1600});
+      this.store.unassignDeviceFromVehicle(v.id!, d.imei);
+      this.snack?.open('Device unassigned', 'OK', { duration: 1600 });
       this.refresh$.next();
     });
   }
@@ -63,7 +60,7 @@ export class DeviceDetailPageComponent {
   toggleOnline(d: Device) {
     if (!d?.id) return;
     const next = !d.online;
-    this.facade.updateDeviceOnline(d.id, next);
+    this.store.updateDeviceOnline(d.id, next);
     this.snack?.open(`Device set ${next ? 'Online' : 'Offline'}`, 'OK', { duration: 1600 });
     this.refresh$.next();
   }
@@ -71,10 +68,10 @@ export class DeviceDetailPageComponent {
   openUpdateFirmwareDialog(d: Device) {
     this.dialog.open(FirmwareDialogComponent, {
       width: '480px',
-      data: { current: d.firmware }
+      data: { current: d.firmware },
     }).afterClosed().subscribe((version?: string) => {
       if (version && d.id) {
-        this.facade.updateDeviceFirmware(d.id, version);
+        this.store.updateDeviceFirmware(d.id, version);
         this.snack?.open('Firmware updated', 'OK', { duration: 1600 });
         this.refresh$.next();
       }
@@ -83,14 +80,13 @@ export class DeviceDetailPageComponent {
 
   openAssignVehicleDialog(d: Device) {
     this.dialog.open(AssignVehicleDialogComponent, {
-      width: '520px'
+      width: '520px',
     }).afterClosed().subscribe((vehicleId?: number) => {
       if (vehicleId) {
-        this.facade.assignDeviceToVehicle(vehicleId, d.imei); // POST desde detail
+        this.store.assignDeviceToVehicle(vehicleId, d.imei);
         this.snack?.open('Device assigned to vehicle', 'OK', { duration: 1600 });
         this.refresh$.next();
       }
     });
   }
-
 }

@@ -15,29 +15,29 @@ export class DashboardService {
 
   getTrips(): Observable<Trip[]> {
     return this.http
-      .get<any[]>(`${this.API_URL}/analytics-trips`)
+      .get<any[]>(`${this.API_URL}/analytics/trips`)
       .pipe(map((trips) => trips.map((trip) => Trip.fromJson(trip))));
   }
 
   getAlerts(): Observable<Alert[]> {
     return this.http
-      .get<any[]>(`${this.API_URL}/analytics-alerts`)
+      .get<any[]>(`${this.API_URL}/analytics/alerts`)
       .pipe(map((alerts) => alerts.map((alert) => Alert.fromJson(alert))));
   }
 
   getIncidentsByMonth(): Observable<IncidentsByMonthData[]> {
-    return this.http.get<IncidentsByMonthData[]>(`${this.API_URL}/incidentsByMonth`);
+    return this.http.get<IncidentsByMonthData[]>(`${this.API_URL}/analytics/incidents-by-month`);
   }
 
   getTripById(id: string): Observable<Trip> {
     return this.http
-      .get<any>(`${this.API_URL}/analytics-trips/${id}`)
+      .get<any>(`${this.API_URL}/analytics/trips/${id}`)
       .pipe(map((trip) => Trip.fromJson(trip)));
   }
 
   getAlertsByTripId(tripId: string): Observable<Alert[]> {
     return this.http
-      .get<any[]>(`${this.API_URL}/analytics-alerts?tripId=${tripId}`)
+      .get<any[]>(`${this.API_URL}/analytics/alerts?tripId=${tripId}`)
       .pipe(map((alerts) => alerts.map((alert) => Alert.fromJson(alert))));
   }
 }

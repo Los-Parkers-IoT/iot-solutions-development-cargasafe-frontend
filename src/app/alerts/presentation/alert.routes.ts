@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
 const listPage = () =>
-  import('../presentation/pages/alerts-page/alerts-page.component')
-    .then((m) => m.AlertsPageComponent);
+  import('./views/alerts-views/alerts-views.component')
+    .then((m) => m.AlertsViewsComponent);
 
 export const routes: Routes = [
   {

@@ -1,3 +1,4 @@
+// src/app/fleet/presentation/components/vehicle-create-and-edit/vehicle-create-and-edit.ts
 import { Component, EventEmitter, Inject, Input, Output, Optional } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -7,16 +8,24 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule, MatChipSelectionChange } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { defaultVehicle, Vehicle, VehicleStatus, VehicleType } from '../../../domain/model/vehicle.model';
+import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model'; // 👈 solo estos
 
 export type VehicleDialogData = { editMode: boolean; data: Vehicle };
 
 @Component({
   selector: 'app-vehicle-create-and-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatChipsModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatButtonModule,
+  ],
   templateUrl: './vehicle-create-and-edit.html',
-  styleUrl: './vehicle-create-and-edit.css'
+  styleUrl: './vehicle-create-and-edit.css',
 })
 export class VehicleCreateAndEditComponent {
   @Input() editMode = false;
@@ -28,9 +37,13 @@ export class VehicleCreateAndEditComponent {
   imeisText = ''; // texto editable
 
   constructor(
-    @Optional() private dialogRef?: MatDialogRef<VehicleCreateAndEditComponent, {action:'add'|'update'|'cancel'; payload?:Vehicle}>,
+    @Optional()
+    private dialogRef?: MatDialogRef<
+      VehicleCreateAndEditComponent,
+      { action: 'add' | 'update' | 'cancel'; payload?: Vehicle }
+    >,
     @Optional() @Inject(MAT_DIALOG_DATA) dialogData?: VehicleDialogData
-  ){
+  ) {
     if (dialogData) {
       this.editMode = dialogData.editMode;
       this.data = { ...dialogData.data };
@@ -40,11 +53,14 @@ export class VehicleCreateAndEditComponent {
 
   // listas públicas
   vehicleTypes: string[] = ['TRUCK', 'VAN', 'CAR', 'MOTORCYCLE'];
-  statuses: string[]     = ['IN_SERVICE', 'OUT_OF_SERVICE', 'MAINTENANCE', 'RETIRED'];
-  caps: string[]         = ['REFRIGERATED', 'BOX', 'GPS_ONLY', 'HEAVY_LOAD', 'FRAGILE_CARGO'];
+  statuses: string[] = ['IN_SERVICE', 'OUT_OF_SERVICE', 'MAINTENANCE', 'RETIRED'];
+  caps: string[] = ['REFRIGERATED', 'BOX', 'GPS_ONLY', 'HEAVY_LOAD', 'FRAGILE_CARGO'];
 
   private parseImeis() {
-    const parts = (this.imeisText ?? '').split(/[,\s]+/).map(s => s.trim()).filter(Boolean);
+    const parts = (this.imeisText ?? '')
+      .split(/[,\s]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
     this.data.deviceImeis = parts;
   }
 
@@ -68,8 +84,13 @@ export class VehicleCreateAndEditComponent {
     const list = this.data.capabilities;
     return Array.isArray(list) ? list.includes(cap) : false;
   }
+
   onChipSelectionChange(cap: string, ev: MatChipSelectionChange) {
     const list = Array.isArray(this.data.capabilities) ? [...this.data.capabilities] : [];
-    this.data.capabilities = ev.selected ? (list.includes(cap) ? list : [...list, cap]) : list.filter(x => x !== cap);
+    this.data.capabilities = ev.selected
+      ? list.includes(cap)
+        ? list
+        : [...list, cap]
+      : list.filter((x) => x !== cap);
   }
 }

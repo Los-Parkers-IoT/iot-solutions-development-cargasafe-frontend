@@ -1,98 +1,239 @@
-:host { display:block; padding:16px; }
-
-/* header */
-.vd-header{
-  display:flex; align-items:center; justify-content:space-between;
-  gap:16px; margin:8px 0 16px;
-}
-.vd-title{ margin:0; font-size:32px; font-weight:800; }
-.vd-actions{ display:flex; gap:12px; }
-
-/* layout 2 columnas */
-.vd-grid{
-  display:grid; grid-template-columns: 1fr 320px; gap:16px;
-}
-.vd-main{ display:flex; flex-direction:column; gap:16px; }
-.vd-aside{ display:flex; flex-direction:column; gap:16px; }
-
-/* cards */
-.vd-card{
-  border:2px solid #e6e6e6; border-radius:12px; padding:14px 16px; background:#fff;
-}
-.vd-card-title{
-  font-weight:700; margin-bottom:8px;
+:host {
+  display: block;
+  padding: 16px 24px;
 }
 
-/* technical card body */
-.vd-tech{ display:grid; grid-template-columns: 1fr 1fr; gap:10px 24px; }
-.kv{ display:grid; grid-template-columns: 120px 1fr; gap:8px; align-items:center; }
-.k{ color:#5a5a5a; font-weight:600; }
-.v{ color:#111; }
-.hint{ margin-left:8px; font-size:12px; color:#7a7a7a; }
-
-/* chips */
-mat-chip-set{ display:flex; flex-wrap:wrap; gap:8px; }
-.mat-mdc-chip{
-  --mdc-chip-container-height: 32px;
-  --mdc-chip-label-text-size: 13px;
-  padding-inline:8px;
+/* HEADER */
+.vd-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 8px 0 16px;
 }
 
-/* history */
-.vd-history{ display:flex; flex-direction:column; gap:8px; }
-.hist-row{ display:flex; align-items:center; gap:12px; }
-.hist-date{ width:180px; color:#666; font-variant-numeric: tabular-nums; }
-.hist-text{ flex:1; }
-.hist-badge{
-  font-size:12px; padding:2px 8px; border-radius:8px; border:1px solid #d0d0d0; color:#444;
+.vd-title {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 800;
 }
 
-/* empty states */
-.empty{ color:#777; font-style:italic; }
-
-/* footer buttons */
-.vd-footer{
-  display:flex; justify-content:flex-end; gap:8px; margin-top:12px;
+.vd-subtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #7a7a7a;
 }
 
-/* Actions — layout limpio y consistente */
-.vd-actions-col{
+.vd-status {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vd-status-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #999;
+}
+
+.vd-status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid #e0e0e0;
+  color: #555;
+  background: #fafafa;
+}
+
+.vd-status-pill--in {
+  background: #e6f5eb;
+  border-color: #b0dfc0;
+  color: #216c3e;
+}
+
+.vd-status-pill--out {
+  background: #ffecec;
+  border-color: #f5b5b5;
+  color: #b42318;
+}
+
+/* 👇 nuevos estados */
+.vd-status-pill--maintenance {
+  background: #fff7e5;
+  border-color: #f3d29b;
+  color: #8a5a13;
+}
+
+.vd-status-pill--retired {
+  background: #f3f3f3;
+  border-color: #d2d2d2;
+  color: #555555;
+}
+
+/* LAYOUT 2 COLUMNAS */
+.vd-grid {
   display: grid;
-  grid-template-columns: 1fr;   /* una columna por defecto */
-  gap: 10px;                    /* separación vertical uniforme */
+  grid-template-columns: minmax(0, 3fr) minmax(260px, 1.2fr);
+  gap: 16px;
 }
 
-/* Botones de ancho completo dentro del panel de acciones */
-.vd-actions-col .mat-mdc-button-base{
+.vd-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vd-aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* CARDS */
+.vd-card {
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #e4e4e4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.vd-card-title {
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* TECHNICAL CARD BODY */
+.vd-tech {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 24px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.kv--full {
+  grid-column: 1 / -1;
+}
+
+.k {
+  color: #5a5a5a;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.v {
+  color: #111;
+  font-size: 14px;
+}
+
+.vd-empty {
+  color: #999;
+  font-style: italic;
+}
+
+/* Chips */
+mat-chip-set {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mat-mdc-chip {
+  --mdc-chip-container-height: 28px;
+  --mdc-chip-label-text-size: 12px;
+  padding-inline: 8px;
+}
+
+/* ACTIONS ASIDE */
+.vd-card--actions {
+  display: flex;
+  flex-direction: column;
+}
+
+.vd-actions-title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7a7a7a;
+}
+
+.vd-actions-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.vd-actions-group {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.vd-actions-group:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Botones de acciones */
+.vd-actions-col .mat-mdc-button-base {
   width: 100%;
   justify-content: center;
 }
 
-/* Separadores visuales para grupos (opcional) */
-.vd-actions-group{
-  display: grid;
-  gap: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #eee;
-}
-.vd-actions-group:last-child{ border-bottom: 0; padding-bottom: 0; }
-
-/* En pantallas anchas, dos columnas si quieres más compacto (opcional) */
-@media (min-width: 1280px){
-  .vd-actions-col{
-    grid-template-columns: 1fr 1fr;
-  }
-  /* Haz que algunos botones ocupen toda la fila si prefieres */
-  .vd-actions-col .row-span-2{
-    grid-column: 1 / -1;   /* botón ocupa ambas columnas */
-  }
+.vd-btn-danger {
+  background-color: #fff5f5;
+  color: #b42318;
 }
 
+.vd-btn-danger:hover {
+  background-color: #ffebeb;
+}
 
+/* FOOTER */
+.vd-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
 
+/* EMPTY STATES */
+.empty {
+  color: #777;
+  font-style: italic;
+}
 
-/* responsive */
-@media (max-width: 960px){
-  .vd-grid{ grid-template-columns: 1fr; }
-  .vd-tech{ grid-template-columns: 1fr; }
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .vd-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vd-tech {
+    grid-template-columns: 1fr;
+  }
+
+  .vd-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vd-status {
+    align-items: flex-start;
+  }
 }
