@@ -1,4 +1,4 @@
-import { Alert } from './alert.model';
+import { Alert } from './alert.entity';
 
 export interface IncidentsByMonthData {
   month: string;
@@ -8,3 +8,5 @@ export interface IncidentsByMonthData {
   totalIncidents: number;
   incidents: Alert[];
 }
+
+

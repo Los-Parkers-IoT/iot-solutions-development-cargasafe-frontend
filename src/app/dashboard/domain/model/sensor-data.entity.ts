@@ -1,4 +1,4 @@
-import { MovementData } from './movement-data.model';
+import { MovementData } from './movement-data.entity';
 
 export interface SensorData {
   temperature?: number;
@@ -6,3 +6,5 @@ export interface SensorData {
   movement?: MovementData;
   timestamp: Date;
 }
+
+

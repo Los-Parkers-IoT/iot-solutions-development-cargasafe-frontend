@@ -1,6 +1,6 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
-import { Alert } from './alert.model';
-import { TripStatus } from './trip-status.enum';
+import { Alert } from './alert.entity';
+import { TripStatus } from './trip-status.vo';
 
 export class Trip implements BaseEntity {
   private _id: number;
@@ -195,3 +195,4 @@ export class Trip implements BaseEntity {
     };
   }
 }
+

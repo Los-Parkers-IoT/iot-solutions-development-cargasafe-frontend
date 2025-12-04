@@ -1,10 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject, effect, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Trip } from '../../../domain/entities';
-import { DashboardService } from '../../../application/services/dashboard.service';
+import { Trip } from '../../../domain/model';
+import { DashboardStore } from '../../../application/dto/dashboard.store';
 
 interface SensorData {
   name: string;
@@ -78,12 +78,48 @@ export class TripDetailComponent implements OnInit {
     }
   };
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private dashboardService: DashboardService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private dashboardStore = inject(DashboardStore);
+  
+  private currentTripId = signal<string | null>(null);
+
+  constructor() {
+    // Setup effect in constructor (injection context)
+    effect(() => {
+      const tripId = this.currentTripId();
+      if (!tripId) return;
+      
+      const trips = this.dashboardStore.tripsState.data();
+      const loading = this.dashboardStore.tripsState.loading();
+      const error = this.dashboardStore.tripsState.error();
+      
+      if (error) {
+        console.error('❌ Error loading trip:', error);
+        this.loading = false;
+        this.router.navigate(['/dashboard']);
+        return;
+      }
+      
+      if (!loading) {
+        const trip = trips.find(t => t.id.toString() === tripId);
+        
+        if (trip) {
+          console.log('✅ Trip loaded successfully:', trip);
+          this.trip = trip;
+          this.loading = false;
+          this.generateMockData();
+          this.prepareChartData();
+          this.calculateStats();
+          console.log('📊 Data generated and charts prepared');
+        } else if (trips.length > 0) {
+          // Only navigate away if trips have been loaded but trip not found
+          console.warn('⚠️ Trip not found with ID:', tripId);
+          this.router.navigate(['/dashboard']);
+        }
+      }
+    });
+  }
 
   ngOnInit() {
     console.log('🔍 TripDetailComponent ngOnInit');
@@ -97,27 +133,8 @@ export class TripDetailComponent implements OnInit {
   loadTrip(tripId: string) {
     console.log('📡 Loading trip with ID:', tripId);
     this.loading = true;
-    this.cdr.detectChanges();
-    
-    this.dashboardService.getTripById(tripId).subscribe({
-      next: (trip) => {
-        console.log('✅ Trip loaded successfully:', trip);
-        this.trip = trip;
-        this.loading = false;
-        this.generateMockData();
-        this.prepareChartData();
-        this.calculateStats();
-        console.log('📊 Data generated and charts prepared');
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('❌ Error loading trip:', error);
-        this.loading = false;
-        this.cdr.detectChanges();
-        // Redirect back to dashboard if trip not found
-        this.router.navigate(['/dashboard']);
-      }
-    });
+    this.currentTripId.set(tripId);
+    this.dashboardStore.loadTripById(tripId);
   }
 
   private generateMockData() {
@@ -257,3 +274,5 @@ export class TripDetailComponent implements OnInit {
     console.log('Chart selection:', event);
   }
 }
+
+

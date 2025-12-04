@@ -1,13 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgxChartsModule, Color, ScaleType } from '@swimlane/ngx-charts';
-import { forkJoin } from 'rxjs';
-import { Trip, IncidentsByMonthData, Alert, AlertType } from '../../domain/entities';
-import { DashboardService } from '../../application/services/dashboard.service';
-import { IncidentsChartComponent } from '../components/incidents-chart/incidents-chart.component';
+import { Trip, IncidentsByMonthData, Alert, AlertType } from '../../../domain/model';
+import { DashboardStore } from '../../../application/dto/dashboard.store';
+import { IncidentsChartComponent } from '../../components/incidents-chart/incidents-chart.component';
 
-// Interfaz extendida para el tooltip con información de incidencias
 interface TripWithIncidents extends Trip {
   incidentCount: number;
   temperatureIncidents?: number;
@@ -22,10 +20,13 @@ interface TripWithIncidents extends Trip {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  trips: Trip[] = [];
-  alerts: Alert[] = [];
-  incidentsData: IncidentsByMonthData[] = [];
-  loading = true;
+  private dashboardStore = inject(DashboardStore);
+  private router = inject(Router);
+
+  trips = this.dashboardStore.tripsState.data;
+  alerts = this.dashboardStore.alertsState.data;
+  incidentsData = this.dashboardStore.incidentsState.data;
+  loading = this.dashboardStore.tripsState.loading;
 
   // ngx-charts data
   chartData: any[] = [];
@@ -57,22 +58,16 @@ export class DashboardComponent implements OnInit {
   tooltipTrips: TripWithIncidents[] = [];
 
   get activeTrips(): number {
-    return this.trips.filter(trip => trip.status === 'IN_PROGRESS' || trip.status === 'COMPLETED').length;
+    return this.dashboardStore.activeTripsCount();
   }
 
   get totalAlerts(): number {
-    return this.alerts.length;
+    return this.dashboardStore.totalAlertsCount();
   }
 
   get pendingAlerts(): number {
-    return this.alerts.filter(alert => !alert.resolved).length;
+    return this.dashboardStore.pendingAlertsCount();
   }
-
-  constructor(
-    private dashboardService: DashboardService,
-    private cdr: ChangeDetectorRef,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.loadDashboardData();
@@ -84,7 +79,7 @@ export class DashboardComponent implements OnInit {
     
     // Usar el evento click para mostrar el tooltip también
     if (data && data.name) {
-      const monthData = this.incidentsData.find(item => item.month === data.name);
+      const monthData = this.incidentsData().find(item => item.month === data.name);
       
       if (monthData) {
         this.tooltipTrips = this.getTripsForMonth(monthData);
@@ -117,7 +112,7 @@ export class DashboardComponent implements OnInit {
     
     if (event && event.name) {
       // Encontrar los datos del mes seleccionado
-      const monthData = this.incidentsData.find(item => item.month === event.name);
+      const monthData = this.incidentsData().find(item => item.month === event.name);
       
       if (monthData) {
         // Filtrar viajes que tuvieron incidencias en este mes
@@ -142,8 +137,8 @@ export class DashboardComponent implements OnInit {
   testTooltip(): void {
     console.log('🧪 Testing tooltip...');
     
-    if (this.incidentsData.length > 0) {
-      const testMonth = this.incidentsData[0]; // Usar el primer mes como prueba
+    if (this.incidentsData().length > 0) {
+      const testMonth = this.incidentsData()[0]; // Usar el primer mes como prueba
       this.tooltipData = testMonth;
       this.tooltipTrips = this.getTripsForMonth(testMonth);
       
@@ -215,10 +210,10 @@ export class DashboardComponent implements OnInit {
   // Método para obtener viajes que tuvieron incidencias en un mes específico
   private getTripsForMonth(monthData: IncidentsByMonthData): TripWithIncidents[] {
     // Simulamos viajes que tuvieron incidencias en este mes
-    const tripsWithIncidents: TripWithIncidents[] = this.trips.map(trip => {
+    const tripsWithIncidents: TripWithIncidents[] = this.trips().map(trip => {
       // Simulamos el número de incidencias basado en los datos del mes
-      const tempIncidents = Math.floor((monthData.temperatureIncidents / this.trips.length) + Math.random() * 2);
-      const movIncidents = Math.floor((monthData.movementIncidents / this.trips.length) + Math.random() * 2);
+      const tempIncidents = Math.floor((monthData.temperatureIncidents / this.trips().length) + Math.random() * 2);
+      const movIncidents = Math.floor((monthData.movementIncidents / this.trips().length) + Math.random() * 2);
       const totalIncidents = tempIncidents + movIncidents;
       
       // Crear un objeto extendido manteniendo la referencia al trip original
@@ -259,43 +254,20 @@ export class DashboardComponent implements OnInit {
       console.error('❌ Trip ID is null or undefined');
       return;
     }
-    this.router.navigate(['/dashboard/trips', tripId.toString()]);
+    this.router.navigate(['/dashboard/trip', tripId.toString()]);
     console.log('🚗 Navigating to trip detail:', tripId);
   }
 
   private loadDashboardData(): void {
-    this.loading = true;
     console.log('🚀 Loading dashboard data...');
-
-    forkJoin({
-      trips: this.dashboardService.getTrips(),
-      alerts: this.dashboardService.getAlerts(),
-      incidentsData: this.dashboardService.getIncidentsByMonth()
-    }).subscribe({
-      next: (data) => {
-        console.log('✅ Data loaded successfully:', data);
-        
-        this.trips = [...(data.trips || [])];
-        this.alerts = [...(data.alerts || [])];
-        this.incidentsData = [...(data.incidentsData || [])];
-        
-        console.log('📊 Trips:', this.trips.length, this.trips);
-        console.log('🚨 Alerts:', this.alerts.length, this.alerts);
-        console.log('📈 Incidents by month:', this.incidentsData.length, this.incidentsData);
-        
-        // Preparar datos para ngx-charts
-        this.prepareChartData();
-        
-        this.loading = false;
-        
-        // Forzar detección de cambios
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('❌ Error loading dashboard data:', error);
-        this.loading = false;
-      }
-    });
+    
+    this.dashboardStore.loadTrips();
+    this.dashboardStore.loadAlerts();
+    this.dashboardStore.loadIncidentsByMonth();
+    
+    setTimeout(() => {
+      this.prepareChartData();
+    }, 500);
   }
 
   getStatusClass(status: string): string {
@@ -332,7 +304,7 @@ export class DashboardComponent implements OnInit {
   private prepareChartData(): void {
     console.log('📊 Preparing chart data for ngx-charts...');
     
-    this.chartData = this.incidentsData.map(monthData => ({
+    this.chartData = this.incidentsData().map(monthData => ({
       name: monthData.month,
       series: [
         {
@@ -360,3 +332,4 @@ export class DashboardComponent implements OnInit {
     }
   }
 }
+

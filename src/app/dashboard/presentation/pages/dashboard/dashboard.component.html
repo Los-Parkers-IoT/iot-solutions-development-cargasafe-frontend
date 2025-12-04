@@ -8,16 +8,16 @@
 
   <div class="dashboard__content">
     <!-- Loading Indicator -->
-    <div *ngIf="loading" style="text-align: center; padding: 20px; background: #f0f0f0; margin: 10px; border-radius: 8px;">
+    <div *ngIf="loading()" style="text-align: center; padding: 20px; background: #f0f0f0; margin: 10px; border-radius: 8px;">
       <h3>🔄 Loading data...</h3>
       <p>Please wait while dashboard data is being loaded</p>
     </div>
 
     <!-- Statistics Summary -->
-    <div class="dashboard__stats" *ngIf="!loading">
+    <div class="dashboard__stats" *ngIf="!loading()">
       <div class="stat-card">
         <h3>Total Trips</h3>
-        <span class="stat-number">{{ trips.length }}</span>
+        <span class="stat-number">{{ trips().length }}</span>
       </div>
       <div class="stat-card">
         <h3>Active Trips</h3>
@@ -36,16 +36,16 @@
     <!-- Data Preview -->
     <div class="dashboard__section">
       <div class="data-preview">
-        <div *ngIf="loading" class="loading">Loading data...</div>
-        <div *ngIf="!loading" class="preview-content">
+        <div *ngIf="loading()" class="loading">Loading data...</div>
+        <div *ngIf="!loading()" class="preview-content">
             <h3>Monthly Incidents Chart</h3>
             <app-incidents-chart
-            [data]="incidentsData"
-            [loading]="loading">
+            [data]="incidentsData()"
+            [loading]="loading()">
           </app-incidents-chart>
           <h3>Recent Trips</h3>
           <div class="trip-cards">
-            <div *ngFor="let trip of trips.slice(0, 3)" 
+            <div *ngFor="let trip of trips().slice(0, 3)" 
                  class="trip-card"
                  (click)="navigateToTripDetail(trip.id)">
               <div class="trip-header">

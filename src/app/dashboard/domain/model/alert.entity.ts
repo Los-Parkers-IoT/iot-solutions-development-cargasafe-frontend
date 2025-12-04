@@ -1,8 +1,8 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
-import { AlertType } from './alert-type.enum';
-import { AlertSeverity } from './alert-severity.enum';
-import { Location } from './location.model';
-import { SensorData } from './sensor-data.model';
+import { AlertType } from './alert-type.vo';
+import { AlertSeverity } from './alert-severity.vo';
+import { Location } from './location.entity';
+import { SensorData } from './sensor-data.entity';
 
 export class Alert implements BaseEntity {
   private _id: number;
@@ -147,3 +147,4 @@ export class Alert implements BaseEntity {
     };
   }
 }
+

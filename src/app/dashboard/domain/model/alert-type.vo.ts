@@ -4,3 +4,5 @@ export enum AlertType {
   HUMIDITY = 'HUMIDITY',
   LOCATION = 'LOCATION'
 }
+
+

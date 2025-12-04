@@ -1,7 +1,7 @@
 import { Component, Input, ElementRef, ViewChild, AfterViewInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IncidentsByMonthData, Alert, AlertType } from '../../../domain/entities';
+import { IncidentsByMonthData, Alert, AlertType } from '../../../domain/model';
 
 @Component({
   selector: 'app-incidents-chart',
@@ -410,3 +410,4 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     }
   }
 }
+

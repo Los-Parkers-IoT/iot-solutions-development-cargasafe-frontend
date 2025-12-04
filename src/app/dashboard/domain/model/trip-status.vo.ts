@@ -4,3 +4,5 @@ export enum TripStatus {
   CANCELLED = 'CANCELLED',
   DELAYED = 'DELAYED'
 }
+
+
