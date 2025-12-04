@@ -24,15 +24,12 @@ export class TripDetailComponent implements OnInit {
   trip!: Trip;
   loading = true;
 
-  // Datos de temperatura
   temperatureData: any[] = [];
   temperatureChartData: any[] = [];
   
-  // Datos de vibración
   vibrationData: any[] = [];
   vibrationChartData: any[] = [];
 
-  // Configuración de gráficos
   view: [number, number] = [600, 350];
   showXAxis = true;
   showYAxis = true;
@@ -46,24 +43,19 @@ export class TripDetailComponent implements OnInit {
   timeline = true;
   autoScale = true;
 
-  // Esquemas de colores personalizados
   temperatureColorScheme: any = {
     domain: ['#3b82f6', '#ef4444', '#f59e0b']
   };
 
   vibrationColorScheme: any = {
-    // domain: ['#9263F8', '#E7F7DD']
     domain: ['#E7F7DD', '#9263F8']
   };
 
-  // Límites de temperatura
   tempUpperLimit = 8;
   tempLowerLimit = 2;
 
-  // Límite de vibración
   vibrationSafeLimit = 2.0;
 
-  // Estadísticas
   stats = {
     temperature: {
       min: 0,
@@ -138,14 +130,13 @@ export class TripDetailComponent implements OnInit {
   }
 
   private generateMockData() {
-    // Generar datos de temperatura
     const startTime = new Date(this.trip.startDate);
     const hours = 12;
-    const intervals = 24; // Cada 30 minutos
+    const intervals = 24;
 
     for (let i = 0; i < intervals; i++) {
       const time = new Date(startTime.getTime() + (i * 30 * 60 * 1000));
-      const temp = 2 + Math.random() * 6; // Entre 2°C y 8°C
+      const temp = 2 + Math.random() * 6;
       const isOutOfRange = temp > this.tempUpperLimit || temp < this.tempLowerLimit;
 
       this.temperatureData.push({
@@ -157,10 +148,9 @@ export class TripDetailComponent implements OnInit {
       });
     }
 
-    // Generar datos de vibración
     for (let i = 0; i < intervals; i++) {
       const time = new Date(startTime.getTime() + (i * 30 * 60 * 1000));
-      const vib = Math.random() * 3.5; // Entre 0 y 3.5g
+      const vib = Math.random() * 3.5;
       const isAlert = vib > this.vibrationSafeLimit;
 
       this.vibrationData.push({
@@ -173,10 +163,9 @@ export class TripDetailComponent implements OnInit {
   }
 
   private prepareChartData() {
-    // Preparar datos para gráfico de temperatura
     this.temperatureChartData = [
       {
-        name: 'Temperatura (°C)',
+        name: 'Temperature (°C)',
         series: this.temperatureData.map(d => ({
           name: this.formatTime(d.timestamp),
           value: d.temperature,
@@ -184,14 +173,14 @@ export class TripDetailComponent implements OnInit {
         }))
       },
       {
-        name: 'Límite Superior (8°C)',
+        name: 'Upper Limit (8°C)',
         series: this.temperatureData.map(d => ({
           name: this.formatTime(d.timestamp),
           value: this.tempUpperLimit
         }))
       },
       {
-        name: 'Límite Inferior (2°C)',
+        name: 'Lower Limit (2°C)',
         series: this.temperatureData.map(d => ({
           name: this.formatTime(d.timestamp),
           value: this.tempLowerLimit
@@ -199,17 +188,16 @@ export class TripDetailComponent implements OnInit {
       }
     ];
 
-    // Preparar datos para gráfico de vibración
     this.vibrationChartData = [
       {
-        name: 'Zona Segura',
+        name: 'Safe Zone',
         series: this.vibrationData.map(d => ({
           name: this.formatTime(d.timestamp),
           value: this.vibrationSafeLimit
         }))
       },
       {
-        name: 'Vibración Detectada (g)',
+        name: 'Detected Vibration (g)',
         series: this.vibrationData.map(d => ({
           name: this.formatTime(d.timestamp),
           value: d.vibration,
@@ -220,13 +208,11 @@ export class TripDetailComponent implements OnInit {
   }
 
   private calculateStats() {
-    // Estadísticas de temperatura
     const temps = this.temperatureData.map(d => d.temperature);
     this.stats.temperature.min = Math.min(...temps);
     this.stats.temperature.max = Math.max(...temps);
     this.stats.temperature.avg = parseFloat((temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1));
 
-    // Estadísticas de vibración
     const vibs = this.vibrationData.map(d => d.vibration);
     this.stats.vibration.min = Math.min(...vibs);
     this.stats.vibration.max = Math.max(...vibs);

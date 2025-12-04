@@ -38,9 +38,9 @@ export class DashboardComponent implements OnInit {
   gradient = false;
   showLegend = true;
   showXAxisLabel = true;
-  xAxisLabel = 'Mes';
+  xAxisLabel = 'Month';
   showYAxisLabel = true;
-  yAxisLabel = 'Número de Incidencias';
+  yAxisLabel = 'Number of Incidents';
   
   // Color scheme
   colorScheme: Color = {
@@ -50,7 +50,6 @@ export class DashboardComponent implements OnInit {
     domain: ['#FF6B35', '#4ECDC4', '#45B7D1', '#96CEB4']
   };
 
-  // Custom tooltip properties
   showCustomTooltip = false;
   tooltipX = 0;
   tooltipY = 0;
@@ -77,7 +76,6 @@ export class DashboardComponent implements OnInit {
   onSelect(data: any): void {
     console.log('📊 Item clicked:', JSON.parse(JSON.stringify(data)));
     
-    // Usar el evento click para mostrar el tooltip también
     if (data && data.name) {
       const monthData = this.incidentsData().find(item => item.month === data.name);
       
@@ -85,7 +83,6 @@ export class DashboardComponent implements OnInit {
         this.tooltipTrips = this.getTripsForMonth(monthData);
         this.tooltipData = monthData;
         
-        // Posicionar el tooltip
         this.tooltipX = 300;
         this.tooltipY = 200;
         this.showCustomTooltip = true;
@@ -106,20 +103,16 @@ export class DashboardComponent implements OnInit {
     console.log('Deactivate', JSON.parse(JSON.stringify(data)));
   }
 
-  // Custom tooltip event handlers (solo para barras específicas)
   onBarHover(event: any): void {
     console.log('🎯 Bar hover (activate):', event);
     
     if (event && event.name) {
-      // Encontrar los datos del mes seleccionado
       const monthData = this.incidentsData().find(item => item.month === event.name);
       
       if (monthData) {
-        // Filtrar viajes que tuvieron incidencias en este mes
         this.tooltipTrips = this.getTripsForMonth(monthData);
         this.tooltipData = monthData;
         
-        // Activar el tooltip (la posición se actualizará con mousemove)
         this.showCustomTooltip = true;
         
         console.log('📊 Tooltip activado para:', {
@@ -133,18 +126,16 @@ export class DashboardComponent implements OnInit {
 
 
 
-  // Método de prueba para verificar que el tooltip funciona
   testTooltip(): void {
     console.log('🧪 Testing tooltip...');
     
     if (this.incidentsData().length > 0) {
-      const testMonth = this.incidentsData()[0]; // Usar el primer mes como prueba
+      const testMonth = this.incidentsData()[0];
       this.tooltipData = testMonth;
       this.tooltipTrips = this.getTripsForMonth(testMonth);
       
-      // Posicionar cerca del centro de la pantalla
-      this.tooltipX = window.innerWidth / 2 - 200; // Centrado horizontalmente
-      this.tooltipY = window.innerHeight / 2 - 125; // Centrado verticalmente
+      this.tooltipX = window.innerWidth / 2 - 200;
+      this.tooltipY = window.innerHeight / 2 - 125;
       this.adjustTooltipPosition();
       this.showCustomTooltip = true;
       
@@ -155,7 +146,6 @@ export class DashboardComponent implements OnInit {
         position: { x: this.tooltipX, y: this.tooltipY }
       });
       
-      // Auto-ocultar después de 5 segundos
       setTimeout(() => {
         this.showCustomTooltip = false;
         console.log('⏰ Tooltip auto-hidden after 5 seconds');
@@ -174,12 +164,10 @@ export class DashboardComponent implements OnInit {
     this.tooltipTrips = [];
   }
 
-  // Método para actualizar la posición del mouse en tiempo real
   updateMousePosition(event: MouseEvent): void {
     if (this.showCustomTooltip) {
-      // Actualizar posición del tooltip en tiempo real mientras está visible
-      this.tooltipX = event.clientX + 15; // 15px offset del cursor
-      this.tooltipY = event.clientY - 10; // 10px arriba del cursor
+      this.tooltipX = event.clientX + 15;
+      this.tooltipY = event.clientY - 10;
       
       // Asegurar que no se salga de la pantalla
       this.adjustTooltipPosition();
@@ -207,41 +195,36 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // Método para obtener viajes que tuvieron incidencias en un mes específico
   private getTripsForMonth(monthData: IncidentsByMonthData): TripWithIncidents[] {
-    // Simulamos viajes que tuvieron incidencias en este mes
     const tripsWithIncidents: TripWithIncidents[] = this.trips().map(trip => {
-      // Simulamos el número de incidencias basado en los datos del mes
       const tempIncidents = Math.floor((monthData.temperatureIncidents / this.trips().length) + Math.random() * 2);
       const movIncidents = Math.floor((monthData.movementIncidents / this.trips().length) + Math.random() * 2);
       const totalIncidents = tempIncidents + movIncidents;
       
-      // Crear un objeto extendido manteniendo la referencia al trip original
       return Object.assign(trip, {
         incidentCount: totalIncidents,
         temperatureIncidents: tempIncidents,
         movementIncidents: movIncidents
       }) as TripWithIncidents;
     })
-    .filter(trip => trip.incidentCount > 0) // Solo viajes con incidencias
-    .sort((a, b) => b.incidentCount - a.incidentCount) // Ordenar por más incidencias primero
-    .slice(0, 4); // Limitar a 4 viajes para no saturar el tooltip
+    .filter(trip => trip.incidentCount > 0)
+    .sort((a, b) => b.incidentCount - a.incidentCount)
+    .slice(0, 4);
     
     console.log('🚛 Trips for month:', monthData.month, tripsWithIncidents);
     return tripsWithIncidents;
   }
 
-  // Métodos auxiliares para el tooltip
   getStatusColor(status: string): string {
     switch (status) {
       case 'IN_PROGRESS':
-        return '#f59e0b'; // Amarillo para en progreso
+        return '#f59e0b';
       case 'COMPLETED':
-        return '#10b981'; // Verde para completado
+        return '#10b981';
       case 'DELAYED':
-        return '#ef4444'; // Rojo para retrasado
+        return '#ef4444';
       case 'CANCELLED':
-        return '#6b7280'; // Gris para cancelado
+        return '#6b7280';
       default:
         return '#6b7280';
     }
@@ -308,11 +291,11 @@ export class DashboardComponent implements OnInit {
       name: monthData.month,
       series: [
         {
-          name: 'Temperatura',
+          name: 'Temperature',
           value: monthData.temperatureIncidents
         },
         {
-          name: 'Movimiento', 
+          name: 'Movement', 
           value: monthData.movementIncidents
         }
       ]
