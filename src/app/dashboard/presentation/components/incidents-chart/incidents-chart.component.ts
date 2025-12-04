@@ -40,18 +40,18 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges() {
+    console.log('📊 Incidents Chart - Data received:', this.data);
     this.filteredData = this.sortDataByDate([...this.data]);
+    console.log('📊 Incidents Chart - Filtered data:', this.filteredData);
     if (this.canvas) {
       this.drawChart();
     }
   }
 
   private sortDataByDate(data: IncidentsByMonthData[]): IncidentsByMonthData[] {
-    // Remove duplicates first, keeping the entry with more data
     const uniqueData = this.removeDuplicates(data);
     
     return uniqueData.sort((a, b) => {
-      // Convert month names to numbers for proper sorting
       const monthOrder = [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -112,8 +112,11 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (this.filteredData.length === 0) {
+      console.warn('⚠️ No data to display in chart');
       return;
     }
+
+    console.log('🎨 Drawing chart with data:', this.filteredData);
 
     // Calculate dimensions with better spacing
     const totalMonths = this.filteredData.length;
@@ -131,6 +134,14 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
     } else {
       this.maxValue = Math.max(...this.filteredData.map(d => Math.max(d.temperatureIncidents, d.movementIncidents)));
     }
+
+    console.log('📏 Chart metrics:', {
+      totalMonths,
+      barWidth: this.barWidth,
+      maxValue: this.maxValue,
+      chartWidth: this.chartWidth,
+      chartHeight: this.chartHeight
+    });
 
     // Draw axes
     this.drawAxes();
@@ -374,16 +385,16 @@ export class IncidentsChartComponent implements AfterViewInit, OnChanges {
 
   private getMonthName(monthIndex: number): string {
     const months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
     ];
     return months[monthIndex];
   }
 
   private getMonthIndex(monthName: string): number {
     const months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
     ];
     return months.indexOf(monthName);
   }

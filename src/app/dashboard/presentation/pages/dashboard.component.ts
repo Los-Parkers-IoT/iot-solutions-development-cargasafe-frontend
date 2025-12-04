@@ -254,7 +254,11 @@ export class DashboardComponent implements OnInit {
 
 
 
-  navigateToTripDetail(tripId: number): void {
+  navigateToTripDetail(tripId: number | null | undefined): void {
+    if (tripId == null) {
+      console.error('❌ Trip ID is null or undefined');
+      return;
+    }
     this.router.navigate(['/dashboard/trips', tripId.toString()]);
     console.log('🚗 Navigating to trip detail:', tripId);
   }
