@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -30,6 +30,7 @@ export class LoginPageComponent {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private authService = inject(AuthService);
+  private cdr = inject(ChangeDetectorRef);
 
   email = '';
   password = '';
@@ -45,6 +46,7 @@ export class LoginPageComponent {
     if (!this.isFormValid() || this.isLoading) return;
 
     this.isLoading = true;
+    this.cdr.detectChanges();
 
     this.authService
       .signIn(this.email, this.password)
@@ -65,7 +67,10 @@ export class LoginPageComponent {
           });
         },
       })
-      .add(() => (this.isLoading = false));
+      .add(() => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      });
   }
 
   togglePasswordVisibility(): void {
