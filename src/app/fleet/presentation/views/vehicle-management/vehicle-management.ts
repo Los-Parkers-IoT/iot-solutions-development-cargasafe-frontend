@@ -14,23 +14,30 @@ import { MatOptionModule } from '@angular/material/core';
 import { defaultVehicle, Vehicle } from '../../../domain/model/vehicle.model';
 import { Router } from '@angular/router';
 import { VehicleCreateAndEditComponent } from '../../components/vehicle-create-and-edit/vehicle-create-and-edit';
-import { FleetStore } from '../../../application/fleet.store'; // 👈
+import { FleetStore } from '../../../application/fleet.store';
 
 @Component({
   selector: 'app-vehicle-management',
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule, MatPaginatorModule, MatSortModule,
-    MatIconModule, MatButtonModule, MatDialogModule,
-    MatFormFieldModule, MatInputModule, MatSelectModule, MatOptionModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
   ],
   templateUrl: './vehicle-management.html',
   styleUrls: ['./vehicle-management.css'],
 })
 export class VehicleManagementComponent implements OnInit, AfterViewInit {
   private dialog = inject(MatDialog);
-  private store = inject(FleetStore); // 👈
+  private store = inject(FleetStore);
 
   constructor(private router: Router) {}
 
@@ -38,8 +45,8 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<Vehicle>([]);
 
   totalCount = 0;
-  availableCount = 0;
   inServiceCount = 0;
+  outOfServiceCount = 0;
   maintenanceCount = 0;
   retiredCount = 0;
 
@@ -73,15 +80,11 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
     this.store.vehicles$.subscribe(rows => {
       this.dataSource.data = rows;
 
-      this.totalCount     = rows.length;
-      this.availableCount = rows.filter(r => r.status === 'IN_SERVICE').length;
-      this.inServiceCount = rows.filter(r => r.status === 'IN_SERVICE').length;
-      this.maintenanceCount = rows.filter(r => r.status === 'MAINTENANCE').length;
-      this.retiredCount    = rows.filter(r => r.status === 'RETIRED').length;
-
-
-      this.availableCount  = this.totalCount - this.retiredCount;
-
+      this.totalCount        = rows.length;
+      this.inServiceCount    = rows.filter(r => r.status === 'IN_SERVICE').length;
+      this.outOfServiceCount = rows.filter(r => r.status === 'OUT_OF_SERVICE').length;
+      this.maintenanceCount  = rows.filter(r => r.status === 'MAINTENANCE').length;
+      this.retiredCount      = rows.filter(r => r.status === 'RETIRED').length;
 
       const set = new Set<string>();
       rows.forEach(r => (r.capabilities ?? []).forEach(c => set.add(c)));
@@ -89,6 +92,7 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
 
       this.applyFilters();
     });
+
     this.store.loadVehicles();
   }
 
