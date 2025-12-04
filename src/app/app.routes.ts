@@ -7,6 +7,8 @@ import { LoginPageComponent } from './iam/presentation/pages/login-page/login-pa
 import { PasswordRecoveryPageComponent } from './iam/presentation/pages/password-recovery-page/password-recovery-page';
 import { RegisterPageComponent } from './iam/presentation/pages/register-page/register-page';
 import { SubscriptionsPage } from './subscription/presentation/pages/subscriptions/subscriptions.page';
+import { LogoutPageComponent } from './iam/presentation/pages/logout-page/logout-page';
+
 
 const tripRoutes = () => import('./trips/presentation/trip.routes').then((m) => m.routes);
 const alertRoutes = () => import('./alerts/presentation/alert.routes').then((m) => m.routes);
@@ -17,6 +19,9 @@ export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'password-recovery', component: PasswordRecoveryPageComponent },
   { path: 'register', component: RegisterPageComponent },
+
+
+
   {
     path: '',
     component: RootLayout,
@@ -26,6 +31,9 @@ export const routes: Routes = [
         redirectTo: '/dashboard',
         pathMatch: 'full',
       },
+
+      { path: 'logout', component: LogoutPageComponent },
+
       {
         path: 'dashboard',
         component: DashboardComponent,
