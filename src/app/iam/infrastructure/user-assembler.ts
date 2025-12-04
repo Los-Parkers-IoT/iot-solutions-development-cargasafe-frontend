@@ -6,6 +6,7 @@ export class UserAssembler {
     return new User({
       id: resource.id,
       email: resource.username,
+      roles: resource.roles,
     });
   }
 }

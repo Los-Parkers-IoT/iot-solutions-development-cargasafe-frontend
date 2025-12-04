@@ -10,7 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
-import {Authentication} from '../../../infrastructure/authentication';
+import { AuthService } from '../../../application/auth.service.';
 
 @Component({
   selector: 'app-register-page',
@@ -45,7 +45,7 @@ export class RegisterPageComponent {
 
   termsAccepted: boolean = false;
 
-  constructor(private router: Router, private snackBar: MatSnackBar, private auth: Authentication) {}
+  constructor(private router: Router, private snackBar: MatSnackBar, private auth: AuthService) {}
 
   onRegister(): void {
     if (!this.termsAccepted) {
@@ -86,37 +86,25 @@ export class RegisterPageComponent {
       }
     }
 
-    const body = {
-      username: this.email,
-      password: this.password,
-      fistName: this.firstName,
+    const profile = {
+      firstName: this.firstName,
       lastName: this.lastName
     };
 
-    this.auth.signUp(body).subscribe({
+    const roles = this.segment === 'Client' ? ['CLIENT'] : ['SHIPPING_COMPANY'];
+
+    this.auth.signUp(this.email, this.password, profile, roles).subscribe({
       next: () => {
         this.showNotification('Registration successful! Redirecting to login...');
-        this.router.navigate(['/login']);
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
       },
-      error: () => {
+      error: (error) => {
+        console.error('Registration error:', error);
         this.showNotification('Could not register. Please try again');
       }
-    })
-
-    console.log('Registration attempt:', {
-      segment: this.segment,
-      firstName: this.firstName,
-      username: this.email,
-      companyData: this.segment === 'Shipping Company'
-        ? { legalName: this.legalName, taxId: this.rucId }
-        : 'N/A'
     });
-
-    this.showNotification('Registration successful! Redirecting to login...');
-
-    setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 2000);
   }
 
   showNotification(message: string): void {

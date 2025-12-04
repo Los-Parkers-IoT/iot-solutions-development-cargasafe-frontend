@@ -9,10 +9,14 @@ export class AuthenticationApi {
   private base = `${environment.baseUrl}/authentication`;
 
   signIn(email: string, password: string) {
-    return this.http.post<SignInResponse>(`${this.base}/sign-in`, { username: email, password });
+    return this.http.post<SignInResponse>(`${this.base}/sign-in`, { email, password });
   }
 
-  signUp(email: string, password: string, profile: { firstName: string; lastName: string }) {
-    return this.http.post<void>(`${this.base}/sign-up`, { username: email, password, profile });
+  signUp(email: string, password: string, profile: { firstName: string; lastName: string }, roles: string[] = ['CLIENT']) {
+    return this.http.post<void>(`${this.base}/sign-up`, { email, password, roles, profile });
+  }
+
+  logout() {
+    return this.http.post<void>(`${this.base}/logout`, {});
   }
 }

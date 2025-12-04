@@ -17,24 +17,35 @@
 
     <nav class="sidebar__nav">
       <ul>
+        <!-- Dashboard - Visible para todos -->
         <li>
           <a routerLink="/dashboard" routerLinkActive="active">
             <mat-icon>dashboard</mat-icon>
             <span>Dashboard</span>
           </a>
         </li>
-        <li>
-          <a routerLink="/fleet/vehicles" routerLinkActive="active">
-            <mat-icon>local_shipping</mat-icon>
-            <span>Vehicles</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink="/fleet/devices" routerLinkActive="active">
-            <mat-icon>sensors</mat-icon>
-            <span>Sensors</span>
-          </a>
-        </li>
+        
+        <!-- Vehicles - Solo OPERATOR -->
+        @if (userStore.user()?.isOperator()) {
+          <li>
+            <a routerLink="/fleet/vehicles" routerLinkActive="active">
+              <mat-icon>local_shipping</mat-icon>
+              <span>Vehicles</span>
+            </a>
+          </li>
+        }
+        
+        <!-- Sensors - Solo OPERATOR -->
+        @if (userStore.user()?.isOperator()) {
+          <li>
+            <a routerLink="/fleet/devices" routerLinkActive="active">
+              <mat-icon>sensors</mat-icon>
+              <span>Sensors</span>
+            </a>
+          </li>
+        }
+        
+        <!-- Trips - Visible para todos -->
         <li>
           <a
             routerLink="/trips"
@@ -45,23 +56,37 @@
             <span>Trips</span>
           </a>
         </li>
+        
+        <!-- Alerts - Visible para todos -->
         <li>
           <a routerLink="/alerts" routerLinkActive="active">
             <mat-icon>notifications</mat-icon>
             <span>Alerts</span>
           </a>
         </li>
+        
+        <!-- Profile - Visible para todos -->
         <li>
-          <a routerLink="/subscriptions" routerLinkActive="active">
-            <mat-icon>card_membership</mat-icon>
-            <span>Subscriptions</span>
+          <a routerLink="/profile" routerLinkActive="active">
+            <mat-icon>person</mat-icon>
+            <span>Profile</span>
           </a>
         </li>
+        
+        <!-- Subscriptions - Solo OPERATOR -->
+        @if (userStore.user()?.isOperator()) {
+          <li>
+            <a routerLink="/subscriptions" routerLinkActive="active">
+              <mat-icon>card_membership</mat-icon>
+              <span>Subscriptions</span>
+            </a>
+          </li>
+        }
       </ul>
     </nav>
 
     <div class="sidebar__footer">
-      <a routerLink="/logout">
+      <a (click)="onLogout($event)" style="cursor: pointer;">
         <mat-icon>logout</mat-icon>
         <span>Log out</span>
       </a>
