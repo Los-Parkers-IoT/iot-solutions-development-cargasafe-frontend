@@ -1,10 +1,12 @@
 <!-- Loading / Not found -->
 <mat-card *ngIf="(device$ | async) === undefined">Loading device…</mat-card>
+
 <mat-card *ngIf="(device$ | async) === null" class="error">
   Device not found.
   <div class="mt-2">
     <button mat-stroked-button (click)="back()">
-      <mat-icon>arrow_back</mat-icon> Back
+      <mat-icon>arrow_back</mat-icon>
+      Back
     </button>
   </div>
 </mat-card>
@@ -13,7 +15,23 @@
 <ng-container *ngIf="(device$ | async) as d">
   <!-- Page header -->
   <div class="dd-header">
-    <h1 class="dd-title">Device {{ d.imei }}</h1>
+    <div>
+      <h1 class="dd-title">Device {{ d.imei }}</h1>
+      <p class="dd-subtitle">Status, firmware and vehicle link</p>
+    </div>
+
+    <div class="dd-status">
+      <span class="dd-status-label">Status</span>
+      <span
+        class="dd-status-pill"
+        [ngClass]="{
+          'dd-status-pill--online': d.online,
+          'dd-status-pill--offline': !d.online
+        }"
+      >
+        {{ d.online ? 'Online' : 'Offline' }}
+      </span>
+    </div>
   </div>
 
   <div class="dd-grid">
@@ -21,68 +39,66 @@
     <div class="dd-main">
       <!-- Technical Card -->
       <mat-card class="dd-card">
-        <div class="dd-card-title">Technical Card</div>
+        <div class="dd-card-title">Technical card</div>
 
         <div class="dd-tech">
           <div class="kv">
-            <div class="k">Status:</div>
-            <div class="v">{{ d.online ? 'Online' : 'Offline' }}</div>
-          </div>
-
-          <div class="kv">
-            <div class="k">Last Signal:</div>
-            <div class="v">—</div> <!-- placeholder -->
-          </div>
-
-          <div class="kv">
-            <div class="k">Firmware:</div>
+            <div class="k">Firmware</div>
             <div class="v">{{ d.firmware || '—' }}</div>
           </div>
 
-          <div class="kv">
-            <div class="k">Linked Vehicle:</div>
-            <div class="v">{{ d.vehiclePlate || '—' }}</div>
+          <div class="kv kv--full">
+            <div class="k">Linked vehicle</div>
+            <div class="v">
+              <ng-container *ngIf="d.vehiclePlate; else noVehicle">
+                <span class="dd-chip">{{ d.vehiclePlate }}</span>
+              </ng-container>
+              <ng-template #noVehicle>
+                <span class="dd-empty">Not linked to any vehicle</span>
+              </ng-template>
+            </div>
           </div>
         </div>
-      </mat-card>
-
-      <!-- Recent Telemetry (empty for now) -->
-      <mat-card class="dd-card">
-        <div class="dd-card-title">Recent Telemetry</div>
-        <div class="empty">No telemetry yet.</div>
       </mat-card>
     </div>
 
     <!-- RIGHT SIDEBAR -->
     <aside class="dd-aside">
-      <mat-card class="dd-card">
+      <mat-card class="dd-card dd-card--actions">
         <div class="dd-card-title">Actions</div>
+
         <div class="dd-actions-col">
           <button mat-raised-button color="primary" (click)="toggleOnline(d)">
             {{ d.online ? 'Set Offline' : 'Set Online' }}
           </button>
 
           <button mat-stroked-button (click)="openUpdateFirmwareDialog(d)">
-            Update Firmware
+            Update firmware
           </button>
 
           <button mat-stroked-button (click)="openAssignVehicleDialog(d)">
-            Link to Vehicle
+            Link to vehicle
           </button>
 
-          <button mat-raised-button color="warn" (click)="unlink(d)" [disabled]="!d.vehiclePlate">
+          <button
+            mat-raised-button
+            color="warn"
+            class="dd-btn-danger"
+            (click)="unlink(d)"
+            [disabled]="!d.vehiclePlate"
+          >
             Unlink
           </button>
         </div>
       </mat-card>
-
     </aside>
   </div>
 
   <!-- Footer actions -->
   <div class="dd-footer">
     <button mat-stroked-button (click)="back()">
-      <mat-icon>arrow_back</mat-icon> Back
+      <mat-icon>arrow_back</mat-icon>
+      Back
     </button>
   </div>
 </ng-container>

@@ -40,6 +40,8 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
   totalCount = 0;
   availableCount = 0;
   inServiceCount = 0;
+  maintenanceCount = 0;
+  retiredCount = 0;
 
   searchTerm = '';
   statusFilter = '';
@@ -74,6 +76,12 @@ export class VehicleManagementComponent implements OnInit, AfterViewInit {
       this.totalCount     = rows.length;
       this.availableCount = rows.filter(r => r.status === 'IN_SERVICE').length;
       this.inServiceCount = rows.filter(r => r.status === 'IN_SERVICE').length;
+      this.maintenanceCount = rows.filter(r => r.status === 'MAINTENANCE').length;
+      this.retiredCount    = rows.filter(r => r.status === 'RETIRED').length;
+
+
+      this.availableCount  = this.totalCount - this.retiredCount;
+
 
       const set = new Set<string>();
       rows.forEach(r => (r.capabilities ?? []).forEach(c => set.add(c)));

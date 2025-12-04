@@ -15,7 +15,10 @@ import { AssignDeviceDialogComponent } from '../../components/assign-device-dial
 import { MatDialog } from '@angular/material/dialog';
 import { UnassignDeviceDialogComponent } from '../../components/unassign-device-dialog/unassign-device-dialog';
 import { FleetStore } from '../../../application/fleet.store';
-import {VehicleStatus} from '../../../domain/model/vehicle-status.vo';
+import { VehicleStatus } from '../../../domain/model/vehicle-status.vo';
+import {
+  ConfirmRetireVehicleDialogComponent
+} from '../../components/confirm-retire-vehicle-dialog/confirm-retire-vehicle-dialog';
 
 @Component({
   selector: 'app-vehicle-detail-page',
@@ -68,8 +71,22 @@ export class VehicleDetailPageComponent {
 
   setOutOfService(v: Vehicle) {
     if (!v?.id) return;
-    this.store.updateVehicleStatus(v.id, VehicleStatus.OUT_OF_SERVICE); // 👈 enum
+    this.store.updateVehicleStatus(v.id, VehicleStatus.OUT_OF_SERVICE);
     this.snack?.open('Vehicle set to OUT_OF_SERVICE', 'OK', { duration: 2000 });
+    this.refresh$.next();
+  }
+
+  setMaintenance(v: Vehicle) {
+    if (!v?.id) return;
+    this.store.updateVehicleStatus(v.id, VehicleStatus.MAINTENANCE);
+    this.snack?.open('Vehicle set to MAINTENANCE', 'OK', { duration: 2000 });
+    this.refresh$.next();
+  }
+
+  setRetired(v: Vehicle) {
+    if (!v?.id) return;
+    this.store.updateVehicleStatus(v.id, VehicleStatus.RETIRED);
+    this.snack?.open('Vehicle set to RETIRED', 'OK', { duration: 2000 });
     this.refresh$.next();
   }
 
@@ -119,5 +136,21 @@ export class VehicleDetailPageComponent {
     }
     this.snack?.open('Unassigned all devices', 'OK', { duration: 1800 });
     this.refresh$.next();
+  }
+
+  openRetireDialog(v: Vehicle) {
+    if (!v?.id) return;
+
+    const ref = this.dialog.open(ConfirmRetireVehicleDialogComponent, {
+      width: '480px',
+      maxWidth: '95vw',
+      data: {plate: v.plate},
+    });
+
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.setRetired(v);
+      }
+    });
   }
 }
