@@ -29,6 +29,7 @@
   /* Secondary Role (Your Dark Blue) */
   --mat-sys-secondary: var(--color-secondary);
   --mat-sys-on-secondary: #ffffff; /* Text on secondary */
+  --mat-sys-secondary-container: var(--color-grey-5);
 
   /* Tertiary Role (Often used for less prominent accents/buttons) */
   --mat-sys-tertiary: var(--color-secondary);
@@ -103,13 +104,11 @@ mat-icon {
   position: relative;
 }
 
-
 .snackbar-error-container {
   padding: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
-
 
 .snackbar-success {
   background: #2e7d32;

@@ -87,7 +87,17 @@
 
     <ng-container matColumnDef="status">
       <th mat-header-cell *matHeaderCellDef>Status</th>
-      <td mat-cell *matCellDef="let trip">{{ trip.status }}</td>
+      <td mat-cell *matCellDef="let trip">
+        @if (trip.isCreated()) {
+        <span class="chip chip-blue">Created</span>
+        } @if (trip.isInProgress()) {
+        <span class="chip chip-orange">In Progress</span>
+        } @if (trip.isCompleted()) {
+        <span class="chip chip-green">Completed</span>
+        } @if (trip.isCancelled()) {
+        <span class="chip chip-red">Cancelled</span>
+        }
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="createdAt">

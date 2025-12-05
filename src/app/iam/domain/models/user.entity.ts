@@ -45,4 +45,8 @@ export class User implements BaseEntity {
   isOperator(): boolean {
     return this.hasRole('OPERATOR');
   }
+
+  isAdmin(): boolean {
+    return this.hasRole('ADMIN');
+  }
 }

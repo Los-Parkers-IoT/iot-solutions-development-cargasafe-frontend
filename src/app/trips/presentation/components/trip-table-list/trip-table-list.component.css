@@ -41,6 +41,30 @@
   margin-top: 3rem;
 }
 
+.chip {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  padding: 0.25rem 0.875rem;
+}
+.chip-blue {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+.chip-orange {
+  background-color: #fff7ed;
+  color: #f97316;
+}
+.chip-green {
+  background-color: #dcfce7;
+  color: #22c55e;
+}
+.chip-red {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
 /* Mobile adjustments */
 @media (max-width: 1024px) {
   .trips-filters {
@@ -145,31 +169,6 @@ td.actions {
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
-  padding: 0 12px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 13px;
-  border: 1px solid transparent;
-}
-
-.chip-gray {
-  background: #eceff4;
-  color: #4a5568;
-  border-color: #d7dbe3;
-}
-
-.chip-orange {
-  background: #ff8a00;
-  color: #fff;
-  border-color: #ff8a00;
-  cursor: pointer;
 }
 
 .arrow {

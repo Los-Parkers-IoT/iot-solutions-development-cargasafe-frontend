@@ -76,6 +76,9 @@ export class Trip implements BaseEntity {
   isCreated(): boolean {
     return this._status === TripStatus.CREATED;
   }
+  isCancelled(): boolean {
+    return this._status === TripStatus.CANCELLED;
+  }
 
   get startedAt(): Date | null {
     return this._startedAt;
