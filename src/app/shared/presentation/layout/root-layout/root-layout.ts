@@ -30,7 +30,7 @@ export class RootLayout implements OnDestroy {
 
     // Load user data on initialization
     this.userStore.loadUser();
-    
+
     // Debug: Log user changes
     effect(() => {
       const user = this.userStore.user();
@@ -51,7 +51,7 @@ export class RootLayout implements OnDestroy {
 
   onLogout(event: Event): void {
     event.preventDefault();
-    
+
     this.authService.logout().subscribe({
       next: () => {
         this.router.navigate(['/login']);

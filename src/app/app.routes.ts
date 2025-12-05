@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { RootLayout } from './shared/presentation/layout/root-layout/root-layout';
 import { PageNotFound } from './shared/presentation/views/page-not-found/page-not-found';
-import { DashboardComponent } from './dashboard/presentation/pages/dashboard.component';
+import { DashboardComponent } from './dashboard/presentation/views/dashboard.component';
 import { TripDetailComponent } from './dashboard/presentation/components/trip-detail/trip-detail.component';
 import { LoginPageComponent } from './iam/presentation/pages/login-page/login-page';
 import { PasswordRecoveryPageComponent } from './iam/presentation/pages/password-recovery-page/password-recovery-page';

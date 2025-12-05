@@ -5,7 +5,7 @@ export enum VehicleStatus {
   RETIRED = 'RETIRED',
 }
 
-// helpers
+
 export const ALL_VEHICLE_STATUSES: VehicleStatus[] = [
   VehicleStatus.IN_SERVICE,
   VehicleStatus.OUT_OF_SERVICE,

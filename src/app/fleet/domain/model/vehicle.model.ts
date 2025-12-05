@@ -4,9 +4,9 @@ import { VehicleStatus } from './vehicle-status.vo';
 export interface Vehicle {
   id?: number;
   plate: string;
-  type: VehicleType;          // ahora VO
-  capabilities: string[];     // puede seguir siendo string[]
-  status: VehicleStatus;      // ahora VO
+  type: VehicleType;
+  capabilities: string[];
+  status: VehicleStatus;
   odometerKm: number;
   deviceImeis: string[];
 }

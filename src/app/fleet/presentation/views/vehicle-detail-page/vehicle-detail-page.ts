@@ -1,5 +1,4 @@
-// src/app/fleet/presentation/views/vehicle-detail-page/vehicle-detail-page.ts
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -7,8 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Vehicle } from '../../../domain/model/vehicle.model';
-import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { AssignDeviceDialogComponent } from '../../components/assign-device-dialog/assign-device-dialog';
@@ -30,27 +29,28 @@ import {
     MatButtonModule,
     MatChipsModule,
     MatListModule,
+    MatProgressSpinnerModule,
     FormsModule,
   ],
   templateUrl: './vehicle-detail-page.html',
   styleUrls: ['./vehicle-detail-page.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VehicleDetailPageComponent {
+export class VehicleDetailPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private store = inject(FleetStore);
   private snack = inject(MatSnackBar, { optional: true });
   private dialog = inject(MatDialog);
-  private refresh$ = new BehaviorSubject<void>(undefined);
 
-  vehicle$ = this.route.paramMap.pipe(
-    map((pm) => Number(pm.get('id'))),
-    switchMap((id) =>
-      this.refresh$.pipe(switchMap(() => this.store.loadVehicleById(id)))
-    ),
-    catchError(() => of(null))
-  );
+  // Computed signals (como en trips)
+  vehicleState = computed(() => this.store.vehicleState);
+  vehicle = computed(() => this.vehicleState().data() as Vehicle);
+
+  ngOnInit(): void {
+    const vehicleId = Number(this.route.snapshot.params['id']);
+    this.store.loadVehicleById(vehicleId);
+  }
 
   back() {
     void this.router.navigate(['/fleet/vehicles']);
@@ -66,28 +66,28 @@ export class VehicleDetailPageComponent {
     if (!v?.id) return;
     this.store.updateVehicleStatus(v.id, VehicleStatus.IN_SERVICE);
     this.snack?.open('Vehicle set to IN_SERVICE', 'OK', { duration: 2000 });
-    this.refresh$.next();
+    this.store.loadVehicleById(v.id);
   }
 
   setOutOfService(v: Vehicle) {
     if (!v?.id) return;
     this.store.updateVehicleStatus(v.id, VehicleStatus.OUT_OF_SERVICE);
     this.snack?.open('Vehicle set to OUT_OF_SERVICE', 'OK', { duration: 2000 });
-    this.refresh$.next();
+    this.store.loadVehicleById(v.id);
   }
 
   setMaintenance(v: Vehicle) {
     if (!v?.id) return;
     this.store.updateVehicleStatus(v.id, VehicleStatus.MAINTENANCE);
     this.snack?.open('Vehicle set to MAINTENANCE', 'OK', { duration: 2000 });
-    this.refresh$.next();
+    this.store.loadVehicleById(v.id);
   }
 
   setRetired(v: Vehicle) {
     if (!v?.id) return;
     this.store.updateVehicleStatus(v.id, VehicleStatus.RETIRED);
     this.snack?.open('Vehicle set to RETIRED', 'OK', { duration: 2000 });
-    this.refresh$.next();
+    this.store.loadVehicleById(v.id);
   }
 
   trackByValue = (_: number, val: string) => val;
@@ -105,7 +105,7 @@ export class VehicleDetailPageComponent {
       if (res?.imei) {
         this.store.assignDeviceToVehicle(v.id!, res.imei);
         this.snack?.open(`Assigned ${res.imei}`, 'OK', { duration: 1800 });
-        this.refresh$.next();
+        this.store.loadVehicleById(v.id!);
       }
     });
   }
@@ -123,7 +123,7 @@ export class VehicleDetailPageComponent {
       if (res?.imei) {
         this.store.unassignDeviceFromVehicle(v.id!, res.imei);
         this.snack?.open(`Unassigned ${res.imei}`, 'OK', { duration: 1800 });
-        this.refresh$.next();
+        this.store.loadVehicleById(v.id!);
       }
     });
   }
@@ -135,7 +135,7 @@ export class VehicleDetailPageComponent {
       this.store.unassignDeviceFromVehicle(v.id, imei);
     }
     this.snack?.open('Unassigned all devices', 'OK', { duration: 1800 });
-    this.refresh$.next();
+    this.store.loadVehicleById(v.id);
   }
 
   openRetireDialog(v: Vehicle) {

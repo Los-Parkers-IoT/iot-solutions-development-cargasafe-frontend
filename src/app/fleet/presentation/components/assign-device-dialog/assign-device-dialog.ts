@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Device } from '../../../domain/model/device.model';
-import { FleetStore } from '../../../application/fleet.store'; // 👈 nuevo import
+import { FleetStore } from '../../../application/fleet.store';
 
 type DialogResult = { imei: string } | undefined;
 
@@ -18,7 +18,7 @@ type DialogResult = { imei: string } | undefined;
   styleUrl: './assign-device-dialog.css'
 })
 export class AssignDeviceDialogComponent implements OnInit {
-  private store = inject(FleetStore); // 👈 antes FleetFacade
+  private store = inject(FleetStore);
   private ref = inject(MatDialogRef<AssignDeviceDialogComponent, DialogResult>);
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { vehicleId: number }) {}

@@ -1,10 +1,9 @@
-// src/app/fleet/infrastructure/vehicle-assembler.ts
 import { CreateVehicleDto, UpdateVehicleDto, VehicleResponse } from './vehicle-response';
 import { Vehicle } from '../domain/model/vehicle.model';
 import { VehicleStatus } from '../domain/model/vehicle-status.vo';
 import { VehicleType } from '../domain/model/vehicle-type.vo';
 
-// Utilidades
+
 export const UA = (arr: unknown[], fallback: string[] = []) =>
   (Array.isArray(arr) ? arr : fallback).map(U);
 
@@ -15,7 +14,7 @@ export const toNum = (v: unknown): number | undefined => {
 
 export const U = (s: unknown) => String(s ?? '').trim().toUpperCase();
 
-// ---------- PARSEADORES VO (como TripAssembler.parseStatus) ----------
+
 
 const parseVehicleType = (value: unknown): VehicleType => {
   const upper = U(value);
@@ -43,7 +42,7 @@ const parseVehicleStatus = (value: unknown): VehicleStatus => {
   }
 };
 
-// ---------- Backend -> Frontend ----------
+
 
 export const toVehicle = (dto: VehicleResponse): Vehicle => ({
   id: toNum(dto.id),
@@ -55,11 +54,11 @@ export const toVehicle = (dto: VehicleResponse): Vehicle => ({
   deviceImeis: Array.isArray(dto.deviceImeis) ? dto.deviceImeis : [],
 });
 
-// ---------- Frontend -> Backend (forzamos UPPER_CASE) ----------
+
 
 export const fromVehicleCreate = (m: Vehicle): CreateVehicleDto => ({
   plate: String(m.plate ?? '').trim(),
-  type: U(m.type),                // m.type es enum, U lo deja como string 'TRUCK'
+  type: U(m.type),
   capabilities: UA(m.capabilities ?? []),
   status: U(m.status),
   odometerKm: Number(m.odometerKm ?? 0),

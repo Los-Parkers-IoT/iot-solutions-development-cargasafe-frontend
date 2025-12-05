@@ -1,4 +1,3 @@
-// src/app/fleet/infrastructure/vehicles-api.ts
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
@@ -14,7 +13,7 @@ export class VehiclesApi {
   private http = inject(HttpClient);
   private baseUrl = environment.baseUrl;
 
-  // --- endpoints específicos de vehículos ---
+
   private vehiclesUrl(): string {
     return `${this.baseUrl}/fleet/vehicles`;
   }
@@ -47,7 +46,6 @@ export class VehiclesApi {
     return `${this.baseUrl}/fleet/vehicles/by-plate/${encodeURIComponent(plate)}`;
   }
 
-  // =============== MÉTODOS PÚBLICOS (antes en VehicleHttpRepository) ===============
 
   getAll(): Observable<Vehicle[]> {
     return this.http

@@ -29,7 +29,7 @@ export class FirmwareDialogComponent {
   close() { this.ref.close(); }
   ok(){
     const v = this.value?.trim();
-    if (!v) return; // o deshabilitar el botón
+    if (!v) return;
     this.ref.close(v);
   }
 }

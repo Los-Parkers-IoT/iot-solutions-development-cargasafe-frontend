@@ -1,4 +1,3 @@
-// src/app/fleet/infrastructure/devices-api.ts
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
@@ -11,10 +10,9 @@ import { toDevice, fromDeviceCreate, fromDeviceUpdate } from './device-assembler
 export class DevicesApi {
   private http = inject(HttpClient);
 
-  // base del backend, por ejemplo: http://localhost:8080/api/v1
+
   private baseUrl = environment.baseUrl;
 
-  // --- helpers de endpoints (lo que antes estaba en endpoints.ts) ---
   private devicesUrl(): string {
     return `${this.baseUrl}/fleet/devices`;
   }
@@ -38,8 +36,6 @@ export class DevicesApi {
   private deviceByImeiUrl(imei: string): string {
     return `${this.baseUrl}/fleet/devices/by-imei/${encodeURIComponent(imei)}`;
   }
-
-  // =============== MÉTODOS PÚBLICOS (antes en DeviceHttpRepository) ===============
 
   getAll(): Observable<Device[]> {
     return this.http.get<any[]>(this.devicesUrl()).pipe(

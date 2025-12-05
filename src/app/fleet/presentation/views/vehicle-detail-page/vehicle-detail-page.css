@@ -3,7 +3,6 @@
   padding: 16px 24px;
 }
 
-/* HEADER */
 .vd-header {
   display: flex;
   align-items: center;
@@ -65,7 +64,6 @@
   color: #b42318;
 }
 
-/* 👇 nuevos estados */
 .vd-status-pill--maintenance {
   background: #fff7e5;
   border-color: #f3d29b;
@@ -78,7 +76,7 @@
   color: #555555;
 }
 
-/* LAYOUT 2 COLUMNAS */
+
 .vd-grid {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(260px, 1.2fr);
@@ -97,7 +95,7 @@
   gap: 16px;
 }
 
-/* CARDS */
+
 .vd-card {
   border-radius: 12px;
   padding: 14px 16px;
@@ -111,7 +109,7 @@
   margin-bottom: 12px;
 }
 
-/* TECHNICAL CARD BODY */
+
 .vd-tech {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -189,7 +187,7 @@ mat-chip-set {
   padding-bottom: 0;
 }
 
-/* Botones de acciones */
+
 .vd-actions-col .mat-mdc-button-base {
   width: 100%;
   justify-content: center;
@@ -204,7 +202,7 @@ mat-chip-set {
   background-color: #ffebeb;
 }
 
-/* FOOTER */
+
 .vd-footer {
   display: flex;
   justify-content: flex-end;
@@ -212,13 +210,13 @@ mat-chip-set {
   margin-top: 12px;
 }
 
-/* EMPTY STATES */
+
 .empty {
   color: #777;
   font-style: italic;
 }
 
-/* RESPONSIVE */
+
 @media (max-width: 960px) {
   .vd-grid {
     grid-template-columns: 1fr;
@@ -236,4 +234,32 @@ mat-chip-set {
   .vd-status {
     align-items: flex-start;
   }
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading-center p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 500;
 }
