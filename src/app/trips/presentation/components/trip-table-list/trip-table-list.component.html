@@ -17,26 +17,13 @@
         <mat-label>Status</mat-label>
         <mat-select [(ngModel)]="statusFilter" (selectionChange)="onStatusChange($event.value)">
           <mat-option value="all">All</mat-option>
-          <mat-option value="0">Completado</mat-option>
-          <mat-option value="1">Cancelado</mat-option>
-          <mat-option value="2">En curso</mat-option>
-          <mat-option value="3">Programado</mat-option>
+          <mat-option value="0">Completed</mat-option>
+          <mat-option value="1">Cancelled</mat-option>
+          <mat-option value="2">In Progress</mat-option>
+          <mat-option value="3">Created</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
-        <mat-label>Created At</mat-label>
-        <mat-select
-          [(ngModel)]="createdOrder"
-          (selectionChange)="onCreatedOrderChange($event.value)"
-        >
-          <mat-option value="desc">Recent</mat-option>
-          <mat-option value="asc">Oldest</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div class="filter-group">
       <mat-form-field subscriptSizing="dynamic" appearance="outline" class="filter-select">
         <mat-label>Created Between</mat-label>
 
@@ -53,7 +40,7 @@
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
 
-      <button mat-stroked-button color="primary" (click)="applyDateFilter()">Apply</button>
+      <button matButton="outlined" color="primary" (click)="applyDateFilter()">Apply</button>
       <button mat-button (click)="clearDateFilter()">Clear</button>
     </div>
   </div>
@@ -121,7 +108,7 @@
 
         @if (trip.isCreated()) {
         <button matIconButton (click)="openModifyModal(trip)">
-          <mat-icon>edit_square</mat-icon>
+          <mat-icon>play_circle</mat-icon>
         </button>
         }
       </td>

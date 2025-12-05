@@ -351,7 +351,6 @@ export class TripCreateViewComponent implements OnInit {
     trip.deviceId = this.device()?.id ?? 0;
     trip.driverId = 1;
     trip.vehicleId = this.tripForm.value.vehicleId!;
-    trip.merchantId = 1;
     trip.originPointId = this.tripForm.value.originPoint!.id;
     trip.deliveryOrders = this.deliveryOrders().map((o, i) => {
       const order = DeliveryOrder.createEmpty();

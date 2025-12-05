@@ -13,6 +13,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-trip-table-list',
@@ -43,6 +46,8 @@ export class TripTableListComponent implements OnInit {
 
   readonly store = inject(TripsStore);
   trips = computed(() => this.store.tripsState.data);
+  dialog = inject(MatDialog);
+  snackbar = inject(MatSnackBar);
 
   displayedColumns: string[] = [
     'id',
@@ -217,13 +222,22 @@ export class TripTableListComponent implements OnInit {
     }
   }
 
-  openModifyModal(trip: any) {
-    this.selectedTripId = Number(trip?.id ?? null);
+  openModifyModal(trip: Trip) {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '400px',
+      data: {
+        title: 'Confirm Status Change',
+        message: `Are you sure you want to execute status of Trip #${trip.id}?`,
+      },
+    });
 
-    this.currentStatusLabel = 'schedule';
-    this.nextStatusLabel = 'completed';
-
-    this.isModifyOpen = true;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.store.executeTrip(trip.id)?.subscribe(() => {
+          this.snackbar.open(`Trip #${trip.id} is now In Progress`, 'Close', { duration: 3000 });
+        });
+      }
+    });
   }
 
   closeModifyModal() {

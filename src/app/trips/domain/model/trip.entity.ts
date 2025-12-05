@@ -6,11 +6,11 @@ import { TripStatus } from './trip-status.vo';
 export class Trip implements BaseEntity {
   private _id: number;
   private _driverId: number;
+  private _driverName: string;
   private _deviceId: number;
   private _vehicleId: number;
   private _createdAt: Date;
   private _updatedAt: Date;
-  private _merchantId: number;
   private _originPointId: number;
   private _startedAt: Date | null;
   private _completedAt: Date | null;
@@ -23,7 +23,7 @@ export class Trip implements BaseEntity {
     driverId: number;
     vehicleId: number;
     deviceId: number;
-    merchantId: number;
+    driverName: string;
     originPointId: number;
     originPoint?: OriginPoint | null;
     deliveryOrders?: DeliveryOrder[];
@@ -35,8 +35,8 @@ export class Trip implements BaseEntity {
   }) {
     this._id = trip.id;
     this._driverId = trip.driverId;
+    this._driverName = trip.driverName;
     this._vehicleId = trip.vehicleId;
-    this._merchantId = trip.merchantId;
 
     this._originPointId = trip.originPointId;
     this._originPoint = trip.originPoint ?? null;
@@ -57,13 +57,31 @@ export class Trip implements BaseEntity {
       driverId: 0,
       vehicleId: 0,
       deviceId: 0,
-      merchantId: 0,
+      driverName: 'Unknown',
       originPointId: 0,
       startedAt: null,
       completedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
       status: TripStatus.CREATED,
+    });
+  }
+
+  static createFrom(trip: Trip): Trip {
+    return new Trip({
+      id: trip._id,
+      driverId: trip._driverId,
+      vehicleId: trip._vehicleId,
+      deviceId: trip._deviceId,
+      driverName: trip._driverName,
+      originPointId: trip._originPointId,
+      originPoint: trip._originPoint,
+      deliveryOrders: trip._deliveryOrders,
+      startedAt: trip._startedAt,
+      completedAt: trip._completedAt,
+      createdAt: trip._createdAt,
+      updatedAt: trip._updatedAt,
+      status: trip._status,
     });
   }
 
@@ -109,6 +127,13 @@ export class Trip implements BaseEntity {
     this._driverId = value;
   }
 
+  get driverName(): string {
+    return this._driverName;
+  }
+  set driverName(value: string) {
+    this._driverName = value;
+  }
+
   get vehicleId(): number {
     return this._vehicleId;
   }
@@ -122,13 +147,6 @@ export class Trip implements BaseEntity {
 
   get updatedAt(): Date {
     return this._updatedAt;
-  }
-
-  get merchantId(): number {
-    return this._merchantId;
-  }
-  set merchantId(value: number) {
-    this._merchantId = value;
   }
 
   get originPointId(): number {

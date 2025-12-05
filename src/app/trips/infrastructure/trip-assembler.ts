@@ -25,7 +25,7 @@ export class TripAssembler {
       updatedAt: new Date(resource.updatedAt),
       completedAt: resource.completedAt ? new Date(resource.completedAt) : null,
       startedAt: resource.startedAt ? new Date(resource.startedAt) : null,
-      merchantId: resource.merchantId,
+      driverName: resource.driverName,
       originPointId: resource.originPoint.id,
       originPoint: OriginPointAssembler.toEntityFromResource(resource.originPoint),
       deliveryOrders: resource.deliveryOrders.map(DeliveryOrderAssembler.toEntityFromResource),
@@ -54,7 +54,7 @@ export class TripAssembler {
     return {
       driverId: entity.driverId,
       deviceId: entity.deviceId,
-      merchantId: entity.merchantId,
+      merchantId: 1,
       vehicleId: entity.vehicleId,
       originPointId: entity.originPointId,
       deliveryOrders: entity.deliveryOrders.map<CreateTripDeliveryOrderResource>((o) => ({

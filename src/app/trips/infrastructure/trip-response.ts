@@ -5,6 +5,7 @@ export interface TripResource {
   id: number;
   statusId: number;
   driverId: number;
+  driverName: string;
   deviceId: number;
   vehicleId: number;
   departureAt: string | null;

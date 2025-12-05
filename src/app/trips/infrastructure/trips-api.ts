@@ -51,4 +51,8 @@ export class TripsApi {
 
     return this.http.post<unknown>(`${this.baseUrl}${this.tripsEndpoint}`, resource);
   }
+
+  executeTrip(tripId: number): Observable<unknown> {
+    return this.http.post<unknown>(`${this.baseUrl}${this.tripsEndpoint}/${tripId}/start`, {});
+  }
 }

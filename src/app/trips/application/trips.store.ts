@@ -6,6 +6,7 @@ import { finalize, firstValueFrom, tap } from 'rxjs';
 import { createAsyncState } from '../../shared/helpers/async-state';
 import { DeliveryOrderStatus } from '../domain/model/delivery-order-status.vo';
 import { DeliveryOrdersApi } from '../infrastructure/delivery-order-api';
+import { TripStatus } from '../domain/model/trip-status.vo';
 
 @Injectable({ providedIn: 'root' })
 export class TripsStore {
@@ -103,7 +104,32 @@ export class TripsStore {
 
   createTrip(trip: Trip) {
     const request$ = this.tripsApi.createTrip(trip);
-    request$.subscribe();
+    return request$;
+  }
+
+  executeTrip(tripId: Trip['_id'] | number) {
+    const currentTrips = this.tripsState.data();
+    const trip = currentTrips.find((t) => t.id === tripId);
+
+    if (!trip) {
+      console.error(`Trip with id ${tripId} not found`);
+      return;
+    }
+
+    const request$ = this.tripsApi.executeTrip(tripId).pipe(
+      tap(() => {
+        // ⚠️ DO NOT mutate the original trip — create a new object
+        const updatedTrip = Trip.createFrom(trip);
+        updatedTrip.status = TripStatus.IN_PROGRESS;
+        updatedTrip.startedAt = new Date();
+
+        // Create NEW array reference
+        const newTrips = currentTrips.map((t) => (t.id === tripId ? updatedTrip : t));
+
+        this.tripsState.setData(newTrips);
+      })
+    );
+
     return request$;
   }
 }
