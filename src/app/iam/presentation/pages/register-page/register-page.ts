@@ -91,7 +91,7 @@ export class RegisterPageComponent {
       lastName: this.lastName
     };
 
-    const roles = this.segment === 'Client' ? ['CLIENT'] : ['SHIPPING_COMPANY'];
+    const roles = this.segment === 'Client' ? ['CLIENT'] : ['OPERATOR'];
 
     this.auth.signUp(this.email, this.password, profile, roles).subscribe({
       next: () => {
